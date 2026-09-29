@@ -511,10 +511,34 @@ let ANOS = [2026];
 let anoAtivo = 2026;
 let DATA = [];
 
+function normalizarTexto(s){
+  return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
+
 /**
- * Converte o ano base no rótulo do ciclo (ex: 2026 -> "2026-2027")
- * Se já for uma string no formato composto, a preserva.
+ * Traduz status por extenso vindo da planilha para a chave interna
  */
+function normalizarStatus(st){
+  const s = normalizarTexto(st);
+  if(s === "atualizado" || s === "ok") return "ok";
+  if(s === "desatualizado" || s === "outdated") return "outdated";
+  if(s.includes("verificar") || s === "warn") return "warn";
+  if(s.includes("nao entregue") || s === "bad") return "bad";
+  return "bad";
+}
+
+function formatarDataAmigavel(str){
+  if(!str || str === "—") return "—";
+  const s = String(str).trim();
+  if(s.includes("GMT")){
+    const d = new Date(s);
+    if(!isNaN(d.getTime())){
+      return d.toLocaleDateString("pt-BR");
+    }
+  }
+  return s;
+}
+
 function formatCicloLabel(ano) {
   const str = String(ano).trim();
   if (str.includes("-") || str.includes("/")) return str;
@@ -529,21 +553,7 @@ function recalcAnos() {
   const anosEncontrados = [...new Set(ALL_DATA.map(d => Number(d.ano)))].filter(a => !isNaN(a) && a > 2000).sort((a,b) => b - a);
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
   anoAtivo = ANOS[0];
-  
-  if (ALL_DATA.length === 0) {
-    DATA = REDEC.map(m => ({
-      ano: String(anoAtivo),
-      municipio: m,
-      risco: "—",
-      versao: "—",
-      atualizacao: "—",
-      status: "bad",
-      link: "",
-      obs: "Aguardando cadastro na planilha"
-    }));
-  } else {
-    DATA = ALL_DATA.filter(d => Number(d.ano) === anoAtivo);
-  }
+  DATA = ALL_DATA.filter(d => Number(d.ano) === anoAtivo);
 }
 
 const STATUS_LABEL = {ok:"Atualizado", outdated:"Desatualizado", warn:"Verificar", bad:"Não entregue"};
@@ -553,17 +563,26 @@ const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"
 const QSTATUS_ICON = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
 const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
 
+/**
+ * Consolida a situação do município dando prioridade ao melhor status cadastrado (ok > warn > outdated > bad)
+ */
 function getMunicipioSummary(){
   const map = {};
   REDEC.forEach(m => map[m] = {status:"bad", riscos:[]});
+  const rank = {bad:0, outdated:1, warn:2, ok:3};
+
   DATA.forEach(d=>{
-    if(!map[d.municipio]) map[d.municipio]={status:"bad",riscos:[]};
-    const rank={bad:0,outdated:1,warn:2,ok:3};
-    if(rank[d.status] !== undefined && (map[d.municipio].status === "bad" || rank[d.status] < rank[map[d.municipio].status])){
+    if(!map[d.municipio]) map[d.municipio] = {status:"bad", riscos:[]};
+    const atualRank = rank[map[d.municipio].status] ?? 0;
+    const novoRank = rank[d.status] ?? 0;
+
+    // Se o plano cadastrado tiver status superior a "bad", ele eleva a situação municipal
+    if(novoRank >= atualRank){
       map[d.municipio].status = d.status;
     }
     if(d.risco && d.risco !== "—") map[d.municipio].riscos.push(d.risco);
   });
+
   return map;
 }
 
@@ -676,7 +695,10 @@ function updateMapColors(){
 function initDonut(){
   const summary = getMunicipioSummary();
   const counts  = {ok:0, outdated:0, warn:0, bad:0};
-  REDEC.forEach(m=>{ const st=(summary[m]||{status:"bad"}).status; if(counts[st]!==undefined) counts[st]++; });
+  REDEC.forEach(m=>{
+    const st = (summary[m] || {status:"bad"}).status;
+    if(counts[st] !== undefined) counts[st]++;
+  });
   const total = REDEC.length;
 
   const segments = [
@@ -730,7 +752,10 @@ function initDonut(){
 function renderStats(){
   const summary = getMunicipioSummary();
   const counts={ok:0,outdated:0,warn:0,bad:0};
-  REDEC.forEach(m=>{ const st=(summary[m]||{status:"bad"}).status; if(counts[st]!==undefined) counts[st]++; });
+  REDEC.forEach(m=>{
+    const st = (summary[m] || {status:"bad"}).status;
+    if(counts[st] !== undefined) counts[st]++;
+  });
   const isHistorico = anoAtivo !== ANOS[0];
   const cicloTexto = formatCicloLabel(anoAtivo);
   const historicoBanner = isHistorico
@@ -742,15 +767,20 @@ function renderStats(){
     <div class="stat ok"><div class="num">${counts.ok}</div><div class="label">Atualizados (${cicloTexto})</div></div>
     <div class="stat" style="border-top-color:var(--red)"><div class="num">${counts.outdated}</div><div class="label">Desatualizados</div></div>
     <div class="stat warn"><div class="num">${counts.warn}</div><div class="label">A verificar</div></div>
-    <div class="stat bad"><div class="num">${counts.bad}</div><div class="label">Sem plano vigente</div></div>
+    <div class="stat bad"><div class="num">${counts.bad}</div><div class="label">Não entregues</div></div>
   `;
 }
 
 let activeStatus="all",searchTerm="",sortKey=null,sortDir=1;
 function applyFilters(){
+  const summary = getMunicipioSummary();
   return DATA.filter(d=>{
-    if(activeStatus!=="all"&&d.status!==activeStatus) return false;
-    if(searchTerm){const hay=(d.municipio+" "+d.risco).toLowerCase();if(!hay.includes(searchTerm))return false;}
+    const munStatus = (summary[d.municipio] || {}).status || d.status;
+    if(activeStatus !== "all" && d.status !== activeStatus && munStatus !== activeStatus) return false;
+    if(searchTerm){
+      const hay = (d.municipio + " " + d.risco).toLowerCase();
+      if(!hay.includes(searchTerm)) return false;
+    }
     return true;
   });
 }
@@ -782,7 +812,7 @@ function renderTable(){
 
   const rank={bad:0,outdated:1,warn:2,ok:3};
   body.innerHTML = groups.map((g,gi)=>{
-    const summaryStatus = g.items.reduce((worst,d)=> rank[d.status]<rank[worst] ? d.status : worst, "ok");
+    const summaryStatus = g.items.reduce((best,d)=> (rank[d.status] ?? 0) > (rank[best] ?? 0) ? d.status : best, "bad");
     const groupId = "mungrp-" + gi;
     const single = g.items.length === 1;
 
@@ -826,9 +856,9 @@ function renderTable(){
 }
 
 document.getElementById("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim().toLowerCase();renderTable();});
-document.querySelectorAll(".pill").forEach(btn=>{
+document.querySelectorAll(".pills .pill").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    document.querySelectorAll(".pill").forEach(b=>b.setAttribute("aria-pressed","false"));
+    document.querySelectorAll(".pills .pill").forEach(b=>b.setAttribute("aria-pressed","false"));
     btn.setAttribute("aria-pressed","true");
     activeStatus=btn.dataset.status;
     renderTable();
@@ -849,12 +879,19 @@ function setAno(ano){
   }
   activeStatus = "all"; searchTerm = "";
   document.getElementById("searchInput").value = "";
-  document.querySelectorAll(".pill").forEach(b=>b.setAttribute("aria-pressed","false"));
-  document.querySelector(".pill[data-status='all']").setAttribute("aria-pressed","true");
+  document.querySelectorAll(".pills .pill").forEach(b=>b.setAttribute("aria-pressed","false"));
+  const allBtn = document.querySelector(".pills .pill[data-status='all']");
+  if(allBtn) allBtn.setAttribute("aria-pressed","true");
+
   document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("active", +b.dataset.ano === ano));
-  renderStats(); updateMapColors(); initDonut(); renderTable();
+  
+  renderStats(); 
+  updateMapColors(); 
+  initDonut(); 
+  renderTable();
   renderQualityMeta();
   renderPendingAnalysisAlert();
+
   if(document.getElementById("qualityModalBackdrop").classList.contains("open")){
     closeDrilldown();
     renderCritList(riskTipoAtivoQuality);
@@ -1167,10 +1204,6 @@ document.getElementById("compareModalBackdrop").addEventListener("click", (e)=>{
   if(e.target.id === "compareModalBackdrop") closeCompareModal();
 });
 
-function normalizarTexto(s){
-  return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-}
-
 function municipioTemDocumentoParaTipo(municipio, tipo){
   const kws = RISK_TYPES[tipo].riscoKeywords || [];
   return DATA.some(d => d.municipio === municipio && d.status !== "bad" &&
@@ -1204,8 +1237,14 @@ async function carregarDadosDaPlanilha() {
     
     const dados = await response.json();
 
-    // 1. Entregas
-    ALL_DATA = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
+    // 1. Entregas (com normalização de status e data)
+    const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
+    ALL_DATA = rawEntregas.map(d => ({
+      ...d,
+      municipio: String(d.municipio || "").trim(),
+      status: normalizarStatus(d.status),
+      atualizacao: formatarDataAmigavel(d.atualizacao)
+    }));
     recalcAnos();
 
     // 2. Análises
@@ -1215,7 +1254,8 @@ async function carregarDadosDaPlanilha() {
       REDEC.forEach(m => cfg.history[m] = []);
       const lista = (dados && dados[cfg.dataKey]) || [];
       lista.forEach(a => {
-        if(cfg.history[a.municipio]) cfg.history[a.municipio].push(a);
+        const mun = String(a.municipio || "").trim();
+        if(cfg.history[mun]) cfg.history[mun].push(a);
       });
       REDEC.forEach(m => {
         cfg.history[m].sort((x, y) => new Date(x.dataAnalise) - new Date(y.dataAnalise));
@@ -1231,11 +1271,7 @@ async function carregarDadosDaPlanilha() {
 
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
     if(syncSubline) {
-      if(ALL_DATA.length === 0) {
-        syncSubline.innerHTML = `✅ Conectado às <b>${hora}</b> · Planilha online (aguardando registros nas linhas)`;
-      } else {
-        syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · fonte: Plancons modelo 26-27`;
-      }
+      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · fonte: Plancons modelo 26-27`;
     }
 
   } catch (err) {
