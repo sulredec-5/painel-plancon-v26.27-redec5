@@ -11,7 +11,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel de Planos de Contingência — REDEC 5 - Sul I</title>
+<title>Painel de Planos de Contingência — SEDEC / REDEC RJ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -25,27 +25,39 @@
   *{box-sizing:border-box;}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",sans-serif;-webkit-font-smoothing:antialiased;}
   a{color:var(--accent);}
-  header.top{background:var(--ink);color:#fff;padding:38px 28px 30px;}
-  .top-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
-  .top-logo-wrap{flex-shrink:0;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
-  .top-logo{width:80px;height:80px;object-fit:contain;}
-  .top-text{flex:1;min-width:200px;}
-  .year-selector{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
-  .year-selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
+  header.top{background:var(--ink);color:#fff;padding:34px 28px 26px;}
+  .top-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .top-logo-wrap{flex-shrink:0;width:76px;height:76px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
+  .top-logo{width:76px;height:76px;object-fit:contain;}
+  .top-text{flex:1;min-width:260px;}
+  
+  .filter-selectors{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;}
+  .selector-block{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
+  .redec-select{padding:7px 10px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;}
+  .redec-select:focus{border-color:#fff;}
+  .redec-select option{background:#fff;color:var(--ink);}
+
   .year-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
   .year-btn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;padding:6px 13px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all .15s;white-space:nowrap;}
   .year-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
   .year-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
-  @media(max-width:600px){.year-selector{align-items:flex-start;}.year-btns{justify-content:flex-start;}}
-  .quality-selector{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
-  @media(max-width:600px){.quality-selector{align-items:flex-start;}}
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 10px;}
-  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:34px;margin:0 0 8px;letter-spacing:-.01em;}
-  .sub{color:#C2CEE2;font-size:14.5px;margin:0;}
-  .sub b{color:#fff;font-weight:600;}
-  main{max-width:1080px;margin:0 auto;padding:26px 28px 70px;}
+  
+  .quality-selector{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+  @media(max-width:768px){
+    .filter-selectors{align-items:flex-start;width:100%;}
+    .selector-block{align-items:flex-start;}
+    .year-btns{justify-content:flex-start;}
+    .quality-selector{align-items:flex-start;}
+  }
 
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin:-26px 0 26px;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 8px;}
+  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:30px;margin:0 0 6px;letter-spacing:-.01em;}
+  .sub{color:#C2CEE2;font-size:13.5px;margin:0;}
+  .sub b{color:#fff;font-weight:600;}
+  main{max-width:1120px;margin:0 auto;padding:26px 28px 70px;}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:-24px 0 26px;}
   .stat{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;padding:16px 16px 14px;}
   .stat.ok{border-top-color:var(--green);}
   .stat.warn{border-top-color:#3F4A5E;}
@@ -68,13 +80,13 @@
 
   .leaflet-popup-content-wrapper{border-radius:6px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
   .leaflet-popup-content{margin:10px 14px;}
-  .popup-nome{font-weight:700;font-size:14px;margin-bottom:5px;}
+  .popup-nome{font-weight:700;font-size:14px;margin-bottom:3px;}
+  .popup-redec{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);margin-bottom:6px;}
   .popup-status{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1.5px solid currentColor;margin-bottom:7px;}
   .popup-status.ok{color:#1F7A4D;background:#E4F1EA;}
   .popup-status.warn{color:#3F4A5E;background:#E7E9ED;}
   .popup-status.bad{color:#B5650A;background:#FBEEDF;}
   .popup-status.outdated{color:#B0241D;background:#FBE7E5;}
-  .popup-status.none{color:#16243F;background:#E2E6ED;border-color:#BAC3D2;}
   .popup-riscos{color:#5B6B82;font-size:12px;line-height:1.6;}
   .popup-quality{margin-top:9px;padding-top:9px;border-top:1px solid #E7E9ED;}
   .popup-quality-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
@@ -121,54 +133,33 @@
   .empty-row td{text-align:center;color:var(--muted);padding:30px 14px;font-size:14px;}
   .historic-banner{grid-column:1/-1;background:#FFF8E6;border:1px solid #E8C84A;border-left:4px solid #B5650A;border-radius:5px;padding:10px 14px;font-size:13px;color:#7A4200;display:flex;align-items:center;gap:8px;}
   .historic-banner::before{content:"🕘";font-size:15px;}
-  footer{max-width:1080px;margin:0 auto;padding:0 28px 50px;color:var(--muted);font-size:12.5px;line-height:1.6;}
+  footer{max-width:1120px;margin:0 auto;padding:0 28px 50px;color:var(--muted);font-size:12.5px;line-height:1.6;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 18px;}
 
-  .quality-open-btn{
-    display:flex;align-items:center;gap:7px;
-    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;
-    background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;
-    padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;
-  }
+  .quality-open-btn{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
   .quality-open-btn:hover{background:#E8EDF5;}
   .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500;color:var(--muted);}
-  .section-meta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);text-align:right;white-space:nowrap;}
+  .compare-open-btn{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;background:transparent;color:rgba(255,255,255,0.78);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .compare-open-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);}
 
-  .quality-modal-backdrop{
-    display:none;position:fixed;inset:0;background:rgba(22,36,63,0.55);
-    z-index:1000;padding:24px;align-items:flex-start;justify-content:center;overflow-y:auto;
-  }
+  .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.55);z-index:1000;padding:24px;align-items:flex-start;justify-content:center;overflow-y:auto;}
   .quality-modal-backdrop.open{display:flex;}
-  .quality-modal{
-    background:var(--paper);border-radius:10px;max-width:1080px;width:100%;
-    margin:18px auto 40px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;
-  }
-  .quality-modal-header{
-    background:var(--ink);color:#fff;padding:22px 28px;
-    display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
-    position:sticky;top:0;z-index:2;
-  }
+  .quality-modal{background:var(--paper);border-radius:10px;max-width:1120px;width:100%;margin:18px auto 40px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;}
+  .quality-modal-header{background:var(--ink);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;position:sticky;top:0;z-index:2;}
   .quality-modal-header h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:22px;margin:0 0 6px;}
   .quality-modal-header .section-desc{color:#C2CEE2;font-size:13px;margin:0;max-width:600px;}
-  .quality-modal-close{
-    flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);
-    color:#fff;border-radius:6px;width:34px;height:34px;font-size:17px;cursor:pointer;line-height:1;
-  }
+  .quality-modal-close{flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:6px;width:34px;height:34px;font-size:17px;cursor:pointer;line-height:1;}
   .quality-modal-close:hover{background:rgba(255,255,255,0.22);}
   .quality-modal-body{padding:24px 28px 30px;}
-  @media(max-width:720px){
-    .quality-modal-backdrop{padding:0;}
-    .quality-modal{margin:0;border-radius:0;min-height:100vh;}
-  }
 
   .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px;}
   .quality-scroll{overflow-x:visible;}
   table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:0;}
   table.quality-matrix thead th{position:sticky;top:0;background:#F6F7F9;z-index:1;}
-  table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:10px;letter-spacing:0;text-transform:none;color:var(--muted);text-align:center;padding:8px 4px;border-left:1px solid #E7E9ED;cursor:default;width:calc((100% - 145px)/var(--crit-count,7));line-height:1.12;white-space:normal;word-break:normal;overflow-wrap:anywhere;hyphens:auto;vertical-align:bottom;}
+  table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:10px;letter-spacing:0;text-transform:none;color:var(--muted);text-align:center;padding:8px 4px;border-left:1px solid #E7E9ED;cursor:default;width:calc((100% - 150px)/var(--crit-count,7));line-height:1.12;white-space:normal;word-break:normal;overflow-wrap:anywhere;hyphens:auto;vertical-align:bottom;}
   table.quality-matrix th.crit-col .crit-num{display:block;font-family:"IBM Plex Mono",monospace;font-weight:700;color:var(--ink);font-size:11px;margin-bottom:3px;}
   table.quality-matrix th.crit-col .crit-label{display:block;max-width:94px;margin:0 auto;}
-  table.quality-matrix th.mun-col{width:145px;min-width:145px;}
+  table.quality-matrix th.mun-col{width:150px;min-width:150px;}
   table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;vertical-align:middle;}
   table.quality-matrix tr:last-child td{border-bottom:none;}
   table.quality-matrix td.mun-name{padding:10px 10px;font-weight:600;font-size:12.5px;white-space:normal;line-height:1.18;cursor:pointer;}
@@ -178,7 +169,6 @@
 
   .cell-btn{width:100%;height:42px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;transition:filter .1s;}
   .cell-btn:hover{filter:brightness(.94);}
-  .cell-btn:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;}
   .cell-icon{font-family:"IBM Plex Sans",sans-serif;font-size:18px;font-weight:800;line-height:1;}
   .cell-btn.ok{background:var(--green-bg);}
   .cell-btn.ok .cell-icon{color:var(--green);}
@@ -189,16 +179,6 @@
   .cell-btn.pending{background:#F0F2F5;}
   .cell-btn.pending .cell-icon{color:#8B95A5;font-weight:700;}
 
-  @media(max-width:720px){
-    table.quality-matrix{font-size:11px;}
-    table.quality-matrix th.mun-col{width:120px;min-width:120px;}
-    table.quality-matrix th.crit-col{width:calc((100% - 120px)/var(--crit-count,7));font-size:9px;padding:7px 2px;}
-    table.quality-matrix th.crit-col .crit-label{max-width:58px;}
-    table.quality-matrix td.mun-name{font-size:11.5px;padding:9px 7px;}
-    .cell-btn{height:38px;}
-    .cell-icon{font-size:16px;}
-  }
-
   .quality-legend{display:flex;flex-wrap:wrap;gap:16px;padding:12px 16px;border-top:1px solid var(--line);background:#FAFBFC;font-size:12px;color:var(--muted);}
   .legend-status-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:5px;font-family:"IBM Plex Sans",sans-serif;font-size:15px;font-weight:800;line-height:1;vertical-align:-2px;}
   .legend-status-icon.ok{color:var(--green);}
@@ -208,8 +188,7 @@
 
   .crit-list{font-size:12px;color:var(--muted);margin:0 0 18px;line-height:1.7;columns:2;column-gap:28px;padding-left:18px;}
   .crit-list b{color:var(--ink);}
-  @media(max-width:720px){.crit-list{columns:1;}}
-
+  
   .drilldown{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;margin-bottom:26px;display:none;overflow:hidden;}
   .drilldown.open{display:block;}
   .dd-header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;background:#F6F7F9;}
@@ -251,12 +230,6 @@
   .risk-tab:hover{border-color:var(--accent);color:var(--ink);}
   .risk-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
 
-  .compare-open-btn{
-    display:flex;align-items:center;gap:7px;
-    font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;
-    background:transparent;color:rgba(255,255,255,0.78);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;
-    padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .compare-open-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);}
   .compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
   .compare-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;}
   .compare-card .num{font-family:"Source Serif 4",serif;font-size:28px;font-weight:600;line-height:1;}
@@ -277,20 +250,7 @@
   .evo.up{color:var(--green);}.evo.flat{color:var(--muted);}.evo.down{color:var(--red);}.evo.na{color:#9AA4B2;}
   .compare-cell{white-space:nowrap;}
   .compare-cell .before,.compare-cell .after{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;}
-  @media(max-width:720px){.compare-grid,.compare-controls{grid-template-columns:1fr;}}
 
-  @media(max-width:720px){
-    .stats{grid-template-columns:repeat(2,1fr);}
-    .viz-row{grid-template-columns:1fr;}
-    #dataTable thead{display:none;}
-    #dataTable,#dataTable tbody,#dataTable tr,#dataTable td{display:block;width:100%;}
-    #dataTable{border:none;background:none;}
-    #dataTable tbody td.cell-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-bottom:0;}
-    #dataTable tbody tr{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:10px;padding:6px 4px;}
-    #dataTable tbody td{border-bottom:none;padding:6px 12px;}
-    .dd-item{grid-template-columns:1fr;}
-  }
-  
   tr.mun-group-row{cursor:pointer;}
   tr.mun-group-row.single{cursor:default;}
   tr.mun-group-row:hover{background:#FAFBFC;}
@@ -310,25 +270,39 @@
 <header class="top">
   <div class="top-inner">
     <div class="top-logo-wrap">
-      <img class="top-logo" id="headerLogo" src="logo.png" alt="Logo REDEC" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:38px;\'>🛡️</span>';">
+      <img class="top-logo" id="headerLogo" src="logo.png" alt="Logo Defesa Civil RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:38px;\'>🛡️</span>';">
     </div>
     <div class="top-text">
-      <p class="eyebrow">REDEC 5 - Sul I · Defesa Civil Estadual</p>
+      <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
       <h1>Painel de Planos de Contingência</h1>
-      <p class="sub" id="syncSubline">Conectando ao banco de dados...</p>
+      <p class="sub" id="syncSubline">Conectando ao banco de dados estadual...</p>
       <div id="pendingAnalysisAlert" style="display:none;margin-top:6px;font-size:12px;color:#B5650A;">⏳ <span id="pendingAnalysisText"></span></div>
     </div>
-    <div class="year-selector">
-      <span class="year-selector-label">Ciclo de referência</span>
-      <div class="year-btns" id="yearBtns"></div>
-    </div>
-    <div class="quality-selector">
-      <span class="year-selector-label">Qualidade dos Planos</span>
-      <button class="quality-open-btn" id="qualityOpenBtn">
-        Ver análise
-        <span class="quality-open-meta" id="qualityOpenMeta"></span>
-      </button>
-      <button class="compare-open-btn" id="compareOpenBtn">Comparar versões</button>
+    
+    <div class="filter-selectors">
+      <!-- Seletor Regional de REDECs -->
+      <div class="selector-block">
+        <span class="selector-label">Regional / REDEC</span>
+        <select class="redec-select" id="redecFilterSelect"></select>
+      </div>
+
+      <!-- Seletor de Ciclos -->
+      <div class="selector-block">
+        <span class="selector-label">Ciclo de referência</span>
+        <div class="year-btns" id="yearBtns"></div>
+      </div>
+
+      <!-- Botões de Qualidade e Comparativo -->
+      <div class="quality-selector">
+        <span class="selector-label">Qualidade Técnica</span>
+        <div style="display:flex;gap:6px;">
+          <button class="quality-open-btn" id="qualityOpenBtn">
+            Ver análise
+            <span class="quality-open-meta" id="qualityOpenMeta"></span>
+          </button>
+          <button class="compare-open-btn" id="compareOpenBtn">Comparar</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -338,7 +312,7 @@
 
   <div class="viz-row">
     <div class="viz-card">
-      <div class="viz-card-header"><h2>Estado do Rio de Janeiro — REDEC 5 - Sul I em destaque</h2></div>
+      <div class="viz-card-header"><h2 id="mapTitle">Estado do Rio de Janeiro — Situação Operacional</h2></div>
       <div id="map"></div>
     </div>
     <div class="viz-card">
@@ -376,9 +350,9 @@
 
   <footer>
     <hr>
-    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha gerenciada pela equipe da REDEC 5[cite: 1].</p>
-    <p>Critério de "atualizado": o município tem pelo menos um documento na pasta do REDEC 5 do ano atual <b>ou</b> do ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente[cite: 1]. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas[cite: 1].</p>
-    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos critérios essenciais de planejamento e prontidão operacional definidos pela REDEC para o respectivo ciclo[cite: 1]. Município sem análise registrada aparece como "Pendente de análise" na matriz[cite: 1].</p>
+    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são consolidados a partir das planilhas setoriais das 11 Regionais de Defesa Civil (REDECs) integradas ao Sistema Estadual de Defesa Civil.</p>
+    <p>Critério de "atualizado": o município tem pelo menos um documento registrado no ciclo atual <b>ou</b> anterior. Só entra como "não entregue" quem não possui documento vigente registrado.</p>
+    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos fatores de verificação operacionais definidos para o respectivo ciclo anual.</p>
   </footer>
 
   <!-- ===================== MODAL: QUALIDADE DOS PLANOS ===================== -->
@@ -387,7 +361,7 @@
       <div class="quality-modal-header">
         <div>
           <h2 id="qualityModalTitle">Qualidade dos Planos</h2>
-          <p class="section-desc">Critérios técnicos e fatores de verificação para prontidão operacional.</p>
+          <p class="section-desc">Critérios técnicos e fatores de verificação de prontidão para os municípios selecionados.</p>
         </div>
         <button class="quality-modal-close" id="qualityModalClose" aria-label="Fechar">✕</button>
       </div>
@@ -424,7 +398,7 @@
       <div class="quality-modal-header">
         <div>
           <h2 id="compareModalTitle">Comparativo entre versões</h2>
-          <p class="section-desc">Comparação individual por município.</p>
+          <p class="section-desc">Evolução individual dos critérios por município.</p>
         </div>
         <button class="quality-modal-close" id="compareModalClose" aria-label="Fechar">✕</button>
       </div>
@@ -447,7 +421,7 @@
           </div>
         </div>
         <div id="compareDetail"></div>
-        <h3 style="font-family:'Source Serif 4',serif;font-size:20px;margin:18px 0 10px;">Situação por município</h3>
+        <h3 style="font-family:'Source Serif 4',serif;font-size:20px;margin:18px 0 10px;">Situação dos Municípios</h3>
         <div class="compare-table-wrap">
           <table class="compare-table">
             <thead><tr><th>Município</th><th>Situação</th><th>Versões disponíveis</th><th>Última análise</th></tr></thead>
@@ -462,114 +436,56 @@
 <script src="mapa.js"></script>
 <script>
 /* ============================================================================
-   CONFIGURAÇÃO E CONEXÃO COM O WEB APP
+   CONFIGURAÇÃO ESTADUAL E CONEXÃO
    ============================================================================ */
 const API_URL = "https://script.google.com/macros/s/AKfycbxbhRXtgXvJ4tGn5XxkqrkzZ1v7N9yqyP6BkeBfjbnPuiAcCHJbJhR8xxuqFpVwLByc0A/exec";
 
 let ALL_DATA = [];
 let DICIONARIO_GLOBAL = [];
 
-const REDEC = [
-  "Barra do Piraí","Barra Mansa","Comendador Levy Gasparian","Itatiaia",
-  "Paraíba do Sul","Paty do Alferes","Pinheiral","Porto Real","Quatis",
-  "Resende","Rio das Flores","Três Rios","Valença","Vassouras","Volta Redonda"
+const MAPA_REDECS_RJ = {
+  "Angra dos Reis": "REDEC 4 - Costa Verde", "Aperibé": "REDEC 11 - Noroeste", "Araruama": "REDEC 9 - Baixada Litorânea",
+  "Areal": "REDEC 7 - Serrana I", "Armação dos Búzios": "REDEC 9 - Baixada Litorânea", "Arraial do Cabo": "REDEC 9 - Baixada Litorânea",
+  "Barra do Piraí": "REDEC 5 - Sul I", "Barra Mansa": "REDEC 5 - Sul I", "Belford Roxo": "REDEC 2 - Baixada Fluminense",
+  "Bom Jardim": "REDEC 8 - Serrana II", "Bom Jesus do Itabapoana": "REDEC 11 - Noroeste", "Cabo Frio": "REDEC 9 - Baixada Litorânea",
+  "Cachoeiras de Macacu": "REDEC 3 - Metropolitana", "Cambuci": "REDEC 11 - Noroeste", "Campos dos Goytacazes": "REDEC 10 - Norte",
+  "Cantagalo": "REDEC 8 - Serrana II", "Carapebus": "REDEC 10 - Norte", "Cardoso Moreira": "REDEC 11 - Noroeste",
+  "Carmo": "REDEC 7 - Serrana I", "Casimiro de Abreu": "REDEC 9 - Baixada Litorânea", "Comendador Levy Gasparian": "REDEC 5 - Sul I",
+  "Conceição de Macabu": "REDEC 10 - Norte", "Cordeiro": "REDEC 8 - Serrana II", "Duas Barras": "REDEC 8 - Serrana II",
+  "Duque de Caxias": "REDEC 2 - Baixada Fluminense", "Engenheiro Paulo de Frontin": "REDEC 6 - Sul II", "Guapimirim": "REDEC 2 - Baixada Fluminense",
+  "Iguaba Grande": "REDEC 9 - Baixada Litorânea", "Itaboraí": "REDEC 3 - Metropolitana", "Itaguaí": "REDEC 6 - Sul II",
+  "Italva": "REDEC 11 - Noroeste", "Itaocara": "REDEC 11 - Noroeste", "Itaperuna": "REDEC 11 - Noroeste",
+  "Itatiaia": "REDEC 5 - Sul I", "Japeri": "REDEC 6 - Sul II", "Laje do Muriaé": "REDEC 11 - Noroeste",
+  "Macaé": "REDEC 9 - Baixada Litorânea", "Macuco": "REDEC 8 - Serrana II", "Magé": "REDEC 2 - Baixada Fluminense",
+  "Mangaratiba": "REDEC 4 - Costa Verde", "Maricá": "REDEC 3 - Metropolitana", "Mendes": "REDEC 6 - Sul II",
+  "Mesquita": "REDEC 2 - Baixada Fluminense", "Miguel Pereira": "REDEC 6 - Sul II", "Miracema": "REDEC 11 - Noroeste",
+  "Natividade": "REDEC 11 - Noroeste", "Nilópolis": "REDEC 2 - Baixada Fluminense", "Niterói": "REDEC 3 - Metropolitana",
+  "Nova Friburgo": "REDEC 8 - Serrana II", "Nova Iguaçu": "REDEC 2 - Baixada Fluminense", "Paracambi": "REDEC 6 - Sul II",
+  "Paraty": "REDEC 4 - Costa Verde", "Paraíba do Sul": "REDEC 5 - Sul I", "Paty do Alferes": "REDEC 5 - Sul I",
+  "Petrópolis": "REDEC 7 - Serrana I", "Pinheiral": "REDEC 5 - Sul I", "Piraí": "REDEC 6 - Sul II",
+  "Porciúncula": "REDEC 11 - Noroeste", "Porto Real": "REDEC 5 - Sul I", "Quatis": "REDEC 5 - Sul I",
+  "Queimados": "REDEC 6 - Sul II", "Quissamã": "REDEC 10 - Norte", "Resende": "REDEC 5 - Sul I",
+  "Rio Bonito": "REDEC 9 - Baixada Litorânea", "Rio Claro": "REDEC 6 - Sul II", "Rio das Flores": "REDEC 5 - Sul I",
+  "Rio das Ostras": "REDEC 9 - Baixada Litorânea", "Rio de Janeiro": "REDEC 1 - Capital", "Santa Maria Madalena": "REDEC 8 - Serrana II",
+  "Santo Antônio de Pádua": "REDEC 11 - Noroeste", "Sapucaia": "REDEC 7 - Serrana I", "Saquarema": "REDEC 9 - Baixada Litorânea",
+  "Seropédica": "REDEC 6 - Sul II", "Silva Jardim": "REDEC 9 - Baixada Litorânea", "Sumidouro": "REDEC 7 - Serrana I",
+  "São Fidélis": "REDEC 11 - Noroeste", "São Francisco de Itabapoana": "REDEC 10 - Norte", "São Gonçalo": "REDEC 3 - Metropolitana",
+  "São José de Ubá": "REDEC 11 - Noroeste", "São José do Vale do Rio Preto": "REDEC 7 - Serrana I", "São João da Barra": "REDEC 10 - Norte",
+  "São João de Meriti": "REDEC 2 - Baixada Fluminense", "São Pedro da Aldeia": "REDEC 9 - Baixada Litorânea", "São Sebastião do Alto": "REDEC 8 - Serrana II",
+  "Tanguá": "REDEC 3 - Metropolitana", "Teresópolis": "REDEC 7 - Serrana I", "Trajano de Moraes": "REDEC 8 - Serrana II",
+  "Três Rios": "REDEC 5 - Sul I", "Valença": "REDEC 5 - Sul I", "Varre-Sai": "REDEC 11 - Noroeste",
+  "Vassouras": "REDEC 5 - Sul I", "Volta Redonda": "REDEC 5 - Sul I"
+};
+
+const TODAS_AS_REDECS = [
+  "REDEC 1 - Capital", "REDEC 2 - Baixada Fluminense", "REDEC 3 - Metropolitana",
+  "REDEC 4 - Costa Verde", "REDEC 5 - Sul I", "REDEC 6 - Sul II",
+  "REDEC 7 - Serrana I", "REDEC 8 - Serrana II", "REDEC 9 - Baixada Litorânea",
+  "REDEC 10 - Norte", "REDEC 11 - Noroeste"
 ];
 
-/* Divisão dos 92 municípios do RJ por REDEC */
-const MAPA_REDECS_RJ = {
-  "Angra dos Reis": "REDEC 4 - Costa Verde",
-  "Aperibé": "REDEC 11 - Noroeste",
-  "Araruama": "REDEC 9 - Baixada Litorânea",
-  "Areal": "REDEC 7 - Serrana I",
-  "Armação dos Búzios": "REDEC 9 - Baixada Litorânea",
-  "Arraial do Cabo": "REDEC 9 - Baixada Litorânea",
-  "Barra do Piraí": "REDEC 5 - Sul I",
-  "Barra Mansa": "REDEC 5 - Sul I",
-  "Belford Roxo": "REDEC 2 - Baixada Fluminense",
-  "Bom Jardim": "REDEC 8 - Serrana II",
-  "Bom Jesus do Itabapoana": "REDEC 11 - Noroeste",
-  "Cabo Frio": "REDEC 9 - Baixada Litorânea",
-  "Cachoeiras de Macacu": "REDEC 3 - Metropolitana",
-  "Cambuci": "REDEC 11 - Noroeste",
-  "Campos dos Goytacazes": "REDEC 10 - Norte",
-  "Cantagalo": "REDEC 8 - Serrana II",
-  "Carapebus": "REDEC 10 - Norte",
-  "Cardoso Moreira": "REDEC 11 - Noroeste",
-  "Carmo": "REDEC 7 - Serrana I",
-  "Casimiro de Abreu": "REDEC 9 - Baixada Litorânea",
-  "Comendador Levy Gasparian": "REDEC 5 - Sul I",
-  "Conceição de Macabu": "REDEC 10 - Norte",
-  "Cordeiro": "REDEC 8 - Serrana II",
-  "Duas Barras": "REDEC 8 - Serrana II",
-  "Duque de Caxias": "REDEC 2 - Baixada Fluminense",
-  "Engenheiro Paulo de Frontin": "REDEC 6 - Sul II",
-  "Guapimirim": "REDEC 2 - Baixada Fluminense",
-  "Iguaba Grande": "REDEC 9 - Baixada Litorânea",
-  "Itaboraí": "REDEC 3 - Metropolitana",
-  "Itaguaí": "REDEC 6 - Sul II",
-  "Italva": "REDEC 11 - Noroeste",
-  "Itaocara": "REDEC 11 - Noroeste",
-  "Itaperuna": "REDEC 11 - Noroeste",
-  "Itatiaia": "REDEC 5 - Sul I",
-  "Japeri": "REDEC 6 - Sul II",
-  "Laje do Muriaé": "REDEC 11 - Noroeste",
-  "Macaé": "REDEC 9 - Baixada Litorânea",
-  "Macuco": "REDEC 8 - Serrana II",
-  "Magé": "REDEC 2 - Baixada Fluminense",
-  "Mangaratiba": "REDEC 4 - Costa Verde",
-  "Maricá": "REDEC 3 - Metropolitana",
-  "Mendes": "REDEC 6 - Sul II",
-  "Mesquita": "REDEC 2 - Baixada Fluminense",
-  "Miguel Pereira": "REDEC 6 - Sul II",
-  "Miracema": "REDEC 11 - Noroeste",
-  "Natividade": "REDEC 11 - Noroeste",
-  "Nilópolis": "REDEC 2 - Baixada Fluminense",
-  "Niterói": "REDEC 3 - Metropolitana",
-  "Nova Friburgo": "REDEC 8 - Serrana II",
-  "Nova Iguaçu": "REDEC 2 - Baixada Fluminense",
-  "Paracambi": "REDEC 6 - Sul II",
-  "Paraty": "REDEC 4 - Costa Verde",
-  "Paraíba do Sul": "REDEC 5 - Sul I",
-  "Paty do Alferes": "REDEC 5 - Sul I",
-  "Petrópolis": "REDEC 7 - Serrana I",
-  "Pinheiral": "REDEC 5 - Sul I",
-  "Piraí": "REDEC 6 - Sul II",
-  "Porciúncula": "REDEC 11 - Noroeste",
-  "Porto Real": "REDEC 5 - Sul I",
-  "Quatis": "REDEC 5 - Sul I",
-  "Queimados": "REDEC 6 - Sul II",
-  "Quissamã": "REDEC 10 - Norte",
-  "Resende": "REDEC 5 - Sul I",
-  "Rio Bonito": "REDEC 9 - Baixada Litorânea",
-  "Rio Claro": "REDEC 6 - Sul II",
-  "Rio das Flores": "REDEC 5 - Sul I",
-  "Rio das Ostras": "REDEC 9 - Baixada Litorânea",
-  "Rio de Janeiro": "REDEC 1 - Capital",
-  "Santa Maria Madalena": "REDEC 8 - Serrana II",
-  "Santo Antônio de Pádua": "REDEC 11 - Noroeste",
-  "Sapucaia": "REDEC 7 - Serrana I",
-  "Saquarema": "REDEC 9 - Baixada Litorânea",
-  "Seropédica": "REDEC 6 - Sul II",
-  "Silva Jardim": "REDEC 9 - Baixada Litorânea",
-  "Sumidouro": "REDEC 7 - Serrana I",
-  "São Fidélis": "REDEC 11 - Noroeste",
-  "São Francisco de Itabapoana": "REDEC 10 - Norte",
-  "São Gonçalo": "REDEC 3 - Metropolitana",
-  "São José de Ubá": "REDEC 11 - Noroeste",
-  "São José do Vale do Rio Preto": "REDEC 7 - Serrana I",
-  "São João da Barra": "REDEC 10 - Norte",
-  "São João de Meriti": "REDEC 2 - Baixada Fluminense",
-  "São Pedro da Aldeia": "REDEC 9 - Baixada Litorânea",
-  "São Sebastião do Alto": "REDEC 8 - Serrana II",
-  "Tanguá": "REDEC 3 - Metropolitana",
-  "Teresópolis": "REDEC 7 - Serrana I",
-  "Trajano de Moraes": "REDEC 8 - Serrana II",
-  "Três Rios": "REDEC 5 - Sul I",
-  "Valença": "REDEC 5 - Sul I",
-  "Varre-Sai": "REDEC 11 - Noroeste",
-  "Vassouras": "REDEC 5 - Sul I",
-  "Volta Redonda": "REDEC 5 - Sul I"
-};
+let redecAtiva = "REDEC 5 - Sul I"; // Padrão de abertura
+let MUNICIPIOS_ESCOPO = [];
 
 function normalizarTexto(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
@@ -582,6 +498,16 @@ function getRedecDoMunicipio(nomeMun) {
     if (normalizarTexto(k) === nKey) return v;
   }
   return "Outra REDEC";
+}
+
+function atualizarMunicipiosEscopo() {
+  if (redecAtiva === "ALL") {
+    MUNICIPIOS_ESCOPO = Object.keys(MAPA_REDECS_RJ).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+    document.getElementById("mapTitle").textContent = "Estado do Rio de Janeiro — Visão Geral (92 municípios)";
+  } else {
+    MUNICIPIOS_ESCOPO = Object.keys(MAPA_REDECS_RJ).filter(m => MAPA_REDECS_RJ[m] === redecAtiva).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+    document.getElementById("mapTitle").textContent = `Estado do Rio de Janeiro — ${redecAtiva} em destaque`;
+  }
 }
 
 const RISK_TYPES = {
@@ -659,7 +585,13 @@ function recalcAnos() {
   const anosEncontrados = [...new Set(ALL_DATA.map(d => extrairAnoNumero(d.ano)))].sort((a,b) => b - a);
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
   if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
-  DATA = ALL_DATA.filter(d => extrairAnoNumero(d.ano) === anoAtivo);
+  
+  // Filtra por ciclo e por REDEC ativa
+  DATA = ALL_DATA.filter(d => {
+    const mesmoAno = extrairAnoNumero(d.ano) === anoAtivo;
+    const pertenceEscopo = (redecAtiva === "ALL") || (getRedecDoMunicipio(d.municipio) === redecAtiva);
+    return mesmoAno && pertenceEscopo;
+  });
 }
 
 const STATUS_LABEL = {ok:"Atualizado", outdated:"Desatualizado", warn:"Verificar", bad:"Não entregue"};
@@ -671,7 +603,7 @@ const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
 
 function getMunicipioSummary(){
   const map = {};
-  REDEC.forEach(m => map[m] = {status:"bad", riscos:[]});
+  MUNICIPIOS_ESCOPO.forEach(m => map[m] = {status:"bad", riscos:[]});
   const rank = {bad:0, outdated:1, warn:2, ok:3};
 
   DATA.forEach(d=>{
@@ -699,16 +631,16 @@ function initMap(){
     }).addTo(mapInstance);
   }
 
-  const REDEC_SET = new Set(REDEC);
+  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO);
 
   function getStyle(feature){
     const nome = feature.properties.NM_MUN;
-    if(REDEC_SET.has(nome)){
+    if(ESCOPO_SET.has(nome)){
       const info = summary[nome];
       const st   = info ? info.status : "bad";
-      return {fillColor:STATUS_FILL[st], fillOpacity:0.82, color:"#fff", weight:1.5, opacity:1};
+      return {fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5, opacity:1};
     }
-    return {fillColor:"#D4DAE3", fillOpacity:0.55, color:"#B0B8C4", weight:0.8, opacity:1};
+    return {fillColor:"#D4DAE3", fillOpacity:0.45, color:"#B0B8C4", weight:0.8, opacity:1};
   }
 
   if(window._geojsonLayer) {
@@ -717,21 +649,21 @@ function initMap(){
 
   function onEachFeature(feature, layer){
     const nome = feature.properties.NM_MUN;
-    const isRedec = REDEC_SET.has(nome);
+    const isNoEscopo = ESCOPO_SET.has(nome);
     const info = summary[nome];
     const redecNome = getRedecDoMunicipio(nome);
 
-    if(isRedec){
+    if(isNoEscopo){
       const riscosHtml = info && info.riscos.length
         ? info.riscos.map(r=>`<div>· ${r}</div>`).join("")
         : "<div style='color:#999'>Sem riscos cadastrados</div>";
       const st = info ? info.status : "bad";
       const obsSet = new Set(DATA.filter(d=>d.municipio===nome && d.obs).map(d=>d.obs));
-      const obsHtml = obsSet.size
-        ? `<div class="popup-obs">${[...obsSet].map(o=>`⚠ ${o}`).join("<br>")}</div>`
-        : "";
+      const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o=>`⚠ ${o}`).join("<br>")}</div>` : "";
+      
       layer.bindPopup(`
         <div class="popup-nome">${nome}</div>
+        <div class="popup-redec">${redecNome}</div>
         <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
         <div class="popup-riscos">${riscosHtml}</div>
         ${obsHtml}
@@ -741,20 +673,20 @@ function initMap(){
     } else {
       layer.bindPopup(`
         <div class="popup-nome">${nome}</div>
-        <div class="popup-status none">${redecNome}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Município sob jurisdição de outra Coordenadoria Regional de Defesa Civil.</div>
+        <div class="popup-redec">${redecNome}</div>
+        <div class="popup-status none">Fora do filtro regional</div>
       `);
       layer.bindTooltip(`<b>${nome}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
     }
 
     layer.on({
       mouseover(e){
-        e.target.setStyle(isRedec ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.85, weight:1.5, color:"#3A4D6B"});
+        e.target.setStyle(isNoEscopo ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.75, weight:1.2, color:"#3A4D6B"});
         e.target.bringToFront();
       },
       mouseout(e){ if(window._geojsonLayer) window._geojsonLayer.resetStyle(e.target); },
       click(e){
-        if(isRedec) mapInstance.fitBounds(e.target.getBounds(),{padding:[40,40]});
+        if(isNoEscopo) mapInstance.fitBounds(e.target.getBounds(),{padding:[40,40]});
         e.target.openPopup();
       }
     });
@@ -762,9 +694,19 @@ function initMap(){
 
   if (typeof GEOJSON !== "undefined" && GEOJSON.features && GEOJSON.features.length) {
     window._geojsonLayer = L.geoJSON(GEOJSON, {style:getStyle, onEachFeature}).addTo(mapInstance);
-    mapInstance.fitBounds(window._geojsonLayer.getBounds(), {padding:[12,12]});
+    
+    // Enquadra a área selecionada
+    const bounds = L.featureGroup(
+      window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(l.feature.properties.NM_MUN))
+    ).getBounds();
+
+    if (bounds.isValid()) {
+      mapInstance.fitBounds(bounds, {padding:[18,18]});
+    } else {
+      mapInstance.fitBounds(window._geojsonLayer.getBounds(), {padding:[12,12]});
+    }
   } else {
-    mapInstance.setView([-22.4, -44.1], 9);
+    mapInstance.setView([-22.4, -43.8], 8);
   }
 
   if(!window._legendAdded) {
@@ -772,7 +714,7 @@ function initMap(){
     legend.onAdd = function(){
       const div = L.DomUtil.create("div","map-legend");
       div.innerHTML = `
-        <div class="map-legend-title">REDEC 5 - Sul I</div>
+        <div class="map-legend-title">Situação dos Planos</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#6EC49A"></div>Atualizado</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#E8807C"></div>Desatualizado</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#9AA4B4"></div>A verificar</div>
@@ -788,13 +730,15 @@ function initMap(){
 function updateMapColors(){
   if(!window._geojsonLayer) return;
   const summary = getMunicipioSummary();
-  const REDEC_SET = new Set(REDEC);
+  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO);
   window._geojsonLayer.eachLayer(layer=>{
     const nome = layer.feature.properties.NM_MUN;
-    if(REDEC_SET.has(nome)){
+    if(ESCOPO_SET.has(nome)){
       const info = summary[nome];
       const st   = info ? info.status : "bad";
-      layer.setStyle({fillColor:STATUS_FILL[st], fillOpacity:0.82, color:"#fff", weight:1.5});
+      layer.setStyle({fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5});
+    } else {
+      layer.setStyle({fillColor:"#D4DAE3", fillOpacity:0.45, color:"#B0B8C4", weight:0.8});
     }
   });
 }
@@ -802,11 +746,11 @@ function updateMapColors(){
 function initDonut(){
   const summary = getMunicipioSummary();
   const counts  = {ok:0, outdated:0, warn:0, bad:0};
-  REDEC.forEach(m=>{
+  MUNICIPIOS_ESCOPO.forEach(m=>{
     const st = (summary[m] || {status:"bad"}).status;
     if(counts[st] !== undefined) counts[st]++;
   });
-  const total = REDEC.length;
+  const total = MUNICIPIOS_ESCOPO.length;
 
   const segments = [
     {label:"Atualizado",   value:counts.ok,       color:STATUS_COLOR.ok},
@@ -859,7 +803,7 @@ function initDonut(){
 function renderStats(){
   const summary = getMunicipioSummary();
   const counts={ok:0,outdated:0,warn:0,bad:0};
-  REDEC.forEach(m=>{
+  MUNICIPIOS_ESCOPO.forEach(m=>{
     const st = (summary[m] || {status:"bad"}).status;
     if(counts[st] !== undefined) counts[st]++;
   });
@@ -870,7 +814,7 @@ function renderStats(){
     : "";
   document.getElementById("stats").innerHTML=`
     ${historicoBanner}
-    <div class="stat"><div class="num">${REDEC.length}</div><div class="label">Municípios na REDEC 5 - Sul I</div></div>
+    <div class="stat"><div class="num">${MUNICIPIOS_ESCOPO.length}</div><div class="label">Municípios na Regional</div></div>
     <div class="stat ok"><div class="num">${counts.ok}</div><div class="label">Atualizados (${cicloTexto})</div></div>
     <div class="stat" style="border-top-color:var(--red)"><div class="num">${counts.outdated}</div><div class="label">Desatualizados</div></div>
     <div class="stat warn"><div class="num">${counts.warn}</div><div class="label">A verificar</div></div>
@@ -981,9 +925,7 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th=>{
 
 function setAno(ano){
   anoAtivo = extrairAnoNumero(ano);
-  if (ALL_DATA.length > 0) {
-    DATA = ALL_DATA.filter(d=>extrairAnoNumero(d.ano) === anoAtivo);
-  }
+  recalcAnos();
   activeStatus = "all"; searchTerm = "";
   document.getElementById("searchInput").value = "";
   document.querySelectorAll(".pills .pill").forEach(b=>b.setAttribute("aria-pressed","false"));
@@ -1012,6 +954,28 @@ function buildYearBtns(){
     const label = formatCicloLabel(a);
     return `<button class="year-btn${a===anoAtivo?" active":""}" data-ano="${a}" onclick="setAno(${a})">${label}</button>`;
   }).join("");
+}
+
+function initRedecSelector() {
+  const sel = document.getElementById("redecFilterSelect");
+  let optionsHtml = `<option value="ALL">Estado do Rio de Janeiro (Todas)</option>`;
+  TODAS_AS_REDECS.forEach(r => {
+    const isSelected = (r === redecAtiva) ? " selected" : "";
+    optionsHtml += `<option value="${r}"${isSelected}>${r}</option>`;
+  });
+  sel.innerHTML = optionsHtml;
+
+  sel.addEventListener("change", (e) => {
+    redecAtiva = e.target.value;
+    atualizarMunicipiosEscopo();
+    recalcAnos();
+    initMap();
+    renderStats();
+    initDonut();
+    renderTable();
+    renderQualityMeta();
+    renderPendingAnalysisAlert();
+  });
 }
 
 function municipioVersions(municipio, tipo){ 
@@ -1101,8 +1065,8 @@ function renderCritList(tipo){
 
 function renderQualityMeta(){
   const parts = Object.keys(RISK_TYPES).map(tipo=>{
-    const analisados = REDEC.filter(m=>latestQualityData(m, tipo)).length;
-    return `${analisados}/${REDEC.length} ${RISK_TYPES[tipo].shortLabel.toLowerCase()}`;
+    const analisados = MUNICIPIOS_ESCOPO.filter(m=>latestQualityData(m, tipo)).length;
+    return `${analisados}/${MUNICIPIOS_ESCOPO.length} ${RISK_TYPES[tipo].shortLabel.toLowerCase()}`;
   });
   document.getElementById("qualityMeta").textContent = parts.join(" · ") + " analisados";
   const metaEl = document.getElementById("qualityOpenMeta");
@@ -1119,7 +1083,7 @@ function renderQualityMatrix(tipo){
     crits.map(c=>`<th class="crit-col" title="${c.full}"><span class="crit-num">${cfg.prefix}${c.id}</span><span class="crit-label">${c.short}</span></th>`).join("");
 
   const body = document.getElementById("qualityBody");
-  body.innerHTML = REDEC.map(municipio=>{
+  body.innerHTML = MUNICIPIOS_ESCOPO.map(municipio=>{
     const summary = municipioQualitySummary(municipio, tipo);
     const sub = summary
       ? `${summary.ok} total · ${summary.warn} parcial · ${summary.bad} não atende`
@@ -1273,9 +1237,9 @@ function compareStatusForMunicipio(municipio, tipo){
 }
 
 function renderCompareCards(tipo){
-  const ready = REDEC.filter(m=>municipioVersions(m, tipo).length >= 2).length;
-  const wait = REDEC.filter(m=>municipioVersions(m, tipo).length === 1).length;
-  const none = REDEC.filter(m=>municipioVersions(m, tipo).length === 0).length;
+  const ready = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length >= 2).length;
+  const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
+  const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
   document.getElementById("compareCards").innerHTML = `
     <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios comparáveis</div></div>
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
@@ -1286,7 +1250,7 @@ function renderCompareCards(tipo){
 
 function renderCompareMunicipioStatus(tipo){
   const tbody = document.getElementById("compareMunicipioStatus");
-  tbody.innerHTML = REDEC.map(m=>{
+  tbody.innerHTML = MUNICIPIOS_ESCOPO.map(m=>{
     const versions = municipioVersions(m, tipo);
     const status = compareStatusForMunicipio(m, tipo);
     const latest = versions.length ? versions[versions.length-1] : null;
@@ -1301,8 +1265,10 @@ function renderCompareMunicipioStatus(tipo){
 
 function populateCompareSelectors(selectedMunicipio, tipo){
   const munSel = document.getElementById("compareMunicipio");
-  munSel.innerHTML = REDEC.map(m=>`<option value="${m}">${m}</option>`).join("");
-  if(selectedMunicipio) munSel.value = selectedMunicipio;
+  munSel.innerHTML = MUNICIPIOS_ESCOPO.map(m=>`<option value="${m}">${m}</option>`).join("");
+  if(selectedMunicipio && MUNICIPIOS_ESCOPO.includes(selectedMunicipio)) {
+    munSel.value = selectedMunicipio;
+  }
   
   const munAtual = munSel.value;
   const versions = municipioVersions(munAtual, tipo);
@@ -1386,7 +1352,7 @@ function setCompareTipo(tipo){
   document.querySelectorAll("#compareRiskTabs .risk-tab").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.tipo===tipo)));
   renderCompareCards(tipo);
   renderCompareMunicipioStatus(tipo);
-  populateCompareSelectors(document.getElementById("compareMunicipio").value || REDEC[0], tipo);
+  populateCompareSelectors(document.getElementById("compareMunicipio").value || MUNICIPIOS_ESCOPO[0], tipo);
 }
 
 function openCompareModal(municipio){
@@ -1395,7 +1361,7 @@ function openCompareModal(municipio){
   renderRiskTabs("compareRiskTabs", riskTipoAtivoCompare, setCompareTipo);
   renderCompareCards(riskTipoAtivoCompare);
   renderCompareMunicipioStatus(riskTipoAtivoCompare);
-  populateCompareSelectors(municipio || REDEC[0], riskTipoAtivoCompare);
+  populateCompareSelectors(municipio || MUNICIPIOS_ESCOPO[0], riskTipoAtivoCompare);
 }
 
 function closeCompareModal(){
@@ -1421,7 +1387,7 @@ function municipioTemDocumentoParaTipo(municipio, tipo){
 function renderPendingAnalysisAlert(){
   const parts = [];
   Object.keys(RISK_TYPES).forEach(tipo=>{
-    const pending = REDEC.filter(m => municipioTemDocumentoParaTipo(m, tipo) && !latestQualityData(m, tipo));
+    const pending = MUNICIPIOS_ESCOPO.filter(m => municipioTemDocumentoParaTipo(m, tipo) && !latestQualityData(m, tipo));
     if(pending.length) parts.push(`${RISK_TYPES[tipo].shortLabel}: ${pending.join(", ")}`);
   });
   const alert = document.getElementById("pendingAnalysisAlert");
@@ -1437,7 +1403,7 @@ function renderPendingAnalysisAlert(){
    ============================================================================ */
 async function carregarDadosDaPlanilha() {
   const syncSubline = document.getElementById("syncSubline");
-  if(syncSubline) syncSubline.innerHTML = "⏳ Sincronizando com a planilha...";
+  if(syncSubline) syncSubline.innerHTML = "⏳ Sincronizando rede estadual...";
 
   try {
     const response = await fetch(API_URL);
@@ -1448,7 +1414,7 @@ async function carregarDadosDaPlanilha() {
     // 0. Dicionário da Planilha
     DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
-    // 1. Entregas
+    // 1. Entregas consolidadas
     const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
     ALL_DATA = rawEntregas.map(d => ({
       ...d,
@@ -1456,24 +1422,26 @@ async function carregarDadosDaPlanilha() {
       status: normalizarStatus(d.status),
       atualizacao: formatarDataAmigavel(d.atualizacao)
     }));
-    recalcAnos();
 
-    // 2. Análises
+    // 2. Análises de todas as REDECs
     Object.keys(RISK_TYPES).forEach(tipo=>{
       const cfg = RISK_TYPES[tipo];
       cfg.history = {};
-      REDEC.forEach(m => cfg.history[m] = []);
+      Object.keys(MAPA_REDECS_RJ).forEach(m => cfg.history[m] = []);
       const lista = (dados && dados[cfg.dataKey]) || [];
       lista.forEach(a => {
         const mun = String(a.municipio || "").trim();
         if(cfg.history[mun]) cfg.history[mun].push(a);
       });
-      REDEC.forEach(m => {
+      Object.keys(MAPA_REDECS_RJ).forEach(m => {
         cfg.history[m].sort((x, y) => new Date(x.dataAnalise) - new Date(y.dataAnalise));
       });
     });
 
     // 3. Renderização
+    initRedecSelector();
+    atualizarMunicipiosEscopo();
+    recalcAnos();
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
@@ -1482,13 +1450,15 @@ async function carregarDadosDaPlanilha() {
 
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
     if(syncSubline) {
-      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Ciclo ativo: <b>${formatCicloLabel(anoAtivo)}</b>`;
+      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Rede Estadual Integrada`;
     }
 
   } catch (err) {
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠ Operando em modo de espera (Planilha ainda não respondeu).`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
     
+    initRedecSelector();
+    atualizarMunicipiosEscopo();
     recalcAnos();
     initMap();
     setAno(anoAtivo);
