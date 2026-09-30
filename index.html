@@ -228,7 +228,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=3" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=4" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -313,7 +313,7 @@
   <footer>
     <hr>
     <p><b>Atualização Operacional:</b> Dados consolidados a partir das planilhas das 11 Regionais de Defesa Civil (REDECs) integradas ao Sistema Estadual da SEDEC-RJ.</p>
-    <p>Critério de conformidade: pelo menos um PLANCON válido registrado no ciclo vigente ou anterior.</p>
+    <p>Critério de conformidade: pelo menos um PLANCON válido registrado no ciclo selecionado ou anterior.</p>
   </footer>
 
   <!-- MODAL: QUALIDADE DOS PLANOS -->
@@ -507,6 +507,7 @@ function recalcAnos() {
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
   if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
   
+  // Filtra ESTRITAMENTE pelo ciclo (ano) e pelo escopo da regional selecionada
   DATA = ALL_DATA.filter(d => {
     const mesmoAno = extrairAnoNumero(d.ano) === anoAtivo;
     const pertenceEscopo = (redecAtiva === "ALL") || (getRedecDoMunicipio(d.municipio) === redecAtiva);
@@ -560,6 +561,32 @@ function obterEstiloFeature(feature, summary, escopoSet) {
   };
 }
 
+// GERA O CONTEÚDO DO POPUP DINAMICAMENTE NO MOMENTO DO CLIQUE
+function criarConteudoPopup(canonico) {
+  const summary = getMunicipioSummary();
+  const info = summary[canonico];
+  const redecNome = getRedecDoMunicipio(canonico);
+  const st = info ? info.status : "bad";
+
+  // Busca riscos apenas do ciclo selecionado
+  const riscosFiltrados = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.risco && d.risco !== "—").map(d => d.risco);
+  const riscosHtml = riscosFiltrados.length
+    ? [...new Set(riscosFiltrados)].map(r => `<div>· ${r}</div>`).join("")
+    : "<div style='color:#999'>Sem riscos cadastrados no ciclo</div>";
+
+  // Busca observações apenas do ciclo selecionado
+  const obsSet = new Set(DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.obs).map(d => d.obs));
+  const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o => `⚠ ${o}`).join("<br>")}</div>` : "";
+
+  return `
+    <div class="popup-nome">${canonico}</div>
+    <div class="popup-redec">${redecNome} · Ciclo ${formatCicloLabel(anoAtivo)}</div>
+    <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
+    <div class="popup-riscos">${riscosHtml}</div>
+    ${obsHtml}
+  `;
+}
+
 let mapInstance = null;
 function initMap(){
   const summary = getMunicipioSummary();
@@ -580,24 +607,8 @@ function initMap(){
   function onEachFeature(feature, layer){
     const canonico = getNomeCanonicoMunicipio(feature.properties.NM_MUN);
     const isNoEscopo = ESCOPO_SET.has(normalizarTexto(canonico));
-    const info = summary[canonico];
-    const redecNome = getRedecDoMunicipio(canonico);
 
     if(isNoEscopo){
-      const riscosHtml = info && info.riscos.length
-        ? info.riscos.map(r=>`<div>· ${r}</div>`).join("")
-        : "<div style='color:#999'>Sem riscos cadastrados</div>";
-      const st = info ? info.status : "bad";
-      const obsSet = new Set(DATA.filter(d=>getNomeCanonicoMunicipio(d.municipio)===canonico && d.obs).map(d=>d.obs));
-      const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o=>`⚠ ${o}`).join("<br>")}</div>` : "";
-      
-      layer.bindPopup(`
-        <div class="popup-nome">${canonico}</div>
-        <div class="popup-redec">${redecNome}</div>
-        <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
-        <div class="popup-riscos">${riscosHtml}</div>
-        ${obsHtml}
-      `);
       layer.bindTooltip(`<b>${canonico}</b>`, {
         sticky: true,
         direction: "top",
@@ -618,8 +629,11 @@ function initMap(){
       },
       click(e){
         e.target.closeTooltip();
-        if(isNoEscopo) mapInstance.fitBounds(e.target.getBounds(),{padding:[20,20]});
-        e.target.openPopup();
+        if(isNoEscopo) {
+          // Atualiza dinamicamente o popup antes de abrir para refletir o ano/ciclo ativo
+          e.target.bindPopup(criarConteudoPopup(canonico)).openPopup();
+          mapInstance.fitBounds(e.target.getBounds(), {padding:[20,20]});
+        }
       }
     });
   }
@@ -872,7 +886,7 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th => {
 
 function setAno(ano){
   anoAtivo = extrairAnoNumero(ano);
-  recalcAnos();
+  recalcAnos(); // Recalcula DATA estritamente para o ano selecionado
   activeStatus = "all"; 
   searchTerm = "";
   document.getElementById("searchInput").value = "";
@@ -882,6 +896,9 @@ function setAno(ano){
 
   document.querySelectorAll(".year-btn").forEach(b => b.classList.toggle("active", +b.dataset.ano === anoAtivo));
   
+  // Fecha qualquer popup aberto para evitar mostrar dados do ciclo anterior
+  if (mapInstance) mapInstance.closePopup();
+
   renderStats(); 
   updateMapColors(); 
   initDonut(); 
