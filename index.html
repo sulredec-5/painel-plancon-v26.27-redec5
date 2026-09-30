@@ -139,6 +139,7 @@
 
   /* BOTÕES AUXILIARES */
   .quality-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
+  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);margin-left:4px;font-weight:500;}
   .compare-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
   
   /* ACCORDION NA TABELA */
@@ -150,7 +151,7 @@
   tr.mun-detail-row.visible{display:table-row;}
   tr.mun-detail-row td{padding-left:28px;font-size:12.5px;}
 
-  /* MODAIS */
+  /* MODAL DE QUALIDADE — FORMATAÇÃO PERFEITA */
   .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.65);z-index:2000;padding:14px;align-items:flex-start;justify-content:center;overflow-y:auto;}
   .quality-modal-backdrop.open{display:flex;}
   .quality-modal{background:var(--paper);border-radius:8px;max-width:1120px;width:100%;margin:10px auto 30px;box-shadow:0 15px 50px rgba(0,0,0,.35);overflow:hidden;}
@@ -159,18 +160,59 @@
   .quality-modal-header .section-desc{color:#C2CEE2;font-size:12px;margin:0;}
   .quality-modal-close{flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:5px;width:32px;height:32px;font-size:16px;cursor:pointer;}
   .quality-modal-body{padding:18px 20px;}
-  .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto;margin-bottom:16px;}
-  table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:680px;}
-  table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:9.5px;color:var(--muted);text-align:center;padding:7px 3px;border-left:1px solid #E7E9ED;}
-  table.quality-matrix th.mun-col{width:140px;min-width:140px;}
-  table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;}
-  table.quality-matrix td.mun-name{padding:8px;font-weight:600;font-size:12px;}
-  .cell-btn{width:100%;height:38px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;}
-  .cell-btn.ok{background:var(--green-bg);color:var(--green);font-weight:bold;}
-  .cell-btn.warn{background:var(--amber-bg);color:var(--amber);font-weight:bold;}
-  .cell-btn.bad{background:var(--red-bg);color:var(--red);font-weight:bold;}
+
+  .risk-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .risk-tab{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.03em;padding:7px 15px;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap;}
+  .risk-tab:hover{border-color:var(--accent);color:var(--ink);}
+  .risk-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .crit-list{font-size:12px;color:var(--muted);margin:0 0 16px;line-height:1.65;columns:2;column-gap:24px;padding-left:18px;}
+  .crit-list b{color:var(--ink);}
+
+  /* TABELA DA MATRIZ: EVITA QUE O TEXTO EMB嗒LE */
+  .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:16px;}
+  table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:820px;}
+  table.quality-matrix th.mun-col{width:160px;min-width:160px;text-align:left;padding:10px 12px;}
+  table.quality-matrix th.crit-col{
+    font-family:"IBM Plex Sans",sans-serif;
+    font-size:10px;
+    color:var(--muted);
+    text-align:center;
+    padding:8px 6px;
+    border-left:1px solid #E7E9ED;
+    vertical-align:top;
+    white-space:normal;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+    line-height:1.2;
+    min-width:90px;
+  }
+  table.quality-matrix th.crit-col .crit-num{
+    display:block;
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:700;
+    color:var(--ink);
+    font-size:11.5px;
+    margin-bottom:3px;
+  }
+  table.quality-matrix th.crit-col .crit-label{
+    display:block;
+    font-weight:500;
+  }
+  table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;vertical-align:middle;}
+  table.quality-matrix td.mun-name{padding:10px 12px;font-weight:600;font-size:12.5px;cursor:pointer;}
+  table.quality-matrix td.mun-name:hover{color:var(--accent);}
+  table.quality-matrix td.mun-name .mun-sub{display:block;font-size:10.5px;font-weight:400;color:var(--muted);margin-top:2px;}
+  
+  .cell-btn{width:100%;height:40px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;font-size:16px;font-weight:800;}
+  .cell-btn.ok{background:var(--green-bg);color:var(--green);}
+  .cell-btn.warn{background:var(--amber-bg);color:var(--amber);}
+  .cell-btn.bad{background:var(--red-bg);color:var(--red);}
   .cell-btn.pending{background:#F0F2F5;color:#8B95A5;}
 
+  .quality-legend{display:flex;flex-wrap:wrap;gap:14px;padding:10px 14px;border-top:1px solid var(--line);background:#FAFBFC;font-size:11.5px;color:var(--muted);}
+
+  /* DRILLDOWN */
   .drilldown{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;margin-bottom:20px;display:none;overflow:hidden;}
   .drilldown.open{display:block;}
   .dd-header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:#F6F7F9;}
@@ -183,6 +225,7 @@
   .dd-tag.ok{color:var(--green);background:var(--green-bg);}
   .dd-tag.warn{color:var(--amber);background:var(--amber-bg);}
   .dd-tag.bad{color:var(--red);background:var(--red-bg);}
+  .dd-tag.pending{color:var(--muted);background:#F0F2F5;}
 
   footer{max-width:1120px;margin:0 auto;padding:0 18px 40px;color:var(--muted);font-size:12px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 16px;}
@@ -197,6 +240,7 @@
     .quality-selector{width:100%;align-items:stretch;}
     .quality-btn-group{display:grid;grid-template-columns:1fr 1fr;width:100%;}
     .quality-open-btn, .compare-open-btn{justify-content:center;}
+    .crit-list{columns:1;}
   }
 
   @media(max-width:600px){
@@ -224,7 +268,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=6" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=7" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -257,7 +301,7 @@
         <div class="quality-btn-group">
           <button class="quality-open-btn" id="qualityOpenBtn">
             Ver análise
-            <span id="qualityOpenMeta" style="font-size:10px;opacity:.8;margin-left:4px;"></span>
+            <span class="quality-open-meta" id="qualityOpenMeta"></span>
           </button>
           <button class="compare-open-btn" id="compareOpenBtn">Comparar</button>
         </div>
@@ -327,15 +371,21 @@
       </div>
 
       <div class="quality-modal-body">
-        <div class="risk-tabs" id="qualityRiskTabs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;"></div>
+        <div class="risk-tabs" id="qualityRiskTabs" role="tablist"></div>
         <div id="qualityMeta" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></div>
-        <ol id="critList" style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding-left:18px;"></ol>
+        <ol class="crit-list" id="critList"></ol>
 
         <div class="quality-wrap">
           <table class="quality-matrix" id="qualityMatrix">
             <thead><tr id="qualityHeadRow"></tr></thead>
             <tbody id="qualityBody"></tbody>
           </table>
+          <div class="quality-legend">
+            <span><b style="color:var(--green)">✓</b> Atende totalmente</span>
+            <span><b style="color:var(--amber)">!</b> Atende parcialmente</span>
+            <span><b style="color:var(--red)">✕</b> Não atende</span>
+            <span><b style="color:#8B95A5">—</b> Pendente de análise</span>
+          </div>
         </div>
         <div class="drilldown" id="drilldown"></div>
       </div>
@@ -353,7 +403,7 @@
         <button class="quality-modal-close" id="compareModalClose" aria-label="Fechar">✕</button>
       </div>
       <div class="quality-modal-body">
-        <div class="risk-tabs" id="compareRiskTabs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;"></div>
+        <div class="risk-tabs" id="compareRiskTabs" role="tablist"></div>
         <div id="compareCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;"></div>
         <div class="compare-controls" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px;">
           <div><label style="font-size:11px;font-weight:600;">Município</label><select id="compareMunicipio" style="width:100%;padding:8px;"></select></div>
@@ -449,8 +499,8 @@ function atualizarMunicipiosEscopo() {
 }
 
 const RISK_TYPES = {
-  chuvas: { label: "Chuvas intensas", shortLabel: "Chuvas", prefix: "C", dataKey: "analises", riscoKeywords: ["geral", "chuva"], history: {} },
-  estiagem: { label: "Estiagem e fogo", shortLabel: "Estiagem/Fogo", prefix: "FV", dataKey: "analisesEstiagem", riscoKeywords: ["geral", "estiagem", "seca", "fogo"], history: {} }
+  chuvas: { label: "Chuvas intensas", shortLabel: "Chuvas", prefix: "C", dataKey: "analises", history: {} },
+  estiagem: { label: "Estiagem e fogo em vegetação", shortLabel: "Estiagem/Fogo", prefix: "FV", dataKey: "analisesEstiagem", history: {} }
 };
 
 let riskTipoAtivoQuality = "chuvas";
@@ -896,6 +946,7 @@ function setAno(ano){
   updateMapColors(); 
   initDonut(); 
   renderTable();
+  renderQualityMeta();
 }
 
 function buildYearBtns(){
@@ -923,6 +974,7 @@ function initRedecSelector() {
     renderStats();
     initDonut();
     renderTable();
+    renderQualityMeta();
   });
 }
 
@@ -953,9 +1005,34 @@ function latestQualityData(municipio, tipo, ano){
   return {analisadoEm:v.dataAnalise, fonte:v.documento, criterios:v.criterios, versaoAnalise:v.id, rotulo:v.rotulo, sintese:v.sintese};
 }
 
+function renderQualityMeta(){
+  const parts = Object.keys(RISK_TYPES).map(tipo=>{
+    const analisados = MUNICIPIOS_ESCOPO.filter(m=>latestQualityData(m, tipo)).length;
+    return `${analisados}/${MUNICIPIOS_ESCOPO.length} ${RISK_TYPES[tipo].shortLabel.toLowerCase()}`;
+  });
+  const metaTexto = parts.join(" · ");
+  const metaTop = document.getElementById("qualityOpenMeta");
+  if(metaTop) metaTop.textContent = metaTexto ? `(${metaTexto})` : "";
+  const metaModal = document.getElementById("qualityMeta");
+  if(metaModal) metaModal.textContent = metaTexto ? `${metaTexto} analisados no ciclo` : "";
+}
+
+function renderRiskTabs(containerId, tipoAtivo, onSelect){
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  wrap.innerHTML = Object.keys(RISK_TYPES).map(tipo =>
+    `<button class="risk-tab" role="tab" data-tipo="${tipo}" aria-pressed="${tipo===tipoAtivo}">${RISK_TYPES[tipo].label}</button>`
+  ).join("");
+  wrap.querySelectorAll(".risk-tab").forEach(btn => {
+    btn.addEventListener("click", () => onSelect(btn.dataset.tipo));
+  });
+}
+
 function renderCritList(tipo){
   const crits = getActiveCriteria(tipo, anoAtivo);
-  document.getElementById("critList").innerHTML = crits.map(c=>
+  const ol = document.getElementById("critList");
+  if (!ol) return;
+  ol.innerHTML = crits.map(c=>
     `<li><b>${RISK_TYPES[tipo].prefix}${c.id}. ${c.short}:</b> ${c.full}</li>`
   ).join("");
 }
@@ -964,8 +1041,14 @@ function renderQualityMatrix(tipo){
   const cfg = RISK_TYPES[tipo];
   const crits = getActiveCriteria(tipo, anoAtivo);
   const headRow = document.getElementById("qualityHeadRow");
+  
   headRow.innerHTML = `<th class="mun-col">Município</th>` +
-    crits.map(c=>`<th class="crit-col" title="${c.full}"><b>${cfg.prefix}${c.id}</b><br>${c.short}</th>`).join("");
+    crits.map(c => `
+      <th class="crit-col" title="${c.full}">
+        <span class="crit-num">${cfg.prefix}${c.id}</span>
+        <span class="crit-label">${c.short}</span>
+      </th>
+    `).join("");
 
   const body = document.getElementById("qualityBody");
   body.innerHTML = MUNICIPIOS_ESCOPO.map(municipio=>{
@@ -975,7 +1058,7 @@ function renderQualityMatrix(tipo){
       const icon = st === "ok" ? "✓" : (st === "warn" ? "!" : (st === "bad" ? "✕" : "—"));
       return `<td><button class="cell-btn ${st}" onclick="openDrilldown('${municipio}', ${c.id}, '${tipo}')">${icon}</button></td>`;
     }).join("");
-    return `<tr><td class="mun-name" onclick="openDrilldown('${municipio}', null, '${tipo}')">${municipio}</td>${cells}</tr>`;
+    return `<tr><td class="mun-name" onclick="openDrilldown('${municipio}', null, '${tipo}')">${municipio}<span class="mun-sub">${data ? "Análise disponível" : "Pendente"}</span></td>${cells}</tr>`;
   }).join("");
 }
 
@@ -985,7 +1068,7 @@ function openDrilldown(municipio, focusCritId, tipo){
   const crits = getActiveCriteria(tipo, anoAtivo);
 
   if(!data){
-    panel.innerHTML = `<div class="dd-header"><p class="dd-title">${municipio}</p><button class="dd-close" onclick="closeDrilldown()">✕</button></div><div class="dd-body"><p style="color:var(--muted);padding:14px 0;">Nenhuma análise técnica registrada para este ciclo.</p></div>`;
+    panel.innerHTML = `<div class="dd-header"><p class="dd-title">${municipio}</p><button class="dd-close" onclick="closeDrilldown()">✕</button></div><div class="dd-body"><p style="color:var(--muted);padding:14px 0;">Nenhuma análise técnica registrada para este município no ciclo ${formatCicloLabel(anoAtivo)}.</p></div>`;
   } else {
     panel.innerHTML = `
       <div class="dd-header">
@@ -1016,10 +1099,18 @@ function openDrilldown(municipio, focusCritId, tipo){
 
 function closeDrilldown(){ document.getElementById("drilldown").classList.remove("open"); }
 
+function setQualityTipo(tipo){
+  riskTipoAtivoQuality = tipo;
+  renderRiskTabs("qualityRiskTabs", riskTipoAtivoQuality, setQualityTipo);
+  renderCritList(tipo);
+  renderQualityMatrix(tipo);
+  closeDrilldown();
+}
+
 document.getElementById("qualityOpenBtn").addEventListener("click", ()=>{
   document.getElementById("qualityModalBackdrop").classList.add("open");
-  renderCritList(riskTipoAtivoQuality);
-  renderQualityMatrix(riskTipoAtivoQuality);
+  setQualityTipo(riskTipoAtivoQuality);
+  renderQualityMeta();
 });
 document.getElementById("qualityModalClose").addEventListener("click", ()=>{
   document.getElementById("qualityModalBackdrop").classList.remove("open");
@@ -1094,6 +1185,7 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
+    renderQualityMeta();
 
     if(loadingBar) loadingBar.style.display = "none";
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
@@ -1123,7 +1215,7 @@ document.getElementById("btnForceRefresh").addEventListener("click", () => {
   carregarDadosDaPlanilha(true);
 });
 
-// Inicialização rápida via cache
+// Inicialização rápida
 carregarDadosDaPlanilha(false);
 </script>
 
