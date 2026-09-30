@@ -74,7 +74,7 @@
   .popup-status.warn{color:#3F4A5E;background:#E7E9ED;}
   .popup-status.bad{color:#B5650A;background:#FBEEDF;}
   .popup-status.outdated{color:#B0241D;background:#FBE7E5;}
-  .popup-status.none{color:#5B6B82;background:#F0F2F5;}
+  .popup-status.none{color:#16243F;background:#E2E6ED;border-color:#BAC3D2;}
   .popup-riscos{color:#5B6B82;font-size:12px;line-height:1.6;}
   .popup-quality{margin-top:9px;padding-top:9px;border-top:1px solid #E7E9ED;}
   .popup-quality-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
@@ -92,7 +92,7 @@
   .map-legend-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5B6B82;margin-bottom:8px;font-weight:600;}
   .map-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
   .map-legend-item:last-child{margin-bottom:0;}
-  .mun-tooltip{background:rgba(22,36,63,0.88);color:#fff;border:none;border-radius:4px;padding:4px 9px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.01em;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
+  .mun-tooltip{background:rgba(22,36,63,0.92);color:#fff;border:none;border-radius:4px;padding:4px 9px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.01em;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
   .mun-tooltip::before{display:none;}
   .map-legend-swatch{width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.12);flex-shrink:0;}
 
@@ -475,6 +475,115 @@ const REDEC = [
   "Resende","Rio das Flores","Três Rios","Valença","Vassouras","Volta Redonda"
 ];
 
+/* Divisão dos 92 municípios do RJ por REDEC */
+const MAPA_REDECS_RJ = {
+  "Angra dos Reis": "REDEC 4 - Costa Verde",
+  "Aperibé": "REDEC 11 - Noroeste",
+  "Araruama": "REDEC 9 - Baixada Litorânea",
+  "Areal": "REDEC 7 - Serrana I",
+  "Armação dos Búzios": "REDEC 9 - Baixada Litorânea",
+  "Arraial do Cabo": "REDEC 9 - Baixada Litorânea",
+  "Barra do Piraí": "REDEC 5 - Sul I",
+  "Barra Mansa": "REDEC 5 - Sul I",
+  "Belford Roxo": "REDEC 2 - Baixada Fluminense",
+  "Bom Jardim": "REDEC 8 - Serrana II",
+  "Bom Jesus do Itabapoana": "REDEC 11 - Noroeste",
+  "Cabo Frio": "REDEC 9 - Baixada Litorânea",
+  "Cachoeiras de Macacu": "REDEC 3 - Metropolitana",
+  "Cambuci": "REDEC 11 - Noroeste",
+  "Campos dos Goytacazes": "REDEC 10 - Norte",
+  "Cantagalo": "REDEC 8 - Serrana II",
+  "Carapebus": "REDEC 10 - Norte",
+  "Cardoso Moreira": "REDEC 11 - Noroeste",
+  "Carmo": "REDEC 7 - Serrana I",
+  "Casimiro de Abreu": "REDEC 9 - Baixada Litorânea",
+  "Comendador Levy Gasparian": "REDEC 5 - Sul I",
+  "Conceição de Macabu": "REDEC 10 - Norte",
+  "Cordeiro": "REDEC 8 - Serrana II",
+  "Duas Barras": "REDEC 8 - Serrana II",
+  "Duque de Caxias": "REDEC 2 - Baixada Fluminense",
+  "Engenheiro Paulo de Frontin": "REDEC 6 - Sul II",
+  "Guapimirim": "REDEC 2 - Baixada Fluminense",
+  "Iguaba Grande": "REDEC 9 - Baixada Litorânea",
+  "Itaboraí": "REDEC 3 - Metropolitana",
+  "Itaguaí": "REDEC 6 - Sul II",
+  "Italva": "REDEC 11 - Noroeste",
+  "Itaocara": "REDEC 11 - Noroeste",
+  "Itaperuna": "REDEC 11 - Noroeste",
+  "Itatiaia": "REDEC 5 - Sul I",
+  "Japeri": "REDEC 6 - Sul II",
+  "Laje do Muriaé": "REDEC 11 - Noroeste",
+  "Macaé": "REDEC 9 - Baixada Litorânea",
+  "Macuco": "REDEC 8 - Serrana II",
+  "Magé": "REDEC 2 - Baixada Fluminense",
+  "Mangaratiba": "REDEC 4 - Costa Verde",
+  "Maricá": "REDEC 3 - Metropolitana",
+  "Mendes": "REDEC 6 - Sul II",
+  "Mesquita": "REDEC 2 - Baixada Fluminense",
+  "Miguel Pereira": "REDEC 6 - Sul II",
+  "Miracema": "REDEC 11 - Noroeste",
+  "Natividade": "REDEC 11 - Noroeste",
+  "Nilópolis": "REDEC 2 - Baixada Fluminense",
+  "Niterói": "REDEC 3 - Metropolitana",
+  "Nova Friburgo": "REDEC 8 - Serrana II",
+  "Nova Iguaçu": "REDEC 2 - Baixada Fluminense",
+  "Paracambi": "REDEC 6 - Sul II",
+  "Paraty": "REDEC 4 - Costa Verde",
+  "Paraíba do Sul": "REDEC 5 - Sul I",
+  "Paty do Alferes": "REDEC 5 - Sul I",
+  "Petrópolis": "REDEC 7 - Serrana I",
+  "Pinheiral": "REDEC 5 - Sul I",
+  "Piraí": "REDEC 6 - Sul II",
+  "Porciúncula": "REDEC 11 - Noroeste",
+  "Porto Real": "REDEC 5 - Sul I",
+  "Quatis": "REDEC 5 - Sul I",
+  "Queimados": "REDEC 6 - Sul II",
+  "Quissamã": "REDEC 10 - Norte",
+  "Resende": "REDEC 5 - Sul I",
+  "Rio Bonito": "REDEC 9 - Baixada Litorânea",
+  "Rio Claro": "REDEC 6 - Sul II",
+  "Rio das Flores": "REDEC 5 - Sul I",
+  "Rio das Ostras": "REDEC 9 - Baixada Litorânea",
+  "Rio de Janeiro": "REDEC 1 - Capital",
+  "Santa Maria Madalena": "REDEC 8 - Serrana II",
+  "Santo Antônio de Pádua": "REDEC 11 - Noroeste",
+  "Sapucaia": "REDEC 7 - Serrana I",
+  "Saquarema": "REDEC 9 - Baixada Litorânea",
+  "Seropédica": "REDEC 6 - Sul II",
+  "Silva Jardim": "REDEC 9 - Baixada Litorânea",
+  "Sumidouro": "REDEC 7 - Serrana I",
+  "São Fidélis": "REDEC 11 - Noroeste",
+  "São Francisco de Itabapoana": "REDEC 10 - Norte",
+  "São Gonçalo": "REDEC 3 - Metropolitana",
+  "São José de Ubá": "REDEC 11 - Noroeste",
+  "São José do Vale do Rio Preto": "REDEC 7 - Serrana I",
+  "São João da Barra": "REDEC 10 - Norte",
+  "São João de Meriti": "REDEC 2 - Baixada Fluminense",
+  "São Pedro da Aldeia": "REDEC 9 - Baixada Litorânea",
+  "São Sebastião do Alto": "REDEC 8 - Serrana II",
+  "Tanguá": "REDEC 3 - Metropolitana",
+  "Teresópolis": "REDEC 7 - Serrana I",
+  "Trajano de Moraes": "REDEC 8 - Serrana II",
+  "Três Rios": "REDEC 5 - Sul I",
+  "Valença": "REDEC 5 - Sul I",
+  "Varre-Sai": "REDEC 11 - Noroeste",
+  "Vassouras": "REDEC 5 - Sul I",
+  "Volta Redonda": "REDEC 5 - Sul I"
+};
+
+function normalizarTexto(s){
+  return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+}
+
+function getRedecDoMunicipio(nomeMun) {
+  if (MAPA_REDECS_RJ[nomeMun]) return MAPA_REDECS_RJ[nomeMun];
+  const nKey = normalizarTexto(nomeMun);
+  for (const [k, v] of Object.entries(MAPA_REDECS_RJ)) {
+    if (normalizarTexto(k) === nKey) return v;
+  }
+  return "Outra REDEC";
+}
+
 const RISK_TYPES = {
   chuvas: {
     label: "Chuvas intensas",
@@ -506,35 +615,20 @@ function extrairAnoNumero(val) {
   return match ? parseInt(match[0], 10) : parseInt(val, 10) || 2026;
 }
 
-/**
- * Lê do dicionário entregue pela planilha
- */
 function getActiveCriteria(tipo, ciclo) {
   const cAno = extrairAnoNumero(ciclo || anoAtivo);
-  
-  if (!DICIONARIO_GLOBAL || DICIONARIO_GLOBAL.length === 0) {
-    return [];
-  }
+  if (!DICIONARIO_GLOBAL || DICIONARIO_GLOBAL.length === 0) return [];
 
-  // 1. Procura critérios do tipo e ano exatos
   let encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && extrairAnoNumero(d.ciclo) === cAno);
-  if (encontrados.length > 0) {
-    return encontrados.sort((a,b) => a.id - b.id);
-  }
+  if (encontrados.length > 0) return encontrados.sort((a,b) => a.id - b.id);
 
-  // 2. Se não achar o ano específico, pega o ano mais próximo disponível daquele tipo
   const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
   if (doTipo.length > 0) {
     const anos = doTipo.map(d => extrairAnoNumero(d.ciclo));
     const maxAno = Math.max(...anos);
     return doTipo.filter(d => extrairAnoNumero(d.ciclo) === maxAno).sort((a,b) => a.id - b.id);
   }
-
   return [];
-}
-
-function normalizarTexto(s){
-  return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 }
 
 function normalizarStatus(st){
@@ -625,6 +719,7 @@ function initMap(){
     const nome = feature.properties.NM_MUN;
     const isRedec = REDEC_SET.has(nome);
     const info = summary[nome];
+    const redecNome = getRedecDoMunicipio(nome);
 
     if(isRedec){
       const riscosHtml = info && info.riscos.length
@@ -642,15 +737,19 @@ function initMap(){
         ${obsHtml}
         ${buildPopupQualityBlock(nome)}
       `);
+      layer.bindTooltip(`<b>${nome}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
     } else {
-      layer.bindPopup(`<div class="popup-nome">${nome}</div><div class="popup-status none">Fora da REDEC 5 - Sul I</div>`);
+      layer.bindPopup(`
+        <div class="popup-nome">${nome}</div>
+        <div class="popup-status none">${redecNome}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Município sob jurisdição de outra coordenação regional de Defesa Civil.</div>
+      `);
+      layer.bindTooltip(`<b>${nome}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
     }
-
-    layer.bindTooltip(nome, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
 
     layer.on({
       mouseover(e){
-        e.target.setStyle(isRedec ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.75, weight:1.2, color:"#8896AA"});
+        e.target.setStyle(isRedec ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.85, weight:1.5, color:"#3A4D6B"});
         e.target.bringToFront();
       },
       mouseout(e){ if(window._geojsonLayer) window._geojsonLayer.resetStyle(e.target); },
