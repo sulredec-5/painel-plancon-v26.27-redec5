@@ -23,61 +23,96 @@
     --blue:#1B5E99;--blue-bg:#DFF0FF;--muted:#5B6B82;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",sans-serif;-webkit-font-smoothing:antialiased;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   a{color:var(--accent);}
-  header.top{background:var(--ink);color:#fff;padding:34px 28px 26px;}
-  .top-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
-  .top-logo-wrap{flex-shrink:0;width:76px;height:76px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
-  .top-logo{width:76px;height:76px;object-fit:contain;}
-  .top-text{flex:1;min-width:260px;}
   
-  .filter-selectors{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;}
-  .selector-block{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+  /* HEADER */
+  header.top{background:var(--ink);color:#fff;padding:26px 18px 20px;}
+  .top-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .top-brand{display:flex;align-items:center;gap:16px;flex:1;min-width:280px;}
+  .top-logo-wrap{flex-shrink:0;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
+  .top-logo{width:70px;height:70px;object-fit:contain;}
+  .top-text{flex:1;}
+  
+  .filter-selectors{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;width:auto;}
+  .selector-block{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
-  .redec-select{padding:7px 10px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;}
+  .redec-select{padding:8px 10px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;max-width:100%;}
   .redec-select:focus{border-color:#fff;}
   .redec-select option{background:#fff;color:var(--ink);}
 
-  .year-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
-  .year-btn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;padding:6px 13px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .year-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .year-btn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s;white-space:nowrap;}
   .year-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
   .year-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
   
-  .quality-selector{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
-  @media(max-width:768px){
-    .filter-selectors{align-items:flex-start;width:100%;}
-    .selector-block{align-items:flex-start;}
-    .year-btns{justify-content:flex-start;}
-    .quality-selector{align-items:flex-start;}
-  }
+  .quality-selector{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
+  .quality-btn-group{display:flex;gap:6px;}
 
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 8px;}
-  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:30px;margin:0 0 6px;letter-spacing:-.01em;}
-  .sub{color:#C2CEE2;font-size:13.5px;margin:0;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 6px;}
+  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:26px;margin:0 0 5px;letter-spacing:-.01em;line-height:1.15;}
+  .sub{color:#C2CEE2;font-size:13px;margin:0;}
   .sub b{color:#fff;font-weight:600;}
-  main{max-width:1120px;margin:0 auto;padding:26px 28px 70px;}
 
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:-24px 0 26px;}
-  .stat{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;padding:16px 16px 14px;}
+  /* MAIN E LAYOUT */
+  main{max-width:1120px;margin:0 auto;padding:20px 18px 60px;}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:-16px 0 22px;}
+  .stat{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;padding:14px;}
   .stat.ok{border-top-color:var(--green);}
   .stat.warn{border-top-color:#3F4A5E;}
   .stat.bad{border-top-color:var(--amber);}
-  .stat .num{font-family:"Source Serif 4",serif;font-size:30px;font-weight:600;line-height:1;}
-  .stat .label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .stat .num{font-family:"Source Serif 4",serif;font-size:28px;font-weight:600;line-height:1;}
+  .stat .label{font-size:12px;color:var(--muted);margin-top:4px;}
 
-  .viz-row{display:grid;grid-template-columns:1fr 280px;gap:14px;margin-bottom:26px;}
+  .viz-row{display:grid;grid-template-columns:1fr 280px;gap:14px;margin-bottom:22px;}
   .viz-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
-  .viz-card-header{padding:13px 16px 10px;border-bottom:1px solid var(--line);}
-  .viz-card-header h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:500;}
-  #map{height:440px;width:100%;}
+  .viz-card-header{padding:12px 14px 10px;border-bottom:1px solid var(--line);}
+  .viz-card-header h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600;}
+  #map{height:420px;width:100%;}
 
-  .chart-wrap{padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:16px;}
-  .legend{width:100%;display:flex;flex-direction:column;gap:8px;}
-  .legend-item{display:flex;align-items:center;gap:8px;font-size:13px;}
-  .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .chart-wrap{padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .legend{width:100%;display:flex;flex-direction:column;gap:7px;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:12.5px;}
+  .legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
   .legend-label{flex:1;color:var(--ink);}
-  .legend-pct{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--muted);}
+  .legend-pct{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;color:var(--muted);}
 
+  /* CONTROLES E BUSCA */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+  .search{flex:1 1 200px;}
+  .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13.5px;background:var(--surface);color:var(--ink);}
+  .search input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .pills{display:flex;gap:6px;flex-wrap:wrap;}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:6px 11px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;user-select:none;}
+  .pill[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  /* TABELA RESPONSIVA */
+  .table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);border-radius:6px;}
+  table{width:100%;border-collapse:collapse;min-width:620px;}
+  thead th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#F6F7F9;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;}
+  thead th:hover{color:var(--ink);}
+  tbody td{padding:12px 14px;border-bottom:1px solid #E7E9ED;font-size:13.5px;vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#FAFBFC;}
+  .municipio-cell{font-weight:600;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:12.5px;}
+  .dim{color:var(--muted);}
+  .linkpdf{font-size:12.5px;white-space:nowrap;}
+  .stamp{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:3px;border:1.5px solid currentColor;transform:rotate(-3deg);white-space:nowrap;}
+  .stamp.ok{color:var(--green);background:var(--green-bg);}
+  .stamp.warn{color:#3F4A5E;background:#E7E9ED;}
+  .stamp.bad{color:var(--amber);background:var(--amber-bg);}
+  .stamp.outdated{color:var(--red);background:var(--red-bg);}
+  .empty-row td{text-align:center;color:var(--muted);padding:26px 14px;font-size:13.5px;}
+  .historic-banner{grid-column:1/-1;background:#FFF8E6;border:1px solid #E8C84A;border-left:4px solid #B5650A;border-radius:5px;padding:10px 14px;font-size:13px;color:#7A4200;}
+
+  /* OVERLAY DE CARREGAMENTO */
+  .sync-loading-bar{width:100%;height:3px;background:rgba(255,255,255,0.15);overflow:hidden;position:relative;margin-top:6px;border-radius:2px;}
+  .sync-loading-bar::after{content:'';position:absolute;left:-50%;top:0;width:50%;height:100%;background:#5BB2FF;animation:syncProgress 1.4s infinite ease-in-out;}
+  @keyframes syncProgress{0%{left:-50%}100%{left:100%}}
+
+  /* POPUPS E LEAFLET */
   .leaflet-popup-content-wrapper{border-radius:6px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
   .leaflet-popup-content{margin:10px 14px;}
   .popup-nome{font-weight:700;font-size:14px;margin-bottom:3px;}
@@ -87,201 +122,125 @@
   .popup-status.warn{color:#3F4A5E;background:#E7E9ED;}
   .popup-status.bad{color:#B5650A;background:#FBEEDF;}
   .popup-status.outdated{color:#B0241D;background:#FBE7E5;}
-  .popup-riscos{color:#5B6B82;font-size:12px;line-height:1.6;}
+  .popup-riscos{color:#5B6B82;font-size:12px;line-height:1.5;}
   .popup-quality{margin-top:9px;padding-top:9px;border-top:1px solid #E7E9ED;}
   .popup-quality-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-  .popup-quality-pending{font-size:12px;color:#9AA4B2;font-style:italic;margin-bottom:8px;}
-  .popup-quality-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;}
-  .pqc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;padding:3px 7px;border-radius:10px;}
+  .popup-quality-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+  .pqc{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;}
   .pqc.ok{background:var(--green-bg);color:var(--green);}
   .pqc.warn{background:var(--amber-bg);color:var(--amber);}
   .pqc.bad{background:var(--red-bg);color:var(--red);}
   .popup-quality-btn{width:100%;background:var(--ink);color:#fff;border:none;border-radius:4px;padding:7px 10px;font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
-  .popup-quality-btn:hover{background:#22365c;}
-  .popup-obs{margin-top:7px;padding:6px 8px;background:#FBEEDF;border-left:3px solid #B5650A;color:#7A4200;font-size:11.5px;line-height:1.5;border-radius:0 3px 3px 0;}
+  .popup-obs{margin-top:7px;padding:6px 8px;background:#FBEEDF;border-left:3px solid #B5650A;color:#7A4200;font-size:11px;line-height:1.4;border-radius:0 3px 3px 0;}
 
-  .map-legend{background:white;border:1px solid var(--line);border-radius:5px;padding:10px 13px;font-family:"IBM Plex Sans",sans-serif;font-size:12px;line-height:1;box-shadow:0 2px 6px rgba(0,0,0,.08);}
-  .map-legend-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5B6B82;margin-bottom:8px;font-weight:600;}
-  .map-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+  .map-legend{background:white;border:1px solid var(--line);border-radius:5px;padding:8px 11px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+  .map-legend-title{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#5B6B82;margin-bottom:6px;font-weight:600;}
+  .map-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
   .map-legend-item:last-child{margin-bottom:0;}
-  .mun-tooltip{background:rgba(22,36,63,0.92);color:#fff;border:none;border-radius:4px;padding:4px 9px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.01em;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
-  .mun-tooltip::before{display:none;}
-  .map-legend-swatch{width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.12);flex-shrink:0;}
+  .mun-tooltip{background:rgba(22,36,63,0.92);color:#fff;border:none;border-radius:4px;padding:4px 8px;font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
+  .map-legend-swatch{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.12);flex-shrink:0;}
 
-  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
-  .search{flex:1 1 220px;}
-  .search input{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:14px;background:var(--surface);color:var(--ink);}
-  .search input:focus{outline:2px solid var(--accent);outline-offset:1px;}
-  .pills{display:flex;gap:6px;flex-wrap:wrap;}
-  .pill{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;user-select:none;}
-  .pill[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
-  table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
-  thead th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#F6F7F9;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;}
-  thead th:hover{color:var(--ink);}
-  tbody td{padding:13px 14px;border-bottom:1px solid #E7E9ED;font-size:14px;vertical-align:middle;}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:#FAFBFC;}
-  .municipio-cell{font-weight:600;}
-  .cell-label{display:none;}
-  .mono{font-family:"IBM Plex Mono",monospace;font-size:13px;}
-  .dim{color:var(--muted);}
-  .linkpdf{font-size:13px;white-space:nowrap;}
-  .stamp{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:3px;border:1.5px solid currentColor;transform:rotate(-3deg);white-space:nowrap;}
-  .stamp.ok{color:var(--green);background:var(--green-bg);}
-  .stamp.warn{color:#3F4A5E;background:#E7E9ED;}
-  .stamp.bad{color:var(--amber);background:var(--amber-bg);}
-  .stamp.outdated{color:var(--red);background:var(--red-bg);}
-  .empty-row td{text-align:center;color:var(--muted);padding:30px 14px;font-size:14px;}
-  .historic-banner{grid-column:1/-1;background:#FFF8E6;border:1px solid #E8C84A;border-left:4px solid #B5650A;border-radius:5px;padding:10px 14px;font-size:13px;color:#7A4200;display:flex;align-items:center;gap:8px;}
-  .historic-banner::before{content:"🕘";font-size:15px;}
-  footer{max-width:1120px;margin:0 auto;padding:0 28px 50px;color:var(--muted);font-size:12.5px;line-height:1.6;}
-  footer hr{border:none;border-top:1px solid var(--line);margin:0 0 18px;}
-
-  .quality-open-btn{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .quality-open-btn:hover{background:#E8EDF5;}
-  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500;color:var(--muted);}
-  .compare-open-btn{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;background:transparent;color:rgba(255,255,255,0.78);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 13px;cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .compare-open-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);}
-
-  .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.55);z-index:1000;padding:24px;align-items:flex-start;justify-content:center;overflow-y:auto;}
-  .quality-modal-backdrop.open{display:flex;}
-  .quality-modal{background:var(--paper);border-radius:10px;max-width:1120px;width:100%;margin:18px auto 40px;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;}
-  .quality-modal-header{background:var(--ink);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;position:sticky;top:0;z-index:2;}
-  .quality-modal-header h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:22px;margin:0 0 6px;}
-  .quality-modal-header .section-desc{color:#C2CEE2;font-size:13px;margin:0;max-width:600px;}
-  .quality-modal-close{flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:6px;width:34px;height:34px;font-size:17px;cursor:pointer;line-height:1;}
-  .quality-modal-close:hover{background:rgba(255,255,255,0.22);}
-  .quality-modal-body{padding:24px 28px 30px;}
-
-  .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px;}
-  .quality-scroll{overflow-x:visible;}
-  table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:0;}
-  table.quality-matrix thead th{position:sticky;top:0;background:#F6F7F9;z-index:1;}
-  table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:10px;letter-spacing:0;text-transform:none;color:var(--muted);text-align:center;padding:8px 4px;border-left:1px solid #E7E9ED;cursor:default;width:calc((100% - 150px)/var(--crit-count,7));line-height:1.12;white-space:normal;word-break:normal;overflow-wrap:anywhere;hyphens:auto;vertical-align:bottom;}
-  table.quality-matrix th.crit-col .crit-num{display:block;font-family:"IBM Plex Mono",monospace;font-weight:700;color:var(--ink);font-size:11px;margin-bottom:3px;}
-  table.quality-matrix th.crit-col .crit-label{display:block;max-width:94px;margin:0 auto;}
-  table.quality-matrix th.mun-col{width:150px;min-width:150px;}
-  table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;vertical-align:middle;}
-  table.quality-matrix tr:last-child td{border-bottom:none;}
-  table.quality-matrix td.mun-name{padding:10px 10px;font-weight:600;font-size:12.5px;white-space:normal;line-height:1.18;cursor:pointer;}
-  table.quality-matrix td.mun-name:hover{color:var(--accent);}
-  table.quality-matrix td.mun-name .mun-sub{display:block;font-weight:400;font-size:10px;line-height:1.25;color:var(--muted);margin-top:2px;}
-  table.quality-matrix tr:hover td{background:#FAFBFC;}
-
-  .cell-btn{width:100%;height:42px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;transition:filter .1s;}
-  .cell-btn:hover{filter:brightness(.94);}
-  .cell-icon{font-family:"IBM Plex Sans",sans-serif;font-size:18px;font-weight:800;line-height:1;}
-  .cell-btn.ok{background:var(--green-bg);}
-  .cell-btn.ok .cell-icon{color:var(--green);}
-  .cell-btn.warn{background:var(--amber-bg);}
-  .cell-btn.warn .cell-icon{color:var(--amber);}
-  .cell-btn.bad{background:var(--red-bg);}
-  .cell-btn.bad .cell-icon{color:var(--red);}
-  .cell-btn.pending{background:#F0F2F5;}
-  .cell-btn.pending .cell-icon{color:#8B95A5;font-weight:700;}
-
-  .quality-legend{display:flex;flex-wrap:wrap;gap:16px;padding:12px 16px;border-top:1px solid var(--line);background:#FAFBFC;font-size:12px;color:var(--muted);}
-  .legend-status-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:5px;font-family:"IBM Plex Sans",sans-serif;font-size:15px;font-weight:800;line-height:1;vertical-align:-2px;}
-  .legend-status-icon.ok{color:var(--green);}
-  .legend-status-icon.warn{color:var(--amber);}
-  .legend-status-icon.bad{color:var(--red);}
-  .legend-status-icon.pending{color:#8B95A5;}
-
-  .crit-list{font-size:12px;color:var(--muted);margin:0 0 18px;line-height:1.7;columns:2;column-gap:28px;padding-left:18px;}
-  .crit-list b{color:var(--ink);}
+  /* BOTÕES AUXILIARES */
+  .quality-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
+  .compare-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
   
-  .drilldown{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;margin-bottom:26px;display:none;overflow:hidden;}
+  /* MODAIS RESPONSIVOS */
+  .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.65);z-index:2000;padding:14px;align-items:flex-start;justify-content:center;overflow-y:auto;}
+  .quality-modal-backdrop.open{display:flex;}
+  .quality-modal{background:var(--paper);border-radius:8px;max-width:1120px;width:100%;margin:10px auto 30px;box-shadow:0 15px 50px rgba(0,0,0,.35);overflow:hidden;}
+  .quality-modal-header{background:var(--ink);color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:sticky;top:0;z-index:2;}
+  .quality-modal-header h2{font-family:"Source Serif 4",serif;font-weight:600;font-size:20px;margin:0 0 4px;}
+  .quality-modal-header .section-desc{color:#C2CEE2;font-size:12px;margin:0;}
+  .quality-modal-close{flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:5px;width:32px;height:32px;font-size:16px;cursor:pointer;}
+  .quality-modal-body{padding:18px 20px;}
+
+  .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto;margin-bottom:16px;}
+  table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:680px;}
+  table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:9.5px;color:var(--muted);text-align:center;padding:7px 3px;border-left:1px solid #E7E9ED;}
+  table.quality-matrix th.mun-col{width:140px;min-width:140px;}
+  table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;}
+  table.quality-matrix td.mun-name{padding:8px;font-weight:600;font-size:12px;}
+  .cell-btn{width:100%;height:38px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;}
+
+  /* DRILLDOWN */
+  .drilldown{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;margin-bottom:20px;display:none;overflow:hidden;}
   .drilldown.open{display:block;}
-  .dd-header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;background:#F6F7F9;}
-  .dd-title{font-family:"Source Serif 4",serif;font-size:21px;font-weight:600;margin:0 0 4px;}
-  .dd-sub{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.04em;}
-  .dd-close{background:none;border:1px solid var(--line);border-radius:5px;width:30px;height:30px;font-size:16px;color:var(--muted);cursor:pointer;flex-shrink:0;line-height:1;}
-  .dd-close:hover{background:#fff;color:var(--ink);}
-  .dd-summary{display:flex;gap:10px;padding:14px 22px;flex-wrap:wrap;border-bottom:1px solid var(--line);}
-  .dd-summary .sumchip{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:5px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;}
-  .dd-summary .sumchip .dot{width:8px;height:8px;border-radius:50%;}
-  .sumchip.ok{background:var(--green-bg);color:var(--green);}
-  .sumchip.ok .dot{background:var(--green);}
-  .sumchip.warn{background:var(--amber-bg);color:var(--amber);}
-  .sumchip.warn .dot{background:var(--amber);}
-  .sumchip.bad{background:var(--red-bg);color:var(--red);}
-  .sumchip.bad .dot{background:var(--red);}
-  .dd-body{padding:6px 22px 18px;}
-  .dd-item{padding:16px 0;border-bottom:1px solid #EEF0F3;display:grid;grid-template-columns:34px 1fr;gap:14px;}
+  .dd-header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:#F6F7F9;}
+  .dd-title{font-family:"Source Serif 4",serif;font-size:19px;font-weight:600;margin:0 0 3px;}
+  .dd-close{background:none;border:1px solid var(--line);border-radius:4px;width:28px;height:28px;font-size:15px;color:var(--muted);cursor:pointer;}
+  .dd-body{padding:6px 18px 16px;}
+  .dd-item{padding:12px 0;border-bottom:1px solid #EEF0F3;display:grid;grid-template-columns:30px 1fr;gap:12px;}
   .dd-item:last-child{border-bottom:none;}
-  .dd-num{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-top:2px;}
-  .dd-item-title{font-weight:600;font-size:14px;margin:0 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .dd-item-text{font-size:13.5px;color:#384660;line-height:1.6;margin:0;}
-  .dd-tag{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:3px;}
+  .dd-tag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase;}
   .dd-tag.ok{color:var(--green);background:var(--green-bg);}
   .dd-tag.warn{color:var(--amber);background:var(--amber-bg);}
   .dd-tag.bad{color:var(--red);background:var(--red-bg);}
-  .dd-pending{padding:30px 22px;text-align:center;color:var(--muted);font-size:13.5px;}
-  .dd-pending b{color:var(--ink);}
-  .dd-copy-btn{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
-  .dd-copy-btn:hover{background:#F6F7F9;}
-  .dd-copy-btn.copied{background:var(--green-bg);color:var(--green);border-color:var(--green);}
-  .dd-resumo{padding:14px 22px;border-bottom:1px solid var(--line);background:#FAFBFC;}
-  .dd-resumo-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;}
-  .dd-resumo-title{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
-  .dd-resumo-text{font-size:13px;color:#384660;line-height:1.6;margin:0;}
 
-  .risk-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-  .risk-tab{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.03em;padding:8px 16px;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap;}
-  .risk-tab:hover{border-color:var(--accent);color:var(--ink);}
-  .risk-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink);}
-
-  .compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
-  .compare-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;}
-  .compare-card .num{font-family:"Source Serif 4",serif;font-size:28px;font-weight:600;line-height:1;}
-  .compare-card .label{font-size:12px;color:var(--muted);margin-top:4px;}
-  .compare-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end;}
-  .compare-field label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-  .compare-field select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);font-family:"IBM Plex Sans",sans-serif;font-size:13px;}
-  .compare-note{font-size:13px;color:var(--muted);line-height:1.55;background:#FAFBFC;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:5px;padding:10px 12px;margin-bottom:16px;}
-  .compare-table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;}
-  table.compare-table{min-width:760px;border:none;border-radius:0;}
-  table.compare-table thead th{cursor:default;}
-  table.compare-table td{font-size:13px;}
-  .compare-status{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;white-space:nowrap;display:inline-block;}
-  .compare-status.ready{background:var(--green-bg);color:var(--green);}
-  .compare-status.wait{background:var(--amber-bg);color:var(--amber);}
-  .compare-status.none{background:#F0F2F5;color:var(--muted);}
-  .evo{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;white-space:nowrap;}
-  .evo.up{color:var(--green);}.evo.flat{color:var(--muted);}.evo.down{color:var(--red);}.evo.na{color:#9AA4B2;}
-  .compare-cell{white-space:nowrap;}
-  .compare-cell .before,.compare-cell .after{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;}
-
+  /* ACCORDION NA TABELA */
   tr.mun-group-row{cursor:pointer;}
   tr.mun-group-row.single{cursor:default;}
-  tr.mun-group-row:hover{background:#FAFBFC;}
-  tr.mun-group-row.single:hover{background:unset;}
-  tr.mun-group-row td{font-weight:600;}
-  .mun-toggle{display:inline-block;width:14px;font-family:"IBM Plex Mono",monospace;color:var(--muted);transition:transform .15s;margin-right:6px;}
+  .mun-toggle{display:inline-block;width:14px;color:var(--muted);transition:transform .15s;margin-right:4px;}
   tr.mun-group-row.expanded .mun-toggle{transform:rotate(90deg);}
-  .mun-summary-count{font-weight:400;color:var(--muted);font-size:12.5px;}
   tr.mun-detail-row{display:none;background:#FAFBFC;}
   tr.mun-detail-row.visible{display:table-row;}
-  tr.mun-detail-row td{padding-left:34px;font-size:13px;}
-  tr.mun-detail-row td.municipio-cell{font-weight:400;color:var(--muted);}
+  tr.mun-detail-row td{padding-left:28px;font-size:12.5px;}
+
+  footer{max-width:1120px;margin:0 auto;padding:0 18px 40px;color:var(--muted);font-size:12px;line-height:1.55;}
+  footer hr{border:none;border-top:1px solid var(--line);margin:0 0 16px;}
+
+  /* =========================================================================
+     REGRAS DE RESPONSIVIDADE (MOBILE / TABLET)
+     ========================================================================= */
+  @media(max-width:920px){
+    .viz-row{grid-template-columns:1fr;gap:16px;}
+    #map{height:340px;}
+    .chart-wrap{padding:14px;}
+    .filter-selectors{width:100%;flex-direction:column;align-items:stretch;}
+    .selector-block{width:100%;align-items:stretch;}
+    .redec-select{width:100%;}
+    .quality-selector{width:100%;align-items:stretch;}
+    .quality-btn-group{display:grid;grid-template-columns:1fr 1fr;width:100%;}
+    .quality-open-btn, .compare-open-btn{justify-content:center;}
+  }
+
+  @media(max-width:600px){
+    header.top{padding:20px 14px 18px;}
+    main{padding:14px 12px 50px;}
+    .top-brand{flex-direction:row;align-items:center;gap:12px;}
+    .top-logo-wrap{width:56px;height:56px;}
+    .top-logo{width:54px;height:54px;}
+    h1{font-size:22px;}
+    .stats{grid-template-columns:1fr 1fr;gap:8px;}
+    .stat{padding:10px;}
+    .stat .num{font-size:24px;}
+    .stat .label{font-size:11px;}
+    #map{height:290px;}
+    .controls{flex-direction:column;align-items:stretch;}
+    .search{flex:1 1 100%;}
+    .pills{justify-content:flex-start;overflow-x:auto;padding-bottom:4px;flex-wrap:nowrap;}
+    .pill{white-space:nowrap;flex-shrink:0;}
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="top-inner">
-    <div class="top-logo-wrap">
-      <img class="top-logo" id="headerLogo" src="logo.png?v=2" alt="Logo Defesa Civil RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:38px;\'>🛡️</span>';">
-    </div>
-    <div class="top-text">
-      <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
-      <h1>Painel de Planos de Contingência</h1>
-      <p class="sub" id="syncSubline">Conectando ao banco de dados estadual...</p>
-      <div id="pendingAnalysisAlert" style="display:none;margin-top:6px;font-size:12px;color:#B5650A;">⏳ <span id="pendingAnalysisText"></span></div>
+    <div class="top-brand">
+      <div class="top-logo-wrap">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=3" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+      </div>
+      <div class="top-text">
+        <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
+        <h1>Painel de Planos de Contingência</h1>
+        <p class="sub" id="syncSubline">Iniciando sincronização estadual...</p>
+        <div id="syncLoadingBar" class="sync-loading-bar"></div>
+        <div id="pendingAnalysisAlert" style="display:none;margin-top:6px;font-size:11.5px;color:#FBEEDF;">⏳ <span id="pendingAnalysisText"></span></div>
+      </div>
     </div>
     
     <div class="filter-selectors">
-      <!-- Seletor Regional de REDECs -->
+      <!-- Seletor Regional -->
       <div class="selector-block">
         <span class="selector-label">Regional / REDEC</span>
         <select class="redec-select" id="redecFilterSelect"></select>
@@ -293,13 +252,13 @@
         <div class="year-btns" id="yearBtns"></div>
       </div>
 
-      <!-- Botões de Qualidade e Comparativo -->
+      <!-- Ações Técnicas -->
       <div class="quality-selector">
         <span class="selector-label">Qualidade Técnica</span>
-        <div style="display:flex;gap:6px;">
+        <div class="quality-btn-group">
           <button class="quality-open-btn" id="qualityOpenBtn">
             Ver análise
-            <span class="quality-open-meta" id="qualityOpenMeta"></span>
+            <span id="qualityOpenMeta" style="font-size:10px;opacity:.8;margin-left:4px;"></span>
           </button>
           <button class="compare-open-btn" id="compareOpenBtn">Comparar</button>
         </div>
@@ -328,107 +287,81 @@
   <div class="controls">
     <div class="search"><input type="text" id="searchInput" placeholder="Buscar município ou tipo de risco…" aria-label="Buscar"></div>
     <div class="pills" role="group" aria-label="Filtrar por status">
-      <button class="pill" data-status="all"  aria-pressed="true">Todos</button>
-      <button class="pill" data-status="ok"        aria-pressed="false">Atualizado</button>
-      <button class="pill" data-status="outdated"   aria-pressed="false">Desatualizado</button>
-      <button class="pill" data-status="warn"      aria-pressed="false">Verificar</button>
-      <button class="pill" data-status="bad"       aria-pressed="false">Não entregue</button>
+      <button class="pill" data-status="all" aria-pressed="true">Todos</button>
+      <button class="pill" data-status="ok" aria-pressed="false">Atualizado</button>
+      <button class="pill" data-status="outdated" aria-pressed="false">Desatualizado</button>
+      <button class="pill" data-status="warn" aria-pressed="false">Verificar</button>
+      <button class="pill" data-status="bad" aria-pressed="false">Não entregue</button>
     </div>
   </div>
 
-  <table id="dataTable">
-    <thead><tr>
-      <th data-key="municipio">Município</th>
-      <th data-key="risco">Risco / Plano</th>
-      <th data-key="versao">Versão</th>
-      <th data-key="atualizacao">Última atualização</th>
-      <th data-key="status">Status</th>
-      <th>PDF</th>
-    </tr></thead>
-    <tbody id="tableBody"></tbody>
-  </table>
+  <div class="table-responsive">
+    <table id="dataTable">
+      <thead><tr>
+        <th data-key="municipio">Município</th>
+        <th data-key="risco">Risco / Plano</th>
+        <th data-key="versao">Versão</th>
+        <th data-key="atualizacao">Última atualização</th>
+        <th data-key="status">Status</th>
+        <th>PDF</th>
+      </tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 </main>
 
   <footer>
     <hr>
-    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são consolidados a partir das planilhas setoriais das 11 Regionais de Defesa Civil (REDECs) integradas ao Sistema Estadual de Defesa Civil.</p>
-    <p>Critério de "atualizado": o município tem pelo menos um documento registrado no ciclo atual <b>ou</b> anterior. Só entra como "não entregue" quem não possui documento vigente registrado.</p>
-    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos fatores de verificação operacionais definidos para o respectivo ciclo anual.</p>
+    <p><b>Atualização Operacional:</b> Dados consolidados a partir das planilhas das 11 Regionais de Defesa Civil (REDECs) integradas ao Sistema Estadual da SEDEC-RJ.</p>
+    <p>Critério de conformidade: pelo menos um PLANCON válido registrado no ciclo vigente ou anterior.</p>
   </footer>
 
-  <!-- ===================== MODAL: QUALIDADE DOS PLANOS ===================== -->
+  <!-- MODAL: QUALIDADE DOS PLANOS -->
   <div class="quality-modal-backdrop" id="qualityModalBackdrop">
-    <div class="quality-modal" role="dialog" aria-modal="true" aria-labelledby="qualityModalTitle">
+    <div class="quality-modal" role="dialog" aria-modal="true">
       <div class="quality-modal-header">
         <div>
-          <h2 id="qualityModalTitle">Qualidade dos Planos</h2>
-          <p class="section-desc">Critérios técnicos e fatores de verificação de prontidão para os municípios selecionados.</p>
+          <h2>Qualidade Técnica dos Planos</h2>
+          <p class="section-desc">Critérios técnicos e fatores de verificação de prontidão para o ciclo anual.</p>
         </div>
         <button class="quality-modal-close" id="qualityModalClose" aria-label="Fechar">✕</button>
       </div>
 
       <div class="quality-modal-body">
-        <div class="risk-tabs" id="qualityRiskTabs" role="tablist" aria-label="Tipo de risco"></div>
-        <div class="section-meta" id="qualityMeta" style="text-align:left;margin-bottom:14px;"></div>
-
-        <ol class="crit-list" id="critList"></ol>
+        <div class="risk-tabs" id="qualityRiskTabs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;"></div>
+        <div id="qualityMeta" style="font-size:12px;color:var(--muted);margin-bottom:12px;"></div>
+        <ol id="critList" style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding-left:18px;"></ol>
 
         <div class="quality-wrap">
-          <div class="quality-scroll">
-            <table class="quality-matrix" id="qualityMatrix">
-              <thead><tr id="qualityHeadRow"></tr></thead>
-              <tbody id="qualityBody"></tbody>
-            </table>
-          </div>
-          <div class="quality-legend">
-            <span><b class="legend-status-icon ok">✓</b> Atende totalmente</span>
-            <span><b class="legend-status-icon warn">!</b> Atende parcialmente</span>
-            <span><b class="legend-status-icon bad">✕</b> Não atende</span>
-            <span><b class="legend-status-icon pending">—</b> Pendente de análise</span>
-          </div>
+          <table class="quality-matrix" id="qualityMatrix">
+            <thead><tr id="qualityHeadRow"></tr></thead>
+            <tbody id="qualityBody"></tbody>
+          </table>
         </div>
-
         <div class="drilldown" id="drilldown"></div>
       </div>
     </div>
   </div>
 
-  <!-- ===================== MODAL: COMPARATIVO ENTRE VERSÕES ===================== -->
+  <!-- MODAL: COMPARATIVO -->
   <div class="quality-modal-backdrop" id="compareModalBackdrop">
-    <div class="quality-modal" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle">
+    <div class="quality-modal" role="dialog" aria-modal="true">
       <div class="quality-modal-header">
         <div>
-          <h2 id="compareModalTitle">Comparativo entre versões</h2>
-          <p class="section-desc">Evolução individual dos critérios por município.</p>
+          <h2>Comparativo entre Versões</h2>
+          <p class="section-desc">Evolução técnica dos critérios por município avaliado.</p>
         </div>
         <button class="quality-modal-close" id="compareModalClose" aria-label="Fechar">✕</button>
       </div>
       <div class="quality-modal-body">
-        <div class="risk-tabs" id="compareRiskTabs" role="tablist" aria-label="Tipo de risco"></div>
-        <div class="compare-grid" id="compareCards"></div>
-        <div class="compare-note" id="compareNote"></div>
-        <div class="compare-controls">
-          <div class="compare-field">
-            <label for="compareMunicipio">Município</label>
-            <select id="compareMunicipio"></select>
-          </div>
-          <div class="compare-field">
-            <label for="compareBefore">Versão anterior</label>
-            <select id="compareBefore"></select>
-          </div>
-          <div class="compare-field">
-            <label for="compareAfter">Versão posterior</label>
-            <select id="compareAfter"></select>
-          </div>
+        <div class="risk-tabs" id="compareRiskTabs" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;"></div>
+        <div id="compareCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;"></div>
+        <div class="compare-controls" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px;">
+          <div><label style="font-size:11px;font-weight:600;">Município</label><select id="compareMunicipio" style="width:100%;padding:8px;"></select></div>
+          <div><label style="font-size:11px;font-weight:600;">Versão anterior</label><select id="compareBefore" style="width:100%;padding:8px;"></select></div>
+          <div><label style="font-size:11px;font-weight:600;">Versão posterior</label><select id="compareAfter" style="width:100%;padding:8px;"></select></div>
         </div>
         <div id="compareDetail"></div>
-        <h3 style="font-family:'Source Serif 4',serif;font-size:20px;margin:18px 0 10px;">Situação dos Municípios</h3>
-        <div class="compare-table-wrap">
-          <table class="compare-table">
-            <thead><tr><th>Município</th><th>Situação</th><th>Versões disponíveis</th><th>Última análise</th></tr></thead>
-            <tbody id="compareMunicipioStatus"></tbody>
-          </table>
-        </div>
       </div>
     </div>
   </div>
@@ -503,8 +436,7 @@ function getNomeCanonicoMunicipio(nomeMun) {
 
 function getRedecDoMunicipio(nomeMun) {
   const canonico = getNomeCanonicoMunicipio(nomeMun);
-  if (MAPA_REDECS_RJ[canonico]) return MAPA_REDECS_RJ[canonico];
-  return "Outra REDEC";
+  return MAPA_REDECS_RJ[canonico] || "Outra REDEC";
 }
 
 function atualizarMunicipiosEscopo() {
@@ -513,27 +445,13 @@ function atualizarMunicipiosEscopo() {
     document.getElementById("mapTitle").textContent = "Estado do Rio de Janeiro — Visão Geral (92 municípios)";
   } else {
     MUNICIPIOS_ESCOPO = Object.keys(MAPA_REDECS_RJ).filter(m => MAPA_REDECS_RJ[m] === redecAtiva).sort((a,b)=>a.localeCompare(b,"pt-BR"));
-    document.getElementById("mapTitle").textContent = `Estado do Rio de Janeiro — ${redecAtiva} em destaque`;
+    document.getElementById("mapTitle").textContent = `Estado do Rio de Janeiro — ${redecAtiva}`;
   }
 }
 
 const RISK_TYPES = {
-  chuvas: {
-    label: "Chuvas intensas",
-    shortLabel: "Chuvas",
-    prefix: "C",
-    dataKey: "analises",
-    riscoKeywords: ["geral", "chuva"],
-    history: {}
-  },
-  estiagem: {
-    label: "Estiagem e fogo em vegetação",
-    shortLabel: "Estiagem/Fogo",
-    prefix: "FV",
-    dataKey: "analisesEstiagem",
-    riscoKeywords: ["geral", "estiagem", "seca", "escassez", "fogo", "incendio", "incêndio", "vegetacao", "vegetação", "el nino", "el niño", "calor", "umidade"],
-    history: {}
-  }
+  chuvas: { label: "Chuvas intensas", shortLabel: "Chuvas", prefix: "C", dataKey: "analises", riscoKeywords: ["geral", "chuva"], history: {} },
+  estiagem: { label: "Estiagem e fogo", shortLabel: "Estiagem/Fogo", prefix: "FV", dataKey: "analisesEstiagem", riscoKeywords: ["geral", "estiagem", "seca", "fogo"], history: {} }
 };
 
 let riskTipoAtivoQuality = "chuvas";
@@ -551,14 +469,11 @@ function extrairAnoNumero(val) {
 function getActiveCriteria(tipo, ciclo) {
   const cAno = extrairAnoNumero(ciclo || anoAtivo);
   if (!DICIONARIO_GLOBAL || DICIONARIO_GLOBAL.length === 0) return [];
-
   let encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && extrairAnoNumero(d.ciclo) === cAno);
   if (encontrados.length > 0) return encontrados.sort((a,b) => a.id - b.id);
-
   const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
   if (doTipo.length > 0) {
-    const anos = doTipo.map(d => extrairAnoNumero(d.ciclo));
-    const maxAno = Math.max(...anos);
+    const maxAno = Math.max(...doTipo.map(d => extrairAnoNumero(d.ciclo)));
     return doTipo.filter(d => extrairAnoNumero(d.ciclo) === maxAno).sort((a,b) => a.id - b.id);
   }
   return [];
@@ -569,7 +484,6 @@ function normalizarStatus(st){
   if(s === "atualizado" || s === "ok") return "ok";
   if(s === "desatualizado" || s === "outdated") return "outdated";
   if(s.includes("verificar") || s === "warn") return "warn";
-  if(s.includes("nao entregue") || s === "bad") return "bad";
   return "bad";
 }
 
@@ -601,11 +515,8 @@ function recalcAnos() {
 }
 
 const STATUS_LABEL = {ok:"Atualizado", outdated:"Desatualizado", warn:"Verificar", bad:"Não entregue"};
-const STATUS_FILL  = {ok:"#6EC49A",    outdated:"#E8807C", warn:"#9AA4B4",   bad:"#F5C07A"};
-const STATUS_COLOR = {ok:"#1F7A4D",    outdated:"#B0241D", warn:"#3F4A5E",   bad:"#B5650A"};
-const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"Não atende", pending:"Pendente de análise"};
-const QSTATUS_ICON = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
-const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
+const STATUS_FILL  = {ok:"#6EC49A", outdated:"#E8807C", warn:"#9AA4B4", bad:"#F5C07A"};
+const STATUS_COLOR = {ok:"#1F7A4D", outdated:"#B0241D", warn:"#3F4A5E", bad:"#B5650A"};
 
 function getMunicipioSummary(){
   const map = {};
@@ -623,7 +534,6 @@ function getMunicipioSummary(){
     }
     if(d.risco && d.risco !== "—") map[canonico].riscos.push(d.risco);
   });
-
   return map;
 }
 
@@ -654,9 +564,9 @@ let mapInstance = null;
 function initMap(){
   const summary = getMunicipioSummary();
   if(!mapInstance) {
-    mapInstance = L.map("map", {zoomControl:true, scrollWheelZoom:true});
+    mapInstance = L.map("map", {zoomControl:true, scrollWheelZoom:false});
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-      attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
+      attribution: "Tiles &copy; Esri &mdash; SEDEC RJ",
       maxZoom: 14
     }).addTo(mapInstance);
   }
@@ -668,8 +578,7 @@ function initMap(){
   }
 
   function onEachFeature(feature, layer){
-    const nomeOriginal = feature.properties.NM_MUN;
-    const canonico = getNomeCanonicoMunicipio(nomeOriginal);
+    const canonico = getNomeCanonicoMunicipio(feature.properties.NM_MUN);
     const isNoEscopo = ESCOPO_SET.has(normalizarTexto(canonico));
     const info = summary[canonico];
     const redecNome = getRedecDoMunicipio(canonico);
@@ -688,22 +597,8 @@ function initMap(){
         <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
         <div class="popup-riscos">${riscosHtml}</div>
         ${obsHtml}
-        ${buildPopupQualityBlock(canonico)}
       `);
-      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {
-        sticky: true,
-        direction: "top",
-        offset: [0, -10],
-        className: "mun-tooltip",
-        opacity: 1
-      });
-    } else {
-      layer.bindPopup(`
-        <div class="popup-nome">${canonico}</div>
-        <div class="popup-redec">${redecNome}</div>
-        <div class="popup-status none">Fora do filtro regional</div>
-      `);
-      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {
+      layer.bindTooltip(`<b>${canonico}</b>`, {
         sticky: true,
         direction: "top",
         offset: [0, -10],
@@ -715,20 +610,15 @@ function initMap(){
     layer.on({
       mouseover(e){
         e.target.setStyle(isNoEscopo ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.75, weight:1.2, color:"#3A4D6B"});
-        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-          e.target.bringToFront();
-        }
       },
       mouseout(e){
-        // Restaura exatamente a cor do status calculado para evitar a troca indevida para "bad"
         const currentSummary = getMunicipioSummary();
-        const originalStyle = obterEstiloFeature(e.target.feature, currentSummary, ESCOPO_SET);
-        e.target.setStyle(originalStyle);
+        e.target.setStyle(obterEstiloFeature(e.target.feature, currentSummary, ESCOPO_SET));
         e.target.closeTooltip();
       },
       click(e){
         e.target.closeTooltip();
-        if(isNoEscopo) mapInstance.fitBounds(e.target.getBounds(),{padding:[40,40]});
+        if(isNoEscopo) mapInstance.fitBounds(e.target.getBounds(),{padding:[20,20]});
         e.target.openPopup();
       }
     });
@@ -745,12 +635,10 @@ function initMap(){
     ).getBounds();
 
     if (bounds.isValid()) {
-      mapInstance.fitBounds(bounds, {padding:[18,18]});
+      mapInstance.fitBounds(bounds, {padding:[14,14]});
     } else {
-      mapInstance.fitBounds(window._geojsonLayer.getBounds(), {padding:[12,12]});
+      mapInstance.fitBounds(window._geojsonLayer.getBounds(), {padding:[10,10]});
     }
-  } else {
-    mapInstance.setView([-22.4, -43.8], 8);
   }
 
   if(!window._legendAdded) {
@@ -758,7 +646,7 @@ function initMap(){
     legend.onAdd = function(){
       const div = L.DomUtil.create("div","map-legend");
       div.innerHTML = `
-        <div class="map-legend-title">Situação dos Planos</div>
+        <div class="map-legend-title">Situação</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#6EC49A"></div>Atualizado</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#E8807C"></div>Desatualizado</div>
         <div class="map-legend-item"><div class="map-legend-swatch" style="background:#9AA4B4"></div>A verificar</div>
@@ -776,8 +664,7 @@ function updateMapColors(){
   const summary = getMunicipioSummary();
   const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO.map(m => normalizarTexto(m)));
   window._geojsonLayer.eachLayer(layer=>{
-    const estilo = obterEstiloFeature(layer.feature, summary, ESCOPO_SET);
-    layer.setStyle(estilo);
+    layer.setStyle(obterEstiloFeature(layer.feature, summary, ESCOPO_SET));
   });
 }
 
@@ -852,8 +739,8 @@ function renderStats(){
     : "";
   document.getElementById("stats").innerHTML=`
     ${historicoBanner}
-    <div class="stat"><div class="num">${MUNICIPIOS_ESCOPO.length}</div><div class="label">Municípios na Regional</div></div>
-    <div class="stat ok"><div class="num">${counts.ok}</div><div class="label">Atualizados (${cicloTexto})</div></div>
+    <div class="stat"><div class="num">${MUNICIPIOS_ESCOPO.length}</div><div class="label">Municípios</div></div>
+    <div class="stat ok"><div class="num">${counts.ok}</div><div class="label">Atualizados</div></div>
     <div class="stat" style="border-top-color:var(--red)"><div class="num">${counts.outdated}</div><div class="label">Desatualizados</div></div>
     <div class="stat warn"><div class="num">${counts.warn}</div><div class="label">A verificar</div></div>
     <div class="stat bad"><div class="num">${counts.bad}</div><div class="label">Não entregues</div></div>
@@ -914,7 +801,7 @@ function renderTable(){
 
   const body = document.getElementById("tableBody");
   if (!groups.length) {
-    body.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum município localizado para os filtros selecionados.</td></tr>`;
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum município localizado.</td></tr>`;
     return;
   }
 
@@ -923,16 +810,16 @@ function renderTable(){
     const single = g.items.length === 1;
 
     const summaryRow = `
-      <tr class="mun-group-row${single ? " single" : ""}" data-group="${groupId}" tabindex="${single ? -1 : 0}" role="${single ? "row" : "button"}" aria-expanded="false">
+      <tr class="mun-group-row${single ? " single" : ""}" data-group="${groupId}" tabindex="${single ? -1 : 0}">
         <td class="municipio-cell">
-          <span class="mun-toggle" aria-hidden="true" style="${single ? "visibility:hidden" : ""}">▸</span>${g.municipio}
-          ${g.obs ? `<div style="font-size:11.5px;color:#B5650A;font-weight:400;margin-top:4px;margin-left:20px;line-height:1.4;">⚠ ${g.obs}</div>` : ""}
+          <span class="mun-toggle" style="${single ? "visibility:hidden" : ""}">▸</span>${g.municipio}
+          ${g.obs ? `<div style="font-size:11px;color:#B5650A;margin-top:3px;">⚠ ${g.obs}</div>` : ""}
         </td>
-        <td class="dim">${single ? g.items[0].risco : `<span class="mun-summary-count">${g.items.length} planos cadastrados</span>`}</td>
+        <td class="dim">${single ? g.items[0].risco : `${g.items.length} planos`}</td>
         <td class="mono">${single ? g.items[0].versao : "—"}</td>
         <td class="mono dim">${single ? g.items[0].atualizacao : "—"}</td>
         <td><span class="stamp ${g.status}">${STATUS_LABEL[g.status]}</span></td>
-        <td class="linkpdf">${single && g.items[0].link ? `<a href="${g.items[0].link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Abrir ↗</a>` : '<span class="dim">—</span>'}</td>
+        <td class="linkpdf">${single && g.items[0].link ? `<a href="${g.items[0].link}" target="_blank" rel="noopener">Abrir ↗</a>` : '<span class="dim">—</span>'}</td>
       </tr>`;
 
     if (single) return summaryRow;
@@ -954,13 +841,10 @@ function renderTable(){
     const groupId = tr.dataset.group;
     const detailRows = body.querySelectorAll(`tr.mun-detail-row[data-group="${groupId}"]`);
     if (!detailRows.length) return;
-    const toggle = () => {
+    tr.addEventListener("click", () => {
       const expanded = tr.classList.toggle("expanded");
-      tr.setAttribute("aria-expanded", expanded ? "true" : "false");
       detailRows.forEach(r => r.classList.toggle("visible", expanded));
-    };
-    tr.addEventListener("click", toggle);
-    tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+    });
   });
 }
 
@@ -1002,14 +886,6 @@ function setAno(ano){
   updateMapColors(); 
   initDonut(); 
   renderTable();
-  renderQualityMeta();
-  renderPendingAnalysisAlert();
-
-  if(document.getElementById("qualityModalBackdrop").classList.contains("open")){
-    closeDrilldown();
-    renderCritList(riskTipoAtivoQuality);
-    renderQualityMatrix(riskTipoAtivoQuality);
-  }
 }
 
 function buildYearBtns(){
@@ -1037,451 +913,31 @@ function initRedecSelector() {
     renderStats();
     initDonut();
     renderTable();
-    renderQualityMeta();
-    renderPendingAnalysisAlert();
   });
-}
-
-function municipioVersions(municipio, tipo){ 
-  const canonico = getNomeCanonicoMunicipio(municipio);
-  return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[canonico]) || []; 
-}
-
-function versoesDoCiclo(municipio, tipo, ano){
-  const targetAno = extrairAnoNumero(ano || anoAtivo);
-  return municipioVersions(municipio, tipo).filter(v => {
-    const c = extrairAnoNumero(v.ciclo || v.dataAnalise || v.rotulo);
-    return c === targetAno;
-  });
-}
-
-function latestQualityVersion(municipio, tipo, ano){
-  const v = versoesDoCiclo(municipio, tipo, ano != null ? ano : anoAtivo);
-  return v.length ? v[v.length-1] : null;
-}
-
-function latestQualityData(municipio, tipo, ano){
-  const v = latestQualityVersion(municipio, tipo, ano);
-  if(!v) return null;
-  return {analisadoEm:v.dataAnalise, fonte:v.documento, criterios:v.criterios, versaoAnalise:v.id, rotulo:v.rotulo, sintese:v.sintese};
-}
-
-function qualityStatusFor(municipio, critId, tipo, ano){
-  const m = latestQualityData(municipio, tipo, ano);
-  if(!m || !m.criterios || !m.criterios[critId]) return "pending";
-  return m.criterios[critId].status;
-}
-
-function municipioQualitySummary(municipio, tipo, ano){
-  const m = latestQualityData(municipio, tipo, ano);
-  if(!m || !m.criterios) return null;
-  const counts = {ok:0, warn:0, bad:0};
-  const crits = getActiveCriteria(tipo, ano || anoAtivo);
-  crits.forEach(c=>{
-    const st = m.criterios[c.id] ? m.criterios[c.id].status : null;
-    if(st && counts[st] !== undefined) counts[st]++;
-  });
-  return counts;
-}
-
-function buildPopupQualityBlock(municipio){
-  const canonico = getNomeCanonicoMunicipio(municipio);
-  return Object.keys(RISK_TYPES).map(tipo=>{
-    const cfg = RISK_TYPES[tipo];
-    const summary = municipioQualitySummary(canonico, tipo);
-    if(!summary){
-      return `
-        <div class="popup-quality">
-          <div class="popup-quality-title">Qualidade — ${cfg.shortLabel}</div>
-          <div class="popup-quality-pending">Pendente de análise</div>
-          <button class="popup-quality-btn" data-quality-mun="${canonico}" data-quality-tipo="${tipo}">Ver análise ↗</button>
-        </div>
-      `;
-    }
-    return `
-      <div class="popup-quality">
-        <div class="popup-quality-title">Qualidade — ${cfg.shortLabel}</div>
-        <div class="popup-quality-chips">
-          <span class="pqc ok">${summary.ok} total</span>
-          <span class="pqc warn">${summary.warn} parcial</span>
-          <span class="pqc bad">${summary.bad} não atende</span>
-        </div>
-        <button class="popup-quality-btn" data-quality-mun="${canonico}" data-quality-tipo="${tipo}">Ver análise ↗</button>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderRiskTabs(containerId, tipoAtivo, onSelect){
-  const wrap = document.getElementById(containerId);
-  wrap.innerHTML = Object.keys(RISK_TYPES).map(tipo=>
-    `<button class="risk-tab" role="tab" data-tipo="${tipo}" aria-pressed="${tipo===tipoAtivo}">${RISK_TYPES[tipo].label}</button>`
-  ).join("");
-  wrap.querySelectorAll(".risk-tab").forEach(btn=>{
-    btn.addEventListener("click", ()=>onSelect(btn.dataset.tipo));
-  });
-}
-
-function renderCritList(tipo){
-  const crits = getActiveCriteria(tipo, anoAtivo);
-  document.getElementById("critList").innerHTML = crits.map(c=>
-    `<li><b>${RISK_TYPES[tipo].prefix}${c.id}. ${c.short}:</b> ${c.full}</li>`
-  ).join("");
-}
-
-function renderQualityMeta(){
-  const parts = Object.keys(RISK_TYPES).map(tipo=>{
-    const analisados = MUNICIPIOS_ESCOPO.filter(m=>latestQualityData(m, tipo)).length;
-    return `${analisados}/${MUNICIPIOS_ESCOPO.length} ${RISK_TYPES[tipo].shortLabel.toLowerCase()}`;
-  });
-  document.getElementById("qualityMeta").textContent = parts.join(" · ") + " analisados";
-  const metaEl = document.getElementById("qualityOpenMeta");
-  if(metaEl) metaEl.textContent = parts.join(" · ");
-}
-
-function renderQualityMatrix(tipo){
-  const cfg = RISK_TYPES[tipo];
-  const crits = getActiveCriteria(tipo, anoAtivo);
-  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length || 1);
-
-  const headRow = document.getElementById("qualityHeadRow");
-  headRow.innerHTML = `<th class="mun-col">Município</th>` +
-    crits.map(c=>`<th class="crit-col" title="${c.full}"><span class="crit-num">${cfg.prefix}${c.id}</span><span class="crit-label">${c.short}</span></th>`).join("");
-
-  const body = document.getElementById("qualityBody");
-  body.innerHTML = MUNICIPIOS_ESCOPO.map(municipio=>{
-    const summary = municipioQualitySummary(municipio, tipo);
-    const sub = summary
-      ? `${summary.ok} total · ${summary.warn} parcial · ${summary.bad} não atende`
-      : "Pendente de análise";
-    const cells = crits.map(c=>{
-      const st = qualityStatusFor(municipio, c.id, tipo);
-      const cls = st==="pending" ? "pending" : st;
-      return `<td><button class="cell-btn ${cls}" data-mun="${municipio}" data-crit="${c.id}" aria-label="${municipio} — ${cfg.prefix}${c.id}: ${QSTATUS_LABEL[st]}"><span class="cell-icon" aria-hidden="true">${QSTATUS_ICON[st] || "—"}</span></button></td>`;
-    }).join("");
-    return `
-      <tr>
-        <td class="mun-name" data-mun="${municipio}">${municipio}<span class="mun-sub">${sub}</span></td>
-        ${cells}
-      </tr>
-    `;
-  }).join("");
-
-  body.querySelectorAll(".cell-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>openDrilldown(btn.dataset.mun, +btn.dataset.crit, riskTipoAtivoQuality));
-  });
-  body.querySelectorAll(".mun-name").forEach(td=>{
-    td.addEventListener("click",()=>openDrilldown(td.dataset.mun, null, riskTipoAtivoQuality));
-  });
-}
-
-function openDrilldown(municipio, focusCritId, tipo){
-  const cfg = RISK_TYPES[tipo];
-  const panel = document.getElementById("drilldown");
-  const data = latestQualityData(municipio, tipo);
-  const crits = getActiveCriteria(tipo, anoAtivo);
-
-  if(!data){
-    panel.innerHTML = `
-      <div class="dd-header">
-        <div>
-          <p class="dd-title">${municipio}</p>
-          <p class="dd-sub">Qualidade dos Planos · ${cfg.label}</p>
-        </div>
-        <button class="dd-close" id="ddClose" aria-label="Fechar">✕</button>
-      </div>
-      <div class="dd-pending">Este município ainda não foi analisado para ${cfg.label.toLowerCase()} no ciclo ${formatCicloLabel(anoAtivo)}. <b>Pendente de análise.</b></div>
-    `;
-  } else {
-    const summary = municipioQualitySummary(municipio, tipo);
-    const resumoHtml = data.sintese ? `
-      <div class="dd-resumo">
-        <div class="dd-resumo-head">
-          <span class="dd-resumo-title">Resumo da análise</span>
-          <button class="dd-copy-btn" id="ddCopyResumo">Copiar resumo</button>
-        </div>
-        <p class="dd-resumo-text">${data.sintese}</p>
-      </div>
-    ` : "";
-    panel.innerHTML = `
-      <div class="dd-header">
-        <div>
-          <p class="dd-title">${municipio}</p>
-          <p class="dd-sub">${cfg.label} · ${data.fonte || ""} · analisado em ${data.analisadoEm}</p>
-        </div>
-        <button class="dd-close" id="ddClose" aria-label="Fechar">✕</button>
-      </div>
-      ${resumoHtml}
-      <div class="dd-summary">
-        <span class="sumchip ok"><span class="dot"></span>${summary.ok} atende totalmente</span>
-        <span class="sumchip warn"><span class="dot"></span>${summary.warn} atende parcialmente</span>
-        <span class="sumchip bad"><span class="dot"></span>${summary.bad} não atende</span>
-      </div>
-      <div class="dd-body">
-        ${crits.map(c=>{
-          const item = data.criterios[c.id];
-          const st = item ? item.status : "pending";
-          return `
-            <div class="dd-item" id="dd-item-${c.id}">
-              <div class="dd-num">${cfg.prefix}${c.id}</div>
-              <div>
-                <p class="dd-item-title">${c.short} <span class="dd-tag ${st==='pending'?'bad':st}">${QSTATUS_LABEL[st]}</span></p>
-                <p class="dd-item-text">${item ? item.texto : "Critério ainda não avaliado para este município."}</p>
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    `;
-  }
-
-  panel.classList.add("open");
-  document.getElementById("ddClose").addEventListener("click", closeDrilldown);
-  panel.scrollIntoView({behavior:"smooth", block:"start"});
-}
-
-function closeDrilldown(){ document.getElementById("drilldown").classList.remove("open"); }
-
-function setQualityTipo(tipo){
-  riskTipoAtivoQuality = tipo;
-  document.querySelectorAll("#qualityRiskTabs .risk-tab").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.tipo===tipo)));
-  closeDrilldown();
-  renderCritList(tipo);
-  renderQualityMatrix(tipo);
-}
-
-function openQualityModal(municipio, tipo){
-  document.getElementById("qualityModalBackdrop").classList.add("open");
-  document.body.style.overflow = "hidden";
-  renderRiskTabs("qualityRiskTabs", riskTipoAtivoQuality, setQualityTipo);
-  setQualityTipo(tipo || riskTipoAtivoQuality);
-  if(municipio) openDrilldown(municipio, null, riskTipoAtivoQuality);
-}
-
-function closeQualityModal(){
-  document.getElementById("qualityModalBackdrop").classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-document.getElementById("qualityOpenBtn").addEventListener("click", ()=>openQualityModal(null));
-document.getElementById("qualityModalClose").addEventListener("click", closeQualityModal);
-document.getElementById("qualityModalBackdrop").addEventListener("click", (e)=>{
-  if(e.target.id === "qualityModalBackdrop") closeQualityModal();
-});
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Escape" && document.getElementById("qualityModalBackdrop").classList.contains("open")){
-    closeQualityModal();
-  }
-});
-document.addEventListener("click", (e)=>{
-  const btn = e.target.closest("[data-quality-mun]");
-  if(btn) openQualityModal(btn.dataset.qualityMun, btn.dataset.qualityTipo);
-});
-
-/* ============================================================================
-   LÓGICA — COMPARATIVO ENTRE VERSÕES
-   ============================================================================ */
-function compareDelta(beforeStatus, afterStatus){
-  if(!(beforeStatus in QSTATUS_SCORE) || !(afterStatus in QSTATUS_SCORE)) return null;
-  return QSTATUS_SCORE[afterStatus] - QSTATUS_SCORE[beforeStatus];
-}
-
-function evolutionLabel(delta){
-  if(delta === null) return {symbol:"—", cls:"na", text:"Sem base comparável"};
-  if(delta >= 2) return {symbol:"↑↑", cls:"up", text:"Evolução forte"};
-  if(delta === 1) return {symbol:"↑", cls:"up", text:"Evolução"};
-  if(delta === 0) return {symbol:"→", cls:"flat", text:"Sem alteração"};
-  if(delta === -1) return {symbol:"↓", cls:"down", text:"Regressão"};
-  return {symbol:"↓↓", cls:"down", text:"Regressão forte"};
-}
-
-function compareStatusForMunicipio(municipio, tipo){
-  const versions = municipioVersions(municipio, tipo);
-  if(versions.length >= 2) return {cls:"ready", label:"Comparável", detail:`${versions.length} versões`};
-  if(versions.length === 1) return {cls:"wait", label:"Aguardando nova versão", detail:"1 versão"};
-  return {cls:"none", label:"Sem documento recebido", detail:"0 versões"};
-}
-
-function renderCompareCards(tipo){
-  const ready = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length >= 2).length;
-  const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
-  const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
-  document.getElementById("compareCards").innerHTML = `
-    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios comparáveis</div></div>
-    <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
-    <div class="compare-card"><div class="num">${none}</div><div class="label">sem documento inicial</div></div>
-  `;
-  document.getElementById("compareNote").innerHTML = `Comparação técnica das versões registradas no histórico.`;
-}
-
-function renderCompareMunicipioStatus(tipo){
-  const tbody = document.getElementById("compareMunicipioStatus");
-  tbody.innerHTML = MUNICIPIOS_ESCOPO.map(m=>{
-    const versions = municipioVersions(m, tipo);
-    const status = compareStatusForMunicipio(m, tipo);
-    const latest = versions.length ? versions[versions.length-1] : null;
-    return `<tr>
-      <td class="municipio-cell">${m}</td>
-      <td><span class="compare-status ${status.cls}">${status.label}</span></td>
-      <td>${status.detail}</td>
-      <td>${latest ? `${latest.rotulo} ·${latest.dataAnalise}` : "—"}</td>
-    </tr>`;
-  }).join("");
-}
-
-function populateCompareSelectors(selectedMunicipio, tipo){
-  const munSel = document.getElementById("compareMunicipio");
-  munSel.innerHTML = MUNICIPIOS_ESCOPO.map(m=>`<option value="${m}">${m}</option>`).join("");
-  if(selectedMunicipio && MUNICIPIOS_ESCOPO.includes(selectedMunicipio)) {
-    munSel.value = selectedMunicipio;
-  }
-  
-  const munAtual = munSel.value;
-  const versions = municipioVersions(munAtual, tipo);
-  const beforeSel = document.getElementById("compareBefore");
-  const afterSel = document.getElementById("compareAfter");
-
-  if(versions.length < 2) {
-    beforeSel.innerHTML = `<option value="">Sem versão suficiente</option>`;
-    afterSel.innerHTML = `<option value="">Sem versão suficiente</option>`;
-    beforeSel.disabled = true;
-    afterSel.disabled = true;
-    renderCompareDetail(tipo);
-    return;
-  }
-
-  const opts = versions.map((v, i) => `<option value="${i}">${v.rotulo || "Versão"} — (${v.dataAnalise})</option>`).join("");
-  beforeSel.innerHTML = opts;
-  afterSel.innerHTML = opts;
-  beforeSel.disabled = false;
-  afterSel.disabled = false;
-
-  beforeSel.value = "0";
-  afterSel.value = String(versions.length - 1);
-  renderCompareDetail(tipo);
-}
-
-function renderCompareDetail(tipo){
-  const cfg = RISK_TYPES[tipo];
-  const municipio = document.getElementById("compareMunicipio").value;
-  const versions = municipioVersions(municipio, tipo);
-  const target = document.getElementById("compareDetail");
-
-  if(versions.length === 0){
-    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: sem análise registrada para ${cfg.label.toLowerCase()}.</div>`;
-    return;
-  }
-  if(versions.length === 1){
-    const v = versions[0];
-    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: possui apenas 1 versão registrada (<b>${v.rotulo}</b> em ${v.dataAnalise}). Aguardando versão subsequente para comparação.</div>`;
-    return;
-  }
-
-  const beforeIdx = Number(document.getElementById("compareBefore").value);
-  const afterIdx = Number(document.getElementById("compareAfter").value);
-  const before = versions[beforeIdx];
-  const after = versions[afterIdx];
-
-  if(!before || !after || beforeIdx === afterIdx){
-    target.innerHTML = `<div class="compare-note">Selecione duas versões diferentes nos campos acima para comparar a evolução.</div>`;
-    return;
-  }
-
-  const anoRef = extrairAnoNumero(after.ciclo || after.dataAnalise || anoAtivo);
-  const crits = getActiveCriteria(tipo, anoRef);
-
-  let improved=0, stable=0, regressed=0;
-  const rows = crits.map(c=>{
-    const b = before.criterios[c.id]?.status || "pending";
-    const a = after.criterios[c.id]?.status || "pending";
-    const delta = compareDelta(b, a);
-    const evo = evolutionLabel(delta);
-    if(delta > 0) improved++; else if(delta === 0) stable++; else if(delta < 0) regressed++;
-    return `<tr>
-      <td><b>${cfg.prefix}${c.id}</b> — ${c.short}</td>
-      <td class="compare-cell"><span class="before">${QSTATUS_ICON[b]} ${QSTATUS_LABEL[b]}</span> → <span class="after">${QSTATUS_ICON[a]} ${QSTATUS_LABEL[a]}</span></td>
-      <td><span class="evo ${evo.cls}" title="${evo.text}">${evo.symbol}</span></td>
-    </tr>`;
-  }).join("");
-
-  target.innerHTML = `
-    <div class="compare-note"><b>${municipio}</b> (${cfg.label}): ${before.rotulo} vs ${after.rotulo}. Evoluções: <b>${improved}</b> · Estáveis: <b>${stable}</b> · Regressões: <b>${regressed}</b>.</div>
-    <div class="compare-table-wrap"><table class="compare-table">
-      <thead><tr><th>Critério</th><th>Antes → Depois</th><th>Evolução</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-  `;
-}
-
-function setCompareTipo(tipo){
-  riskTipoAtivoCompare = tipo;
-  document.querySelectorAll("#compareRiskTabs .risk-tab").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.tipo===tipo)));
-  renderCompareCards(tipo);
-  renderCompareMunicipioStatus(tipo);
-  populateCompareSelectors(document.getElementById("compareMunicipio").value || MUNICIPIOS_ESCOPO[0], tipo);
-}
-
-function openCompareModal(municipio){
-  document.getElementById("compareModalBackdrop").classList.add("open");
-  document.body.style.overflow = "hidden";
-  renderRiskTabs("compareRiskTabs", riskTipoAtivoCompare, setCompareTipo);
-  renderCompareCards(riskTipoAtivoCompare);
-  renderCompareMunicipioStatus(riskTipoAtivoCompare);
-  populateCompareSelectors(municipio || MUNICIPIOS_ESCOPO[0], riskTipoAtivoCompare);
-}
-
-function closeCompareModal(){
-  document.getElementById("compareModalBackdrop").classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-document.getElementById("compareOpenBtn").addEventListener("click", ()=>openCompareModal(null));
-document.getElementById("compareModalClose").addEventListener("click", closeCompareModal);
-document.getElementById("compareModalBackdrop").addEventListener("click", (e)=>{
-  if(e.target.id === "compareModalBackdrop") closeCompareModal();
-});
-document.getElementById("compareMunicipio").addEventListener("change", ()=>populateCompareSelectors(document.getElementById("compareMunicipio").value, riskTipoAtivoCompare));
-document.getElementById("compareBefore").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
-document.getElementById("compareAfter").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
-
-function municipioTemDocumentoParaTipo(municipio, tipo){
-  const kws = RISK_TYPES[tipo].riscoKeywords || [];
-  const canonico = getNomeCanonicoMunicipio(municipio);
-  return DATA.some(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.status !== "bad" &&
-    kws.some(k => normalizarTexto(d.risco).includes(normalizarTexto(k))));
-}
-
-function renderPendingAnalysisAlert(){
-  const parts = [];
-  Object.keys(RISK_TYPES).forEach(tipo=>{
-    const pending = MUNICIPIOS_ESCOPO.filter(m => municipioTemDocumentoParaTipo(m, tipo) && !latestQualityData(m, tipo));
-    if(pending.length) parts.push(`${RISK_TYPES[tipo].shortLabel}: ${pending.join(", ")}`);
-  });
-  const alert = document.getElementById("pendingAnalysisAlert");
-  const txt   = document.getElementById("pendingAnalysisText");
-  if(!alert || !txt) return;
-  if(parts.length === 0){ alert.style.display="none"; return; }
-  txt.textContent = `Municípios com plano entregue aguardando análise técnica — ${parts.join(" · ")}`;
-  alert.style.display = "block";
 }
 
 /* ============================================================================
-   CONEXÃO COM O GOOGLE SHEETS E INICIALIZAÇÃO
+   CONEXÃO COM TEMPO DECORRIDO E ANIMAÇÃO
    ============================================================================ */
 async function carregarDadosDaPlanilha() {
   const syncSubline = document.getElementById("syncSubline");
-  if(syncSubline) syncSubline.innerHTML = "⏳ Sincronizando rede estadual...";
+  const loadingBar = document.getElementById("syncLoadingBar");
+  
+  let segundos = 0;
+  const timer = setInterval(() => {
+    segundos++;
+    if(syncSubline) syncSubline.innerHTML = `⏳ Sincronizando rede estadual (${segundos}s)...`;
+  }, 1000);
 
   try {
     const response = await fetch(API_URL);
     if(!response.ok) throw new Error("Status HTTP: " + response.status);
     
     const dados = await response.json();
+    clearInterval(timer);
 
-    // 0. Dicionário da Planilha Mestre
     DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
-    // 1. Entregas consolidadas com normalização de nomes
     const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
     ALL_DATA = rawEntregas.map(d => {
       const nomeLimpo = getNomeCanonicoMunicipio(d.municipio);
@@ -1494,42 +950,24 @@ async function carregarDadosDaPlanilha() {
       };
     });
 
-    // 2. Análises de todas as REDECs
-    Object.keys(RISK_TYPES).forEach(tipo=>{
-      const cfg = RISK_TYPES[tipo];
-      cfg.history = {};
-      Object.keys(MAPA_REDECS_RJ).forEach(m => cfg.history[m] = []);
-      const lista = (dados && dados[cfg.dataKey]) || [];
-      lista.forEach(a => {
-        const mun = getNomeCanonicoMunicipio(a.municipio);
-        if(cfg.history[mun]) cfg.history[mun].push({
-          ...a,
-          municipio: mun
-        });
-      });
-      Object.keys(MAPA_REDECS_RJ).forEach(m => {
-        cfg.history[m].sort((x, y) => new Date(x.dataAnalise) - new Date(y.dataAnalise));
-      });
-    });
-
-    // 3. Renderização
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
-    renderPendingAnalysisAlert();
-    renderQualityMeta();
 
+    if(loadingBar) loadingBar.style.display = "none";
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
     if(syncSubline) {
       syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Rede Estadual Integrada`;
     }
 
   } catch (err) {
+    clearInterval(timer);
+    if(loadingBar) loadingBar.style.display = "none";
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️ Conexão em modo offline.`;
     
     initRedecSelector();
     atualizarMunicipiosEscopo();
@@ -1540,7 +978,7 @@ async function carregarDadosDaPlanilha() {
   }
 }
 
-// Inicializa a aplicação
+// Inicialização
 carregarDadosDaPlanilha();
 </script>
 
