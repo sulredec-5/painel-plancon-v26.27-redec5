@@ -377,8 +377,8 @@
   <footer>
     <hr>
     <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha gerenciada pela equipe da REDEC 5.</p>
-    <p>Critério de "atualizado": o município tem pelo menos um documento na pasta do REDEC 5 do ano atual <b>ou</b> do ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas.</p>
-    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos critérios essenciais de planejamento e prontidão operacional definidos pela REDEC para o respectivo ciclo. Município sem análise registrada aparece como "Pendente de análise" na matriz.</p>
+    <p>Critério de "atualizado": o município tem pelo menos um documento na pasta do REDEC 5 do ano atual <b>ou</b> do ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente[cite: 1]. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas[cite: 1].</p>
+    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos critérios essenciais de planejamento e prontidão operacional definidos pela REDEC para o respectivo ciclo[cite: 1]. Município sem análise registrada aparece como "Pendente de análise" na matriz[cite: 1].</p>
   </footer>
 
   <!-- ===================== MODAL: QUALIDADE DOS PLANOS ===================== -->
@@ -462,7 +462,7 @@
 <script src="mapa.js"></script>
 <script>
 /* ============================================================================
-   CONFIGURAÇÃO E CONEXÃO COM O WEB APP (Plancons modelo 26-27)
+   CONFIGURAÇÃO E CONEXÃO COM O WEB APP
    ============================================================================ */
 const API_URL = "https://script.google.com/macros/s/AKfycbxbhRXtgXvJ4tGn5XxkqrkzZ1v7N9yqyP6BkeBfjbnPuiAcCHJbJhR8xxuqFpVwLByc0A/exec";
 
@@ -473,16 +473,6 @@ const REDEC = [
   "Barra do Piraí","Barra Mansa","Comendador Levy Gasparian","Itatiaia",
   "Paraíba do Sul","Paty do Alferes","Pinheiral","Porto Real","Quatis",
   "Resende","Rio das Flores","Três Rios","Valença","Vassouras","Volta Redonda"
-];
-
-const FALLBACK_CRITERIOS = [
-  {id:1, short:"Áreas de risco e COBRADE", full:"As áreas de risco estão mapeadas e relacionadas à codificação COBRADE?"},
-  {id:2, short:"Alerta e rotas de evacuação", full:"O plano prevê sistema de alerta e identifica as rotas de evacuação?"},
-  {id:3, short:"Abrigos e recursos humanos", full:"Os abrigos estão identificados e descritos, incluindo os recursos humanos disponíveis?"},
-  {id:4, short:"Recursos para resposta", full:"Há descrição dos recursos disponíveis para a resposta?"},
-  {id:5, short:"Matriz de responsabilidades", full:"A matriz de responsabilidades indica quem atua e quais recursos serão mobilizados?"},
-  {id:6, short:"Resgate e cuidado animal", full:"O plano contempla resgate, acolhimento e cuidado de animais?"},
-  {id:7, short:"Exercícios simulados", full:"Estão previstos exercícios simulados?"}
 ];
 
 const RISK_TYPES = {
@@ -510,22 +500,33 @@ let ANOS = [2026];
 let anoAtivo = 2026;
 let DATA = [];
 
+function extrairAnoNumero(val) {
+  if (!val) return 2026;
+  const match = String(val).match(/20\d{2}/);
+  return match ? Number(match[0]) : Number(val) || 2026;
+}
+
 /**
- * Obtém dinamicamente os critérios para o tipo e ciclo ativo
+ * Obtém critérios daquele ciclo exato a partir do dicionário recebido
  */
 function getActiveCriteria(tipo, ciclo) {
-  var cAno = Number(ciclo || anoAtivo);
-  var encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && Number(d.ciclo) === cAno);
+  const cAno = extrairAnoNumero(ciclo || anoAtivo);
+  const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
+
+  // Busca do ciclo exato
+  const encontrados = doTipo.filter(d => extrairAnoNumero(d.ciclo) === cAno);
   if (encontrados.length > 0) {
     return encontrados.sort((a,b) => a.id - b.id);
   }
-  // Se não houver cadastro do ano específico, busca o mais recente disponível
-  var doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
+
+  // Fallback: se não achar o ano exato, busca o maior ciclo cadastrado
   if (doTipo.length > 0) {
-    var maxCiclo = Math.max(...doTipo.map(d => d.ciclo));
-    return doTipo.filter(d => d.ciclo === maxCiclo).sort((a,b) => a.id - b.id);
+    const anos = doTipo.map(d => extrairAnoNumero(d.ciclo));
+    const maxAno = Math.max(...anos);
+    return doTipo.filter(d => extrairAnoNumero(d.ciclo) === maxAno).sort((a,b) => a.id - b.id);
   }
-  return FALLBACK_CRITERIOS;
+
+  return [];
 }
 
 function normalizarTexto(s){
@@ -546,28 +547,21 @@ function formatarDataAmigavel(str){
   const s = String(str).trim();
   if(s.includes("GMT")){
     const d = new Date(s);
-    if(!isNaN(d.getTime())){
-      return d.toLocaleDateString("pt-BR");
-    }
+    if(!isNaN(d.getTime())) return d.toLocaleDateString("pt-BR");
   }
   return s;
 }
 
 function formatCicloLabel(ano) {
-  const str = String(ano).trim();
-  if (str.includes("-") || str.includes("/")) return str;
-  const n = Number(str);
-  if (!isNaN(n) && n > 2000) {
-    return `${n}-${n + 1}`;
-  }
-  return str;
+  const n = extrairAnoNumero(ano);
+  return `${n}-${n + 1}`;
 }
 
 function recalcAnos() {
-  const anosEncontrados = [...new Set(ALL_DATA.map(d => Number(d.ano)))].filter(a => !isNaN(a) && a > 2000).sort((a,b) => b - a);
+  const anosEncontrados = [...new Set(ALL_DATA.map(d => extrairAnoNumero(d.ano)))].sort((a,b) => b - a);
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
-  anoAtivo = ANOS[0];
-  DATA = ALL_DATA.filter(d => Number(d.ano) === anoAtivo);
+  if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
+  DATA = ALL_DATA.filter(d => extrairAnoNumero(d.ano) === anoAtivo);
 }
 
 const STATUS_LABEL = {ok:"Atualizado", outdated:"Desatualizado", warn:"Verificar", bad:"Não entregue"};
@@ -883,9 +877,9 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th=>{
 });
 
 function setAno(ano){
-  anoAtivo = ano;
+  anoAtivo = extrairAnoNumero(ano);
   if (ALL_DATA.length > 0) {
-    DATA = ALL_DATA.filter(d=>Number(d.ano)===anoAtivo);
+    DATA = ALL_DATA.filter(d=>extrairAnoNumero(d.ano) === anoAtivo);
   }
   activeStatus = "all"; searchTerm = "";
   document.getElementById("searchInput").value = "";
@@ -893,7 +887,7 @@ function setAno(ano){
   const allBtn = document.querySelector(".pills .pill[data-status='all']");
   if(allBtn) allBtn.setAttribute("aria-pressed","true");
 
-  document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("active", +b.dataset.ano === ano));
+  document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("active", +b.dataset.ano === anoAtivo));
   
   renderStats(); 
   updateMapColors(); 
@@ -917,17 +911,23 @@ function buildYearBtns(){
   }).join("");
 }
 
-function municipioVersions(municipio, tipo){ return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[municipio]) || []; }
+function municipioVersions(municipio, tipo){ 
+  return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[municipio]) || []; 
+}
+
 function versoesDoCiclo(municipio, tipo, ano){
+  const targetAno = extrairAnoNumero(ano || anoAtivo);
   return municipioVersions(municipio, tipo).filter(v => {
-    const c = v.ciclo ? Number(v.ciclo) : ANOS[0];
-    return c === Number(ano);
+    const c = extrairAnoNumero(v.ciclo || v.dataAnalise || v.rotulo);
+    return c === targetAno;
   });
 }
+
 function latestQualityVersion(municipio, tipo, ano){
   const v = versoesDoCiclo(municipio, tipo, ano != null ? ano : anoAtivo);
   return v.length ? v[v.length-1] : null;
 }
+
 function latestQualityData(municipio, tipo, ano){
   const v = latestQualityVersion(municipio, tipo, ano);
   if(!v) return null;
@@ -944,7 +944,7 @@ function municipioQualitySummary(municipio, tipo, ano){
   const m = latestQualityData(municipio, tipo, ano);
   if(!m || !m.criterios) return null;
   const counts = {ok:0, warn:0, bad:0};
-  const crits = getActiveCriteria(tipo, ano);
+  const crits = getActiveCriteria(tipo, ano || anoAtivo);
   crits.forEach(c=>{
     const st = m.criterios[c.id] ? m.criterios[c.id].status : null;
     if(st && counts[st] !== undefined) counts[st]++;
@@ -1009,7 +1009,7 @@ function renderQualityMeta(){
 function renderQualityMatrix(tipo){
   const cfg = RISK_TYPES[tipo];
   const crits = getActiveCriteria(tipo, anoAtivo);
-  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length);
+  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length || 7);
 
   const headRow = document.getElementById("qualityHeadRow");
   headRow.innerHTML = `<th class="mun-col">Município</th>` +
@@ -1057,7 +1057,7 @@ function openDrilldown(municipio, focusCritId, tipo){
         </div>
         <button class="dd-close" id="ddClose" aria-label="Fechar">✕</button>
       </div>
-      <div class="dd-pending">Este município ainda não foi analisado para ${cfg.label.toLowerCase()}. <b>Pendente de análise.</b></div>
+      <div class="dd-pending">Este município ainda não foi analisado para ${cfg.label.toLowerCase()} no ciclo ${formatCicloLabel(anoAtivo)}. <b>Pendente de análise.</b></div>
     `;
   } else {
     const summary = municipioQualitySummary(municipio, tipo);
@@ -1145,6 +1145,23 @@ document.addEventListener("click", (e)=>{
   if(btn) openQualityModal(btn.dataset.qualityMun, btn.dataset.qualityTipo);
 });
 
+/* ============================================================================
+   LÓGICA — COMPARATIVO ENTRE VERSÕES CORRIGIDO
+   ============================================================================ */
+function compareDelta(beforeStatus, afterStatus){
+  if(!(beforeStatus in QSTATUS_SCORE) || !(afterStatus in QSTATUS_SCORE)) return null;
+  return QSTATUS_SCORE[afterStatus] - QSTATUS_SCORE[beforeStatus];
+}
+
+function evolutionLabel(delta){
+  if(delta === null) return {symbol:"—", cls:"na", text:"Sem base comparável"};
+  if(delta >= 2) return {symbol:"↑↑", cls:"up", text:"Evolução forte"};
+  if(delta === 1) return {symbol:"↑", cls:"up", text:"Evolução"};
+  if(delta === 0) return {symbol:"→", cls:"flat", text:"Sem alteração"};
+  if(delta === -1) return {symbol:"↓", cls:"down", text:"Regressão"};
+  return {symbol:"↓↓", cls:"down", text:"Regressão forte"};
+}
+
 function compareStatusForMunicipio(municipio, tipo){
   const versions = municipioVersions(municipio, tipo);
   if(versions.length >= 2) return {cls:"ready", label:"Comparável", detail:`${versions.length} versões`};
@@ -1161,7 +1178,7 @@ function renderCompareCards(tipo){
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
     <div class="compare-card"><div class="num">${none}</div><div class="label">sem documento inicial</div></div>
   `;
-  document.getElementById("compareNote").innerHTML = `Comparação técnica dos fatores de prontidão operacional.`;
+  document.getElementById("compareNote").innerHTML = `Comparação técnica das versões registradas no histórico.`;
 }
 
 function renderCompareMunicipioStatus(tipo){
@@ -1183,12 +1200,84 @@ function populateCompareSelectors(selectedMunicipio, tipo){
   const munSel = document.getElementById("compareMunicipio");
   munSel.innerHTML = REDEC.map(m=>`<option value="${m}">${m}</option>`).join("");
   if(selectedMunicipio) munSel.value = selectedMunicipio;
+  
+  const munAtual = munSel.value;
+  const versions = municipioVersions(munAtual, tipo);
   const beforeSel = document.getElementById("compareBefore");
   const afterSel = document.getElementById("compareAfter");
-  beforeSel.innerHTML = `<option value="">Sem versão</option>`;
-  afterSel.innerHTML = `<option value="">Sem versão</option>`;
-  beforeSel.disabled = true; afterSel.disabled = true;
-  document.getElementById("compareDetail").innerHTML = `<div class="compare-note">Cadastre análises na planilha para habilitar a comparação.</div>`;
+
+  if(versions.length < 2) {
+    beforeSel.innerHTML = `<option value="">Sem versão suficiente</option>`;
+    afterSel.innerHTML = `<option value="">Sem versão suficiente</option>`;
+    beforeSel.disabled = true;
+    afterSel.disabled = true;
+    renderCompareDetail(tipo);
+    return;
+  }
+
+  // Habilita as opções quando há 2 ou mais versões
+  const opts = versions.map((v, i) => `<option value="${i}">${v.rotulo || "Versão"} — (${v.dataAnalise})</option>`).join("");
+  beforeSel.innerHTML = opts;
+  afterSel.innerHTML = opts;
+  beforeSel.disabled = false;
+  afterSel.disabled = false;
+
+  beforeSel.value = "0";
+  afterSel.value = String(versions.length - 1);
+  renderCompareDetail(tipo);
+}
+
+function renderCompareDetail(tipo){
+  const cfg = RISK_TYPES[tipo];
+  const municipio = document.getElementById("compareMunicipio").value;
+  const versions = municipioVersions(municipio, tipo);
+  const target = document.getElementById("compareDetail");
+
+  if(versions.length === 0){
+    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: sem análise registrada para ${cfg.label.toLowerCase()}.</div>`;
+    return;
+  }
+  if(versions.length === 1){
+    const v = versions[0];
+    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: possui apenas 1 versão registrada (<b>${v.rotulo}</b> em ${v.dataAnalise}). Aguardando versão subsequente para comparação.</div>`;
+    return;
+  }
+
+  const beforeIdx = Number(document.getElementById("compareBefore").value);
+  const afterIdx = Number(document.getElementById("compareAfter").value);
+  const before = versions[beforeIdx];
+  const after = versions[afterIdx];
+
+  if(!before || !after || beforeIdx === afterIdx){
+    target.innerHTML = `<div class="compare-note">Selecione duas versões diferentes nos campos acima para comparar a evolução.</div>`;
+    return;
+  }
+
+  // Pega os critérios da versão mais recente comparada
+  const anoRef = extrairAnoNumero(after.ciclo || after.dataAnalise || anoAtivo);
+  const crits = getActiveCriteria(tipo, anoRef);
+
+  let improved=0, stable=0, regressed=0;
+  const rows = crits.map(c=>{
+    const b = before.criterios[c.id]?.status || "pending";
+    const a = after.criterios[c.id]?.status || "pending";
+    const delta = compareDelta(b, a);
+    const evo = evolutionLabel(delta);
+    if(delta > 0) improved++; else if(delta === 0) stable++; else if(delta < 0) regressed++;
+    return `<tr>
+      <td><b>${cfg.prefix}${c.id}</b> — ${c.short}</td>
+      <td class="compare-cell"><span class="before">${QSTATUS_ICON[b]} ${QSTATUS_LABEL[b]}</span> → <span class="after">${QSTATUS_ICON[a]} ${QSTATUS_LABEL[a]}</span></td>
+      <td><span class="evo ${evo.cls}" title="${evo.text}">${evo.symbol}</span></td>
+    </tr>`;
+  }).join("");
+
+  target.innerHTML = `
+    <div class="compare-note"><b>${municipio}</b> (${cfg.label}): ${before.rotulo} vs ${after.rotulo}. Evoluções: <b>${improved}</b> · Estáveis: <b>${stable}</b> · Regressões: <b>${regressed}</b>.</div>
+    <div class="compare-table-wrap"><table class="compare-table">
+      <thead><tr><th>Critério</th><th>Antes → Depois</th><th>Evolução</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+  `;
 }
 
 function setCompareTipo(tipo){
@@ -1207,6 +1296,7 @@ function openCompareModal(municipio){
   renderCompareMunicipioStatus(riskTipoAtivoCompare);
   populateCompareSelectors(municipio || REDEC[0], riskTipoAtivoCompare);
 }
+
 function closeCompareModal(){
   document.getElementById("compareModalBackdrop").classList.remove("open");
   document.body.style.overflow = "";
@@ -1217,6 +1307,9 @@ document.getElementById("compareModalClose").addEventListener("click", closeComp
 document.getElementById("compareModalBackdrop").addEventListener("click", (e)=>{
   if(e.target.id === "compareModalBackdrop") closeCompareModal();
 });
+document.getElementById("compareMunicipio").addEventListener("change", ()=>populateCompareSelectors(document.getElementById("compareMunicipio").value, riskTipoAtivoCompare));
+document.getElementById("compareBefore").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
+document.getElementById("compareAfter").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
 
 function municipioTemDocumentoParaTipo(municipio, tipo){
   const kws = RISK_TYPES[tipo].riscoKeywords || [];
@@ -1239,7 +1332,7 @@ function renderPendingAnalysisAlert(){
 }
 
 /* ============================================================================
-   CONEXÃO COM O GOOGLE SHEETS (API) E INICIALIZAÇÃO RESILIENTE
+   CONEXÃO COM O GOOGLE SHEETS E INICIALIZAÇÃO
    ============================================================================ */
 async function carregarDadosDaPlanilha() {
   const syncSubline = document.getElementById("syncSubline");
@@ -1251,10 +1344,10 @@ async function carregarDadosDaPlanilha() {
     
     const dados = await response.json();
 
-    // 0. Dicionário Dinâmico de Critérios
+    // 0. Dicionário Dinâmico
     DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
-    // 1. Entregas (com normalização de status e data)
+    // 1. Entregas
     const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
     ALL_DATA = rawEntregas.map(d => ({
       ...d,
@@ -1288,12 +1381,12 @@ async function carregarDadosDaPlanilha() {
 
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
     if(syncSubline) {
-      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · fonte: Plancons modelo 26-27`;
+      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Ciclo ativo: <b>${formatCicloLabel(anoAtivo)}</b>`;
     }
 
   } catch (err) {
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo de espera (Planilha ainda não respondeu).`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️️ Operando em modo de espera (Planilha ainda não respondeu).`;
     
     recalcAnos();
     initMap();
@@ -1302,7 +1395,7 @@ async function carregarDadosDaPlanilha() {
   }
 }
 
-// Inicializa a interface
+// Inicializa a aplicação
 carregarDadosDaPlanilha();
 </script>
 
