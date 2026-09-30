@@ -122,6 +122,7 @@
   tbody tr:last-child td{border-bottom:none;}
   tbody tr:hover{background:#FAFBFC;}
   .municipio-cell{font-weight:600;}
+  .cell-label{display:none;} /* Garante que os rótulos não dupliquem em telas de desktop */
   .mono{font-family:"IBM Plex Mono",monospace;font-size:13px;}
   .dim{color:var(--muted);}
   .linkpdf{font-size:13px;white-space:nowrap;}
@@ -484,19 +485,25 @@ const TODAS_AS_REDECS = [
   "REDEC 10 - Norte", "REDEC 11 - Noroeste"
 ];
 
-let redecAtiva = "REDEC 5 - Sul I"; // Padrão de abertura
+let redecAtiva = "REDEC 5 - Sul I";
 let MUNICIPIOS_ESCOPO = [];
 
 function normalizarTexto(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 }
 
-function getRedecDoMunicipio(nomeMun) {
-  if (MAPA_REDECS_RJ[nomeMun]) return MAPA_REDECS_RJ[nomeMun];
+function getNomeCanonicoMunicipio(nomeMun) {
+  if (MAPA_REDECS_RJ[nomeMun]) return nomeMun;
   const nKey = normalizarTexto(nomeMun);
-  for (const [k, v] of Object.entries(MAPA_REDECS_RJ)) {
-    if (normalizarTexto(k) === nKey) return v;
+  for (const k of Object.keys(MAPA_REDECS_RJ)) {
+    if (normalizarTexto(k) === nKey) return k;
   }
+  return String(nomeMun || "").trim();
+}
+
+function getRedecDoMunicipio(nomeMun) {
+  const canonico = getNomeCanonicoMunicipio(nomeMun);
+  if (MAPA_REDECS_RJ[canonico]) return MAPA_REDECS_RJ[canonico];
   return "Outra REDEC";
 }
 
@@ -586,7 +593,6 @@ function recalcAnos() {
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
   if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
   
-  // Filtra por ciclo e por REDEC ativa
   DATA = ALL_DATA.filter(d => {
     const mesmoAno = extrairAnoNumero(d.ano) === anoAtivo;
     const pertenceEscopo = (redecAtiva === "ALL") || (getRedecDoMunicipio(d.municipio) === redecAtiva);
@@ -631,12 +637,13 @@ function initMap(){
     }).addTo(mapInstance);
   }
 
-  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO);
+  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO.map(m => normalizarTexto(m)));
 
   function getStyle(feature){
-    const nome = feature.properties.NM_MUN;
-    if(ESCOPO_SET.has(nome)){
-      const info = summary[nome];
+    const nomeNorm = normalizarTexto(feature.properties.NM_MUN);
+    if(ESCOPO_SET.has(nomeNorm)){
+      const canonico = getNomeCanonicoMunicipio(feature.properties.NM_MUN);
+      const info = summary[canonico];
       const st   = info ? info.status : "bad";
       return {fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5, opacity:1};
     }
@@ -648,35 +655,36 @@ function initMap(){
   }
 
   function onEachFeature(feature, layer){
-    const nome = feature.properties.NM_MUN;
-    const isNoEscopo = ESCOPO_SET.has(nome);
-    const info = summary[nome];
-    const redecNome = getRedecDoMunicipio(nome);
+    const nomeOriginal = feature.properties.NM_MUN;
+    const canonico = getNomeCanonicoMunicipio(nomeOriginal);
+    const isNoEscopo = ESCOPO_SET.has(normalizarTexto(nomeOriginal));
+    const info = summary[canonico];
+    const redecNome = getRedecDoMunicipio(canonico);
 
     if(isNoEscopo){
       const riscosHtml = info && info.riscos.length
         ? info.riscos.map(r=>`<div>· ${r}</div>`).join("")
         : "<div style='color:#999'>Sem riscos cadastrados</div>";
       const st = info ? info.status : "bad";
-      const obsSet = new Set(DATA.filter(d=>d.municipio===nome && d.obs).map(d=>d.obs));
+      const obsSet = new Set(DATA.filter(d=>d.municipio===canonico && d.obs).map(d=>d.obs));
       const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o=>`⚠ ${o}`).join("<br>")}</div>` : "";
       
       layer.bindPopup(`
-        <div class="popup-nome">${nome}</div>
+        <div class="popup-nome">${canonico}</div>
         <div class="popup-redec">${redecNome}</div>
         <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
         <div class="popup-riscos">${riscosHtml}</div>
         ${obsHtml}
-        ${buildPopupQualityBlock(nome)}
+        ${buildPopupQualityBlock(canonico)}
       `);
-      layer.bindTooltip(`<b>${nome}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
+      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
     } else {
       layer.bindPopup(`
-        <div class="popup-nome">${nome}</div>
+        <div class="popup-nome">${canonico}</div>
         <div class="popup-redec">${redecNome}</div>
         <div class="popup-status none">Fora do filtro regional</div>
       `);
-      layer.bindTooltip(`<b>${nome}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
+      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
     }
 
     layer.on({
@@ -695,9 +703,8 @@ function initMap(){
   if (typeof GEOJSON !== "undefined" && GEOJSON.features && GEOJSON.features.length) {
     window._geojsonLayer = L.geoJSON(GEOJSON, {style:getStyle, onEachFeature}).addTo(mapInstance);
     
-    // Enquadra a área selecionada
     const bounds = L.featureGroup(
-      window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(l.feature.properties.NM_MUN))
+      window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(normalizarTexto(l.feature.properties.NM_MUN)))
     ).getBounds();
 
     if (bounds.isValid()) {
@@ -730,11 +737,12 @@ function initMap(){
 function updateMapColors(){
   if(!window._geojsonLayer) return;
   const summary = getMunicipioSummary();
-  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO);
+  const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO.map(m => normalizarTexto(m)));
   window._geojsonLayer.eachLayer(layer=>{
-    const nome = layer.feature.properties.NM_MUN;
-    if(ESCOPO_SET.has(nome)){
-      const info = summary[nome];
+    const nomeNorm = normalizarTexto(layer.feature.properties.NM_MUN);
+    if(ESCOPO_SET.has(nomeNorm)){
+      const canonico = getNomeCanonicoMunicipio(layer.feature.properties.NM_MUN);
+      const info = summary[canonico];
       const st   = info ? info.status : "bad";
       layer.setStyle({fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5});
     } else {
@@ -823,102 +831,132 @@ function renderStats(){
 }
 
 let activeStatus="all",searchTerm="",sortKey=null,sortDir=1;
-function applyFilters(){
-  const summary = getMunicipioSummary();
-  return DATA.filter(d=>{
-    const munStatus = (summary[d.municipio] || {}).status || d.status;
-    if(activeStatus !== "all" && d.status !== activeStatus && munStatus !== activeStatus) return false;
-    if(searchTerm){
-      const hay = (d.municipio + " " + d.risco).toLowerCase();
-      if(!hay.includes(searchTerm)) return false;
-    }
-    return true;
-  });
-}
 
 function renderTable(){
-  let rows=applyFilters();
-  rows=[...rows].sort((a,b)=>{
-    const am=a.municipio.localeCompare(b.municipio,"pt-BR",{sensitivity:"base"});
-    if(am!==0) return am;
-    if(sortKey && sortKey!=="municipio"){
-      const av=(a[sortKey]||"").toLowerCase(),bv=(b[sortKey]||"").toLowerCase();
-      if(av<bv)return-1*sortDir;if(av>bv)return 1*sortDir;
-    }
-    return 0;
-  });
-  const body=document.getElementById("tableBody");
-  if(!rows.length){body.innerHTML=`<tr class="empty-row"><td colspan="6">Nenhum resultado para esse filtro/busca.</td></tr>`;return;}
-
+  const summary = getMunicipioSummary();
   const groups = [];
-  const groupIndex = {};
-  rows.forEach(d=>{
-    if(!(d.municipio in groupIndex)){
-      groupIndex[d.municipio] = groups.length;
-      groups.push({municipio:d.municipio, obs:d.obs, items:[]});
+
+  // Garante que TODOS os municípios do escopo atual façam parte da lista
+  MUNICIPIOS_ESCOPO.forEach(mun => {
+    let items = DATA.filter(d => d.municipio === mun);
+    
+    // Se o município não tem linha explícita cadastrada no ciclo, cria a representação padrão
+    if (items.length === 0) {
+      items = [{
+        redec: getRedecDoMunicipio(mun),
+        ano: anoAtivo,
+        municipio: mun,
+        risco: "—",
+        versao: "—",
+        atualizacao: "—",
+        status: "bad",
+        link: "",
+        obs: ""
+      }];
     }
-    groups[groupIndex[d.municipio]].items.push(d);
-    if(d.obs && !groups[groupIndex[d.municipio]].obs) groups[groupIndex[d.municipio]].obs = d.obs;
+
+    const munStatus = summary[mun]?.status || "bad";
+    
+    // Aplicação do filtro por pílula de status
+    if (activeStatus !== "all" && munStatus !== activeStatus) return;
+
+    // Aplicação da busca textual
+    if (searchTerm) {
+      const matchMun = normalizarTexto(mun).includes(searchTerm);
+      const matchRisco = items.some(it => normalizarTexto(it.risco).includes(searchTerm));
+      if (!matchMun && !matchRisco) return;
+    }
+
+    const obsText = items.find(d => d.obs)?.obs || "";
+    groups.push({
+      municipio: mun,
+      status: munStatus,
+      obs: obsText,
+      items: items
+    });
   });
 
-  const rank={bad:0,outdated:1,warn:2,ok:3};
-  body.innerHTML = groups.map((g,gi)=>{
-    const summaryStatus = g.items.reduce((best,d)=> (rank[d.status] ?? 0) > (rank[best] ?? 0) ? d.status : best, "bad");
+  // Ordenação das linhas
+  groups.sort((a,b)=>{
+    if(sortKey && sortKey !== "municipio"){
+      const av = String(a.items[0]?.[sortKey] || a[sortKey] || "").toLowerCase();
+      const bv = String(b.items[0]?.[sortKey] || b[sortKey] || "").toLowerCase();
+      if(av < bv) return -1 * sortDir;
+      if(av > bv) return 1 * sortDir;
+    }
+    return a.municipio.localeCompare(b.municipio, "pt-BR", {sensitivity:"base"});
+  });
+
+  const body = document.getElementById("tableBody");
+  if (!groups.length) {
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum município localizado para os filtros selecionados.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = groups.map((g, gi) => {
     const groupId = "mungrp-" + gi;
     const single = g.items.length === 1;
 
     const summaryRow = `
-      <tr class="mun-group-row${single ? " single" : ""}" data-group="${groupId}" tabindex="${single ? -1 : 0}" role="${single ? "row" : "button"}" aria-expanded="${single ? "false" : "false"}">
-        <td class="municipio-cell"><span class="mun-toggle" aria-hidden="true" style="${single ? "visibility:hidden" : ""}">▸</span>${g.municipio}${g.obs ? `<div style="font-size:11px;color:#B5650A;font-weight:400;margin-top:3px;margin-left:20px;">⚠ ${g.obs}</div>` : ""}</td>
-        <td class="dim"><span class="cell-label">Risco / plano </span>${single ? g.items[0].risco : `<span class="mun-summary-count">${g.items.length} plano${g.items.length>1?"s":""} cadastrado${g.items.length>1?"s":""}</span>`}</td>
-        <td class="mono"><span class="cell-label">Versão </span>${single ? g.items[0].versao : "—"}</td>
-        <td class="mono dim"><span class="cell-label">Última atualização </span>${single ? g.items[0].atualizacao : "—"}</td>
-        <td><span class="cell-label">Status </span><span class="stamp ${summaryStatus}">${STATUS_LABEL[summaryStatus]}</span></td>
-        <td class="linkpdf"><span class="cell-label">PDF </span>${single && g.items[0].link ? `<a href="${g.items[0].link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Abrir ↗</a>` : '<span class="dim">—</span>'}</td>
+      <tr class="mun-group-row${single ? " single" : ""}" data-group="${groupId}" tabindex="${single ? -1 : 0}" role="${single ? "row" : "button"}" aria-expanded="false">
+        <td class="municipio-cell">
+          <span class="mun-toggle" aria-hidden="true" style="${single ? "visibility:hidden" : ""}">▸</span>${g.municipio}
+          ${g.obs ? `<div style="font-size:11.5px;color:#B5650A;font-weight:400;margin-top:4px;margin-left:20px;line-height:1.4;">⚠ ${g.obs}</div>` : ""}
+        </td>
+        <td class="dim">${single ? g.items[0].risco : `<span class="mun-summary-count">${g.items.length} planos cadastrados</span>`}</td>
+        <td class="mono">${single ? g.items[0].versao : "—"}</td>
+        <td class="mono dim">${single ? g.items[0].atualizacao : "—"}</td>
+        <td><span class="stamp ${g.status}">${STATUS_LABEL[g.status]}</span></td>
+        <td class="linkpdf">${single && g.items[0].link ? `<a href="${g.items[0].link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Abrir ↗</a>` : '<span class="dim">—</span>'}</td>
       </tr>`;
 
-    if(single) return summaryRow;
+    if (single) return summaryRow;
 
-    const detailRows = g.items.map(d=>`
+    const detailRows = g.items.map(d => `
       <tr class="mun-detail-row" data-group="${groupId}">
         <td class="municipio-cell"></td>
-        <td class="dim"><span class="cell-label">Risco / plano </span>${d.risco}</td>
-        <td class="mono"><span class="cell-label">Versão </span>${d.versao}</td>
-        <td class="mono dim"><span class="cell-label">Última atualização </span>${d.atualizacao}</td>
-        <td><span class="cell-label">Status </span><span class="stamp ${d.status}">${STATUS_LABEL[d.status]}</span></td>
-        <td class="linkpdf"><span class="cell-label">PDF </span>${d.link?`<a href="${d.link}" target="_blank" rel="noopener">Abrir ↗</a>`:'<span class="dim">—</span>'}</td>
+        <td class="dim">${d.risco}</td>
+        <td class="mono">${d.versao}</td>
+        <td class="mono dim">${d.atualizacao}</td>
+        <td><span class="stamp ${d.status}">${STATUS_LABEL[d.status]}</span></td>
+        <td class="linkpdf">${d.link ? `<a href="${d.link}" target="_blank" rel="noopener">Abrir ↗</a>` : '<span class="dim">—</span>'}</td>
       </tr>`).join("");
 
     return summaryRow + detailRows;
   }).join("");
 
-  body.querySelectorAll("tr.mun-group-row").forEach(tr=>{
+  body.querySelectorAll("tr.mun-group-row:not(.single)").forEach(tr => {
     const groupId = tr.dataset.group;
     const detailRows = body.querySelectorAll(`tr.mun-detail-row[data-group="${groupId}"]`);
-    if(!detailRows.length) return; 
-    const toggle = ()=>{
+    if (!detailRows.length) return;
+    const toggle = () => {
       const expanded = tr.classList.toggle("expanded");
       tr.setAttribute("aria-expanded", expanded ? "true" : "false");
-      detailRows.forEach(r=>r.classList.toggle("visible", expanded));
+      detailRows.forEach(r => r.classList.toggle("visible", expanded));
     };
     tr.addEventListener("click", toggle);
-    tr.addEventListener("keydown", e=>{ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); } });
+    tr.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
   });
 }
 
-document.getElementById("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim().toLowerCase();renderTable();});
-document.querySelectorAll(".pills .pill").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".pills .pill").forEach(b=>b.setAttribute("aria-pressed","false"));
-    btn.setAttribute("aria-pressed","true");
-    activeStatus=btn.dataset.status;
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchTerm = normalizarTexto(e.target.value);
+  renderTable();
+});
+
+document.querySelectorAll(".pills .pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".pills .pill").forEach(b => b.setAttribute("aria-pressed", "false"));
+    btn.setAttribute("aria-pressed", "true");
+    activeStatus = btn.dataset.status;
     renderTable();
   });
 });
-document.querySelectorAll("#dataTable thead th[data-key]").forEach(th=>{
-  th.addEventListener("click",()=>{
-    const key=th.dataset.key;
-    if(sortKey===key){sortDir*=-1;}else{sortKey=key;sortDir=1;}
+
+document.querySelectorAll("#dataTable thead th[data-key]").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = 1; }
     renderTable();
   });
 });
@@ -926,13 +964,14 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th=>{
 function setAno(ano){
   anoAtivo = extrairAnoNumero(ano);
   recalcAnos();
-  activeStatus = "all"; searchTerm = "";
+  activeStatus = "all"; 
+  searchTerm = "";
   document.getElementById("searchInput").value = "";
-  document.querySelectorAll(".pills .pill").forEach(b=>b.setAttribute("aria-pressed","false"));
+  document.querySelectorAll(".pills .pill").forEach(b => b.setAttribute("aria-pressed", "false"));
   const allBtn = document.querySelector(".pills .pill[data-status='all']");
-  if(allBtn) allBtn.setAttribute("aria-pressed","true");
+  if(allBtn) allBtn.setAttribute("aria-pressed", "true");
 
-  document.querySelectorAll(".year-btn").forEach(b=>b.classList.toggle("active", +b.dataset.ano === anoAtivo));
+  document.querySelectorAll(".year-btn").forEach(b => b.classList.toggle("active", +b.dataset.ano === anoAtivo));
   
   renderStats(); 
   updateMapColors(); 
@@ -1411,17 +1450,21 @@ async function carregarDadosDaPlanilha() {
     
     const dados = await response.json();
 
-    // 0. Dicionário da Planilha
+    // 0. Dicionário da Planilha Mestre
     DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
-    // 1. Entregas consolidadas
+    // 1. Entregas consolidadas com normalização de nomes
     const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
-    ALL_DATA = rawEntregas.map(d => ({
-      ...d,
-      municipio: String(d.municipio || "").trim(),
-      status: normalizarStatus(d.status),
-      atualizacao: formatarDataAmigavel(d.atualizacao)
-    }));
+    ALL_DATA = rawEntregas.map(d => {
+      const nomeLimpo = getNomeCanonicoMunicipio(d.municipio);
+      return {
+        ...d,
+        municipio: nomeLimpo,
+        redec: d.redec || getRedecDoMunicipio(nomeLimpo),
+        status: normalizarStatus(d.status),
+        atualizacao: formatarDataAmigavel(d.atualizacao)
+      };
+    });
 
     // 2. Análises de todas as REDECs
     Object.keys(RISK_TYPES).forEach(tipo=>{
@@ -1430,8 +1473,11 @@ async function carregarDadosDaPlanilha() {
       Object.keys(MAPA_REDECS_RJ).forEach(m => cfg.history[m] = []);
       const lista = (dados && dados[cfg.dataKey]) || [];
       lista.forEach(a => {
-        const mun = String(a.municipio || "").trim();
-        if(cfg.history[mun]) cfg.history[mun].push(a);
+        const mun = getNomeCanonicoMunicipio(a.municipio);
+        if(cfg.history[mun]) cfg.history[mun].push({
+          ...a,
+          municipio: mun
+        });
       });
       Object.keys(MAPA_REDECS_RJ).forEach(m => {
         cfg.history[m].sort((x, y) => new Date(x.dataAnalise) - new Date(y.dataAnalise));
@@ -1460,7 +1506,7 @@ async function carregarDadosDaPlanilha() {
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
-    initMap();
+    initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
   }
