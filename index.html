@@ -376,7 +376,7 @@
 
   <footer>
     <hr>
-    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha gerenciada pela equipe da REDEC 5.</p>
+    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha gerenciada pela equipe da REDEC 5[cite: 1].</p>
     <p>Critério de "atualizado": o município tem pelo menos um documento na pasta do REDEC 5 do ano atual <b>ou</b> do ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente[cite: 1]. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas[cite: 1].</p>
     <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos critérios essenciais de planejamento e prontidão operacional definidos pela REDEC para o respectivo ciclo[cite: 1]. Município sem análise registrada aparece como "Pendente de análise" na matriz[cite: 1].</p>
   </footer>
@@ -503,23 +503,27 @@ let DATA = [];
 function extrairAnoNumero(val) {
   if (!val) return 2026;
   const match = String(val).match(/20\d{2}/);
-  return match ? Number(match[0]) : Number(val) || 2026;
+  return match ? parseInt(match[0], 10) : parseInt(val, 10) || 2026;
 }
 
 /**
- * Obtém critérios daquele ciclo exato a partir do dicionário recebido
+ * Lê do dicionário entregue pela planilha
  */
 function getActiveCriteria(tipo, ciclo) {
   const cAno = extrairAnoNumero(ciclo || anoAtivo);
-  const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
+  
+  if (!DICIONARIO_GLOBAL || DICIONARIO_GLOBAL.length === 0) {
+    return [];
+  }
 
-  // Busca do ciclo exato
-  const encontrados = doTipo.filter(d => extrairAnoNumero(d.ciclo) === cAno);
+  // 1. Procura critérios do tipo e ano exatos
+  let encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && extrairAnoNumero(d.ciclo) === cAno);
   if (encontrados.length > 0) {
     return encontrados.sort((a,b) => a.id - b.id);
   }
 
-  // Fallback: se não achar o ano exato, busca o maior ciclo cadastrado
+  // 2. Se não achar o ano específico, pega o ano mais próximo disponível daquele tipo
+  const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
   if (doTipo.length > 0) {
     const anos = doTipo.map(d => extrairAnoNumero(d.ciclo));
     const maxAno = Math.max(...anos);
@@ -1009,7 +1013,7 @@ function renderQualityMeta(){
 function renderQualityMatrix(tipo){
   const cfg = RISK_TYPES[tipo];
   const crits = getActiveCriteria(tipo, anoAtivo);
-  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length || 7);
+  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length || 1);
 
   const headRow = document.getElementById("qualityHeadRow");
   headRow.innerHTML = `<th class="mun-col">Município</th>` +
@@ -1146,7 +1150,7 @@ document.addEventListener("click", (e)=>{
 });
 
 /* ============================================================================
-   LÓGICA — COMPARATIVO ENTRE VERSÕES CORRIGIDO
+   LÓGICA — COMPARATIVO ENTRE VERSÕES
    ============================================================================ */
 function compareDelta(beforeStatus, afterStatus){
   if(!(beforeStatus in QSTATUS_SCORE) || !(afterStatus in QSTATUS_SCORE)) return null;
@@ -1215,7 +1219,6 @@ function populateCompareSelectors(selectedMunicipio, tipo){
     return;
   }
 
-  // Habilita as opções quando há 2 ou mais versões
   const opts = versions.map((v, i) => `<option value="${i}">${v.rotulo || "Versão"} — (${v.dataAnalise})</option>`).join("");
   beforeSel.innerHTML = opts;
   afterSel.innerHTML = opts;
@@ -1253,7 +1256,6 @@ function renderCompareDetail(tipo){
     return;
   }
 
-  // Pega os critérios da versão mais recente comparada
   const anoRef = extrairAnoNumero(after.ciclo || after.dataAnalise || anoAtivo);
   const crits = getActiveCriteria(tipo, anoRef);
 
@@ -1344,7 +1346,7 @@ async function carregarDadosDaPlanilha() {
     
     const dados = await response.json();
 
-    // 0. Dicionário Dinâmico
+    // 0. Dicionário da Planilha
     DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
     // 1. Entregas
@@ -1386,7 +1388,7 @@ async function carregarDadosDaPlanilha() {
 
   } catch (err) {
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️️ Operando em modo de espera (Planilha ainda não respondeu).`;
+    if(syncSubline) syncSubline.innerHTML = `⚠ Operando em modo de espera (Planilha ainda não respondeu).`;
     
     recalcAnos();
     initMap();
