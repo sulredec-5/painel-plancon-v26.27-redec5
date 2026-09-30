@@ -122,7 +122,7 @@
   tbody tr:last-child td{border-bottom:none;}
   tbody tr:hover{background:#FAFBFC;}
   .municipio-cell{font-weight:600;}
-  .cell-label{display:none;} /* Garante que os rótulos não dupliquem em telas de desktop */
+  .cell-label{display:none;}
   .mono{font-family:"IBM Plex Mono",monospace;font-size:13px;}
   .dim{color:var(--muted);}
   .linkpdf{font-size:13px;white-space:nowrap;}
@@ -271,7 +271,7 @@
 <header class="top">
   <div class="top-inner">
     <div class="top-logo-wrap">
-      <img class="top-logo" id="headerLogo" src="logo.png" alt="Logo Defesa Civil RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:38px;\'>🛡️</span>';">
+      <img class="top-logo" id="headerLogo" src="logo.png?v=2" alt="Logo Defesa Civil RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:38px;\'>🛡️</span>';">
     </div>
     <div class="top-text">
       <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -613,17 +613,41 @@ function getMunicipioSummary(){
   const rank = {bad:0, outdated:1, warn:2, ok:3};
 
   DATA.forEach(d=>{
-    if(!map[d.municipio]) map[d.municipio] = {status:"bad", riscos:[]};
-    const atualRank = rank[map[d.municipio].status] ?? 0;
+    const canonico = getNomeCanonicoMunicipio(d.municipio);
+    if(!map[canonico]) map[canonico] = {status:"bad", riscos:[]};
+    const atualRank = rank[map[canonico].status] ?? 0;
     const novoRank = rank[d.status] ?? 0;
 
     if(novoRank >= atualRank){
-      map[d.municipio].status = d.status;
+      map[canonico].status = d.status;
     }
-    if(d.risco && d.risco !== "—") map[d.municipio].riscos.push(d.risco);
+    if(d.risco && d.risco !== "—") map[canonico].riscos.push(d.risco);
   });
 
   return map;
+}
+
+function obterEstiloFeature(feature, summary, escopoSet) {
+  const canonico = getNomeCanonicoMunicipio(feature.properties.NM_MUN);
+  const isNoEscopo = escopoSet.has(normalizarTexto(canonico));
+  if (isNoEscopo) {
+    const info = summary[canonico];
+    const st = info ? info.status : "bad";
+    return {
+      fillColor: STATUS_FILL[st] || "#F5C07A",
+      fillOpacity: 0.85,
+      color: "#ffffff",
+      weight: 1.5,
+      opacity: 1
+    };
+  }
+  return {
+    fillColor: "#D4DAE3",
+    fillOpacity: 0.45,
+    color: "#B0B8C4",
+    weight: 0.8,
+    opacity: 1
+  };
 }
 
 let mapInstance = null;
@@ -639,17 +663,6 @@ function initMap(){
 
   const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO.map(m => normalizarTexto(m)));
 
-  function getStyle(feature){
-    const nomeNorm = normalizarTexto(feature.properties.NM_MUN);
-    if(ESCOPO_SET.has(nomeNorm)){
-      const canonico = getNomeCanonicoMunicipio(feature.properties.NM_MUN);
-      const info = summary[canonico];
-      const st   = info ? info.status : "bad";
-      return {fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5, opacity:1};
-    }
-    return {fillColor:"#D4DAE3", fillOpacity:0.45, color:"#B0B8C4", weight:0.8, opacity:1};
-  }
-
   if(window._geojsonLayer) {
     mapInstance.removeLayer(window._geojsonLayer);
   }
@@ -657,7 +670,7 @@ function initMap(){
   function onEachFeature(feature, layer){
     const nomeOriginal = feature.properties.NM_MUN;
     const canonico = getNomeCanonicoMunicipio(nomeOriginal);
-    const isNoEscopo = ESCOPO_SET.has(normalizarTexto(nomeOriginal));
+    const isNoEscopo = ESCOPO_SET.has(normalizarTexto(canonico));
     const info = summary[canonico];
     const redecNome = getRedecDoMunicipio(canonico);
 
@@ -666,7 +679,7 @@ function initMap(){
         ? info.riscos.map(r=>`<div>· ${r}</div>`).join("")
         : "<div style='color:#999'>Sem riscos cadastrados</div>";
       const st = info ? info.status : "bad";
-      const obsSet = new Set(DATA.filter(d=>d.municipio===canonico && d.obs).map(d=>d.obs));
+      const obsSet = new Set(DATA.filter(d=>getNomeCanonicoMunicipio(d.municipio)===canonico && d.obs).map(d=>d.obs));
       const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o=>`⚠ ${o}`).join("<br>")}</div>` : "";
       
       layer.bindPopup(`
@@ -677,23 +690,44 @@ function initMap(){
         ${obsHtml}
         ${buildPopupQualityBlock(canonico)}
       `);
-      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
+      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {
+        sticky: true,
+        direction: "top",
+        offset: [0, -10],
+        className: "mun-tooltip",
+        opacity: 1
+      });
     } else {
       layer.bindPopup(`
         <div class="popup-nome">${canonico}</div>
         <div class="popup-redec">${redecNome}</div>
         <div class="popup-status none">Fora do filtro regional</div>
       `);
-      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {permanent:false, direction:"center", className:"mun-tooltip", opacity:1});
+      layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10.5px;color:#A9C0E4;">${redecNome}</span>`, {
+        sticky: true,
+        direction: "top",
+        offset: [0, -10],
+        className: "mun-tooltip",
+        opacity: 1
+      });
     }
 
     layer.on({
       mouseover(e){
         e.target.setStyle(isNoEscopo ? {fillOpacity:1, weight:2.5, color:"#16243F"} : {fillOpacity:0.75, weight:1.2, color:"#3A4D6B"});
-        e.target.bringToFront();
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          e.target.bringToFront();
+        }
       },
-      mouseout(e){ if(window._geojsonLayer) window._geojsonLayer.resetStyle(e.target); },
+      mouseout(e){
+        // Restaura exatamente a cor do status calculado para evitar a troca indevida para "bad"
+        const currentSummary = getMunicipioSummary();
+        const originalStyle = obterEstiloFeature(e.target.feature, currentSummary, ESCOPO_SET);
+        e.target.setStyle(originalStyle);
+        e.target.closeTooltip();
+      },
       click(e){
+        e.target.closeTooltip();
         if(isNoEscopo) mapInstance.fitBounds(e.target.getBounds(),{padding:[40,40]});
         e.target.openPopup();
       }
@@ -701,10 +735,13 @@ function initMap(){
   }
 
   if (typeof GEOJSON !== "undefined" && GEOJSON.features && GEOJSON.features.length) {
-    window._geojsonLayer = L.geoJSON(GEOJSON, {style:getStyle, onEachFeature}).addTo(mapInstance);
+    window._geojsonLayer = L.geoJSON(GEOJSON, {
+      style: (feat) => obterEstiloFeature(feat, summary, ESCOPO_SET),
+      onEachFeature
+    }).addTo(mapInstance);
     
     const bounds = L.featureGroup(
-      window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(normalizarTexto(l.feature.properties.NM_MUN)))
+      window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(normalizarTexto(getNomeCanonicoMunicipio(l.feature.properties.NM_MUN))))
     ).getBounds();
 
     if (bounds.isValid()) {
@@ -739,15 +776,8 @@ function updateMapColors(){
   const summary = getMunicipioSummary();
   const ESCOPO_SET = new Set(MUNICIPIOS_ESCOPO.map(m => normalizarTexto(m)));
   window._geojsonLayer.eachLayer(layer=>{
-    const nomeNorm = normalizarTexto(layer.feature.properties.NM_MUN);
-    if(ESCOPO_SET.has(nomeNorm)){
-      const canonico = getNomeCanonicoMunicipio(layer.feature.properties.NM_MUN);
-      const info = summary[canonico];
-      const st   = info ? info.status : "bad";
-      layer.setStyle({fillColor:STATUS_FILL[st], fillOpacity:0.85, color:"#fff", weight:1.5});
-    } else {
-      layer.setStyle({fillColor:"#D4DAE3", fillOpacity:0.45, color:"#B0B8C4", weight:0.8});
-    }
+    const estilo = obterEstiloFeature(layer.feature, summary, ESCOPO_SET);
+    layer.setStyle(estilo);
   });
 }
 
@@ -836,11 +866,9 @@ function renderTable(){
   const summary = getMunicipioSummary();
   const groups = [];
 
-  // Garante que TODOS os municípios do escopo atual façam parte da lista
   MUNICIPIOS_ESCOPO.forEach(mun => {
-    let items = DATA.filter(d => d.municipio === mun);
+    let items = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === mun);
     
-    // Se o município não tem linha explícita cadastrada no ciclo, cria a representação padrão
     if (items.length === 0) {
       items = [{
         redec: getRedecDoMunicipio(mun),
@@ -857,10 +885,8 @@ function renderTable(){
 
     const munStatus = summary[mun]?.status || "bad";
     
-    // Aplicação do filtro por pílula de status
     if (activeStatus !== "all" && munStatus !== activeStatus) return;
 
-    // Aplicação da busca textual
     if (searchTerm) {
       const matchMun = normalizarTexto(mun).includes(searchTerm);
       const matchRisco = items.some(it => normalizarTexto(it.risco).includes(searchTerm));
@@ -876,7 +902,6 @@ function renderTable(){
     });
   });
 
-  // Ordenação das linhas
   groups.sort((a,b)=>{
     if(sortKey && sortKey !== "municipio"){
       const av = String(a.items[0]?.[sortKey] || a[sortKey] || "").toLowerCase();
@@ -1018,7 +1043,8 @@ function initRedecSelector() {
 }
 
 function municipioVersions(municipio, tipo){ 
-  return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[municipio]) || []; 
+  const canonico = getNomeCanonicoMunicipio(municipio);
+  return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[canonico]) || []; 
 }
 
 function versoesDoCiclo(municipio, tipo, ano){
@@ -1059,15 +1085,16 @@ function municipioQualitySummary(municipio, tipo, ano){
 }
 
 function buildPopupQualityBlock(municipio){
+  const canonico = getNomeCanonicoMunicipio(municipio);
   return Object.keys(RISK_TYPES).map(tipo=>{
     const cfg = RISK_TYPES[tipo];
-    const summary = municipioQualitySummary(municipio, tipo);
+    const summary = municipioQualitySummary(canonico, tipo);
     if(!summary){
       return `
         <div class="popup-quality">
           <div class="popup-quality-title">Qualidade — ${cfg.shortLabel}</div>
           <div class="popup-quality-pending">Pendente de análise</div>
-          <button class="popup-quality-btn" data-quality-mun="${municipio}" data-quality-tipo="${tipo}">Ver análise ↗</button>
+          <button class="popup-quality-btn" data-quality-mun="${canonico}" data-quality-tipo="${tipo}">Ver análise ↗</button>
         </div>
       `;
     }
@@ -1079,7 +1106,7 @@ function buildPopupQualityBlock(municipio){
           <span class="pqc warn">${summary.warn} parcial</span>
           <span class="pqc bad">${summary.bad} não atende</span>
         </div>
-        <button class="popup-quality-btn" data-quality-mun="${municipio}" data-quality-tipo="${tipo}">Ver análise ↗</button>
+        <button class="popup-quality-btn" data-quality-mun="${canonico}" data-quality-tipo="${tipo}">Ver análise ↗</button>
       </div>
     `;
   }).join("");
@@ -1419,7 +1446,8 @@ document.getElementById("compareAfter").addEventListener("change", ()=>renderCom
 
 function municipioTemDocumentoParaTipo(municipio, tipo){
   const kws = RISK_TYPES[tipo].riscoKeywords || [];
-  return DATA.some(d => d.municipio === municipio && d.status !== "bad" &&
+  const canonico = getNomeCanonicoMunicipio(municipio);
+  return DATA.some(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.status !== "bad" &&
     kws.some(k => normalizarTexto(d.risco).includes(normalizarTexto(k))));
 }
 
