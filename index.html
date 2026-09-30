@@ -34,6 +34,11 @@
   .top-logo{width:70px;height:70px;object-fit:contain;}
   .top-text{flex:1;}
   
+  .sync-status-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;}
+  .btn-refresh{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.28);color:#fff;border-radius:4px;padding:3px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .btn-refresh:hover:not(:disabled){background:rgba(255,255,255,0.25);border-color:#fff;}
+  .btn-refresh:disabled{opacity:0.6;cursor:wait;}
+
   .filter-selectors{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;width:auto;}
   .selector-block{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
@@ -54,7 +59,7 @@
   .sub{color:#C2CEE2;font-size:13px;margin:0;}
   .sub b{color:#fff;font-weight:600;}
 
-  /* MAIN E LAYOUT */
+  /* MAIN E ESTRUTURA */
   main{max-width:1120px;margin:0 auto;padding:20px 18px 60px;}
 
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:-16px 0 22px;}
@@ -112,7 +117,7 @@
   .sync-loading-bar::after{content:'';position:absolute;left:-50%;top:0;width:50%;height:100%;background:#5BB2FF;animation:syncProgress 1.4s infinite ease-in-out;}
   @keyframes syncProgress{0%{left:-50%}100%{left:100%}}
 
-  /* POPUPS E LEAFLET */
+  /* POPUPS E MAPA */
   .leaflet-popup-content-wrapper{border-radius:6px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
   .leaflet-popup-content{margin:10px 14px;}
   .popup-nome{font-weight:700;font-size:14px;margin-bottom:3px;}
@@ -123,14 +128,6 @@
   .popup-status.bad{color:#B5650A;background:#FBEEDF;}
   .popup-status.outdated{color:#B0241D;background:#FBE7E5;}
   .popup-riscos{color:#5B6B82;font-size:12px;line-height:1.5;}
-  .popup-quality{margin-top:9px;padding-top:9px;border-top:1px solid #E7E9ED;}
-  .popup-quality-title{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-  .popup-quality-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
-  .pqc{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;}
-  .pqc.ok{background:var(--green-bg);color:var(--green);}
-  .pqc.warn{background:var(--amber-bg);color:var(--amber);}
-  .pqc.bad{background:var(--red-bg);color:var(--red);}
-  .popup-quality-btn{width:100%;background:var(--ink);color:#fff;border:none;border-radius:4px;padding:7px 10px;font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
   .popup-obs{margin-top:7px;padding:6px 8px;background:#FBEEDF;border-left:3px solid #B5650A;color:#7A4200;font-size:11px;line-height:1.4;border-radius:0 3px 3px 0;}
 
   .map-legend{background:white;border:1px solid var(--line);border-radius:5px;padding:8px 11px;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px;box-shadow:0 2px 6px rgba(0,0,0,.08);}
@@ -144,7 +141,16 @@
   .quality-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
   .compare-open-btn{display:flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
   
-  /* MODAIS RESPONSIVOS */
+  /* ACCORDION NA TABELA */
+  tr.mun-group-row{cursor:pointer;}
+  tr.mun-group-row.single{cursor:default;}
+  .mun-toggle{display:inline-block;width:14px;color:var(--muted);transition:transform .15s;margin-right:4px;}
+  tr.mun-group-row.expanded .mun-toggle{transform:rotate(90deg);}
+  tr.mun-detail-row{display:none;background:#FAFBFC;}
+  tr.mun-detail-row.visible{display:table-row;}
+  tr.mun-detail-row td{padding-left:28px;font-size:12.5px;}
+
+  /* MODAIS */
   .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.65);z-index:2000;padding:14px;align-items:flex-start;justify-content:center;overflow-y:auto;}
   .quality-modal-backdrop.open{display:flex;}
   .quality-modal{background:var(--paper);border-radius:8px;max-width:1120px;width:100%;margin:10px auto 30px;box-shadow:0 15px 50px rgba(0,0,0,.35);overflow:hidden;}
@@ -153,7 +159,6 @@
   .quality-modal-header .section-desc{color:#C2CEE2;font-size:12px;margin:0;}
   .quality-modal-close{flex-shrink:0;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:5px;width:32px;height:32px;font-size:16px;cursor:pointer;}
   .quality-modal-body{padding:18px 20px;}
-
   .quality-wrap{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow-x:auto;margin-bottom:16px;}
   table.quality-matrix{width:100%;border-collapse:collapse;table-layout:fixed;min-width:680px;}
   table.quality-matrix th.crit-col{font-family:"IBM Plex Sans",sans-serif;font-size:9.5px;color:var(--muted);text-align:center;padding:7px 3px;border-left:1px solid #E7E9ED;}
@@ -161,8 +166,11 @@
   table.quality-matrix td{padding:0;border-bottom:1px solid #E7E9ED;}
   table.quality-matrix td.mun-name{padding:8px;font-weight:600;font-size:12px;}
   .cell-btn{width:100%;height:38px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-left:1px solid #E7E9ED;}
+  .cell-btn.ok{background:var(--green-bg);color:var(--green);font-weight:bold;}
+  .cell-btn.warn{background:var(--amber-bg);color:var(--amber);font-weight:bold;}
+  .cell-btn.bad{background:var(--red-bg);color:var(--red);font-weight:bold;}
+  .cell-btn.pending{background:#F0F2F5;color:#8B95A5;}
 
-  /* DRILLDOWN */
   .drilldown{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0;margin-bottom:20px;display:none;overflow:hidden;}
   .drilldown.open{display:block;}
   .dd-header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:#F6F7F9;}
@@ -176,21 +184,9 @@
   .dd-tag.warn{color:var(--amber);background:var(--amber-bg);}
   .dd-tag.bad{color:var(--red);background:var(--red-bg);}
 
-  /* ACCORDION NA TABELA */
-  tr.mun-group-row{cursor:pointer;}
-  tr.mun-group-row.single{cursor:default;}
-  .mun-toggle{display:inline-block;width:14px;color:var(--muted);transition:transform .15s;margin-right:4px;}
-  tr.mun-group-row.expanded .mun-toggle{transform:rotate(90deg);}
-  tr.mun-detail-row{display:none;background:#FAFBFC;}
-  tr.mun-detail-row.visible{display:table-row;}
-  tr.mun-detail-row td{padding-left:28px;font-size:12.5px;}
-
   footer{max-width:1120px;margin:0 auto;padding:0 18px 40px;color:var(--muted);font-size:12px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 16px;}
 
-  /* =========================================================================
-     REGRAS DE RESPONSIVIDADE (MOBILE / TABLET)
-     ========================================================================= */
   @media(max-width:920px){
     .viz-row{grid-template-columns:1fr;gap:16px;}
     #map{height:340px;}
@@ -228,12 +224,15 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=4" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=6" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
         <h1>Painel de Planos de Contingência</h1>
-        <p class="sub" id="syncSubline">Iniciando sincronização estadual...</p>
+        <div class="sync-status-row">
+          <p class="sub" id="syncSubline" style="margin:0;">Iniciando...</p>
+          <button class="btn-refresh" id="btnForceRefresh" title="Varre as 11 REDECs e atualiza a base">🔄 Atualizar Base</button>
+        </div>
         <div id="syncLoadingBar" class="sync-loading-bar"></div>
         <div id="pendingAnalysisAlert" style="display:none;margin-top:6px;font-size:11.5px;color:#FBEEDF;">⏳ <span id="pendingAnalysisText"></span></div>
       </div>
@@ -507,7 +506,6 @@ function recalcAnos() {
   ANOS = anosEncontrados.length > 0 ? anosEncontrados : [2026];
   if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
   
-  // Filtra ESTRITAMENTE pelo ciclo (ano) e pelo escopo da regional selecionada
   DATA = ALL_DATA.filter(d => {
     const mesmoAno = extrairAnoNumero(d.ano) === anoAtivo;
     const pertenceEscopo = (redecAtiva === "ALL") || (getRedecDoMunicipio(d.municipio) === redecAtiva);
@@ -561,20 +559,17 @@ function obterEstiloFeature(feature, summary, escopoSet) {
   };
 }
 
-// GERA O CONTEÚDO DO POPUP DINAMICAMENTE NO MOMENTO DO CLIQUE
 function criarConteudoPopup(canonico) {
   const summary = getMunicipioSummary();
   const info = summary[canonico];
   const redecNome = getRedecDoMunicipio(canonico);
   const st = info ? info.status : "bad";
 
-  // Busca riscos apenas do ciclo selecionado
   const riscosFiltrados = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.risco && d.risco !== "—").map(d => d.risco);
   const riscosHtml = riscosFiltrados.length
     ? [...new Set(riscosFiltrados)].map(r => `<div>· ${r}</div>`).join("")
     : "<div style='color:#999'>Sem riscos cadastrados no ciclo</div>";
 
-  // Busca observações apenas do ciclo selecionado
   const obsSet = new Set(DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.obs).map(d => d.obs));
   const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o => `⚠ ${o}`).join("<br>")}</div>` : "";
 
@@ -630,7 +625,6 @@ function initMap(){
       click(e){
         e.target.closeTooltip();
         if(isNoEscopo) {
-          // Atualiza dinamicamente o popup antes de abrir para refletir o ano/ciclo ativo
           e.target.bindPopup(criarConteudoPopup(canonico)).openPopup();
           mapInstance.fitBounds(e.target.getBounds(), {padding:[20,20]});
         }
@@ -886,7 +880,7 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th => {
 
 function setAno(ano){
   anoAtivo = extrairAnoNumero(ano);
-  recalcAnos(); // Recalcula DATA estritamente para o ano selecionado
+  recalcAnos();
   activeStatus = "all"; 
   searchTerm = "";
   document.getElementById("searchInput").value = "";
@@ -896,7 +890,6 @@ function setAno(ano){
 
   document.querySelectorAll(".year-btn").forEach(b => b.classList.toggle("active", +b.dataset.ano === anoAtivo));
   
-  // Fecha qualquer popup aberto para evitar mostrar dados do ciclo anterior
   if (mapInstance) mapInstance.closePopup();
 
   renderStats(); 
@@ -934,20 +927,134 @@ function initRedecSelector() {
 }
 
 /* ============================================================================
-   CONEXÃO COM TEMPO DECORRIDO E ANIMAÇÃO
+   LÓGICA MODAL QUALIDADE E COMPARAÇÃO
    ============================================================================ */
-async function carregarDadosDaPlanilha() {
+function municipioVersions(municipio, tipo){ 
+  const canonico = getNomeCanonicoMunicipio(municipio);
+  return (RISK_TYPES[tipo] && RISK_TYPES[tipo].history[canonico]) || []; 
+}
+
+function versoesDoCiclo(municipio, tipo, ano){
+  const targetAno = extrairAnoNumero(ano || anoAtivo);
+  return municipioVersions(municipio, tipo).filter(v => {
+    const c = extrairAnoNumero(v.ciclo || v.dataAnalise || v.rotulo);
+    return c === targetAno;
+  });
+}
+
+function latestQualityVersion(municipio, tipo, ano){
+  const v = versoesDoCiclo(municipio, tipo, ano != null ? ano : anoAtivo);
+  return v.length ? v[v.length-1] : null;
+}
+
+function latestQualityData(municipio, tipo, ano){
+  const v = latestQualityVersion(municipio, tipo, ano);
+  if(!v) return null;
+  return {analisadoEm:v.dataAnalise, fonte:v.documento, criterios:v.criterios, versaoAnalise:v.id, rotulo:v.rotulo, sintese:v.sintese};
+}
+
+function renderCritList(tipo){
+  const crits = getActiveCriteria(tipo, anoAtivo);
+  document.getElementById("critList").innerHTML = crits.map(c=>
+    `<li><b>${RISK_TYPES[tipo].prefix}${c.id}. ${c.short}:</b> ${c.full}</li>`
+  ).join("");
+}
+
+function renderQualityMatrix(tipo){
+  const cfg = RISK_TYPES[tipo];
+  const crits = getActiveCriteria(tipo, anoAtivo);
+  const headRow = document.getElementById("qualityHeadRow");
+  headRow.innerHTML = `<th class="mun-col">Município</th>` +
+    crits.map(c=>`<th class="crit-col" title="${c.full}"><b>${cfg.prefix}${c.id}</b><br>${c.short}</th>`).join("");
+
+  const body = document.getElementById("qualityBody");
+  body.innerHTML = MUNICIPIOS_ESCOPO.map(municipio=>{
+    const data = latestQualityData(municipio, tipo);
+    const cells = crits.map(c=>{
+      const st = data?.criterios?.[c.id]?.status || "pending";
+      const icon = st === "ok" ? "✓" : (st === "warn" ? "!" : (st === "bad" ? "✕" : "—"));
+      return `<td><button class="cell-btn ${st}" onclick="openDrilldown('${municipio}', ${c.id}, '${tipo}')">${icon}</button></td>`;
+    }).join("");
+    return `<tr><td class="mun-name" onclick="openDrilldown('${municipio}', null, '${tipo}')">${municipio}</td>${cells}</tr>`;
+  }).join("");
+}
+
+function openDrilldown(municipio, focusCritId, tipo){
+  const panel = document.getElementById("drilldown");
+  const data = latestQualityData(municipio, tipo);
+  const crits = getActiveCriteria(tipo, anoAtivo);
+
+  if(!data){
+    panel.innerHTML = `<div class="dd-header"><p class="dd-title">${municipio}</p><button class="dd-close" onclick="closeDrilldown()">✕</button></div><div class="dd-body"><p style="color:var(--muted);padding:14px 0;">Nenhuma análise técnica registrada para este ciclo.</p></div>`;
+  } else {
+    panel.innerHTML = `
+      <div class="dd-header">
+        <div>
+          <p class="dd-title">${municipio}</p>
+          <small style="color:var(--muted);">${data.fonte || "PLANCON"} · Analisado em ${data.analisadoEm}</small>
+        </div>
+        <button class="dd-close" onclick="closeDrilldown()">✕</button>
+      </div>
+      <div class="dd-body">
+        ${crits.map(c=>{
+          const item = data.criterios[c.id];
+          const st = item ? item.status : "pending";
+          return `
+            <div class="dd-item">
+              <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;">${RISK_TYPES[tipo].prefix}${c.id}</div>
+              <div>
+                <p style="margin:0 0 4px;font-weight:600;">${c.short} <span class="dd-tag ${st}">${st}</span></p>
+                <p style="margin:0;font-size:12.5px;color:#384660;">${item ? item.texto : "Critério não avaliado."}</p>
+              </div>
+            </div>`;
+        }).join("")}
+      </div>`;
+  }
+  panel.classList.add("open");
+  panel.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function closeDrilldown(){ document.getElementById("drilldown").classList.remove("open"); }
+
+document.getElementById("qualityOpenBtn").addEventListener("click", ()=>{
+  document.getElementById("qualityModalBackdrop").classList.add("open");
+  renderCritList(riskTipoAtivoQuality);
+  renderQualityMatrix(riskTipoAtivoQuality);
+});
+document.getElementById("qualityModalClose").addEventListener("click", ()=>{
+  document.getElementById("qualityModalBackdrop").classList.remove("open");
+  closeDrilldown();
+});
+
+document.getElementById("compareOpenBtn").addEventListener("click", ()=>{
+  document.getElementById("compareModalBackdrop").classList.add("open");
+});
+document.getElementById("compareModalClose").addEventListener("click", ()=>{
+  document.getElementById("compareModalBackdrop").classList.remove("open");
+});
+
+/* ============================================================================
+   SINCRONIZAÇÃO E BOTÃO DE FORÇAR ATUALIZAÇÃO
+   ============================================================================ */
+async function carregarDadosDaPlanilha(forcarRecache = false) {
   const syncSubline = document.getElementById("syncSubline");
   const loadingBar = document.getElementById("syncLoadingBar");
-  
+  const btnRefresh = document.getElementById("btnForceRefresh");
+
+  if (btnRefresh) btnRefresh.disabled = true;
+  if (loadingBar) loadingBar.style.display = "block";
+
   let segundos = 0;
+  const textoStatus = forcarRecache ? "Varrendo as 11 REDECs" : "Sincronizando rede estadual";
+  
   const timer = setInterval(() => {
     segundos++;
-    if(syncSubline) syncSubline.innerHTML = `⏳ Sincronizando rede estadual (${segundos}s)...`;
+    if(syncSubline) syncSubline.innerHTML = `⏳ ${textoStatus} (${segundos}s)...`;
   }, 1000);
 
   try {
-    const response = await fetch(API_URL);
+    const urlFinal = forcarRecache ? (API_URL + "?recache=1") : API_URL;
+    const response = await fetch(urlFinal);
     if(!response.ok) throw new Error("Status HTTP: " + response.status);
     
     const dados = await response.json();
@@ -967,6 +1074,20 @@ async function carregarDadosDaPlanilha() {
       };
     });
 
+    Object.keys(RISK_TYPES).forEach(tipo=>{
+      const cfg = RISK_TYPES[tipo];
+      cfg.history = {};
+      Object.keys(MAPA_REDECS_RJ).forEach(m => cfg.history[m] = []);
+      const lista = (dados && dados[cfg.dataKey]) || [];
+      lista.forEach(a => {
+        const mun = getNomeCanonicoMunicipio(a.municipio);
+        if(cfg.history[mun]) cfg.history[mun].push({ ...a, municipio: mun });
+      });
+      Object.keys(MAPA_REDECS_RJ).forEach(m => {
+        cfg.history[m].sort((x, y) => new Date(x.dataAnalise) - new Date(y.dataAnalise));
+      });
+    });
+
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
@@ -977,14 +1098,14 @@ async function carregarDadosDaPlanilha() {
     if(loadingBar) loadingBar.style.display = "none";
     const hora = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
     if(syncSubline) {
-      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Rede Estadual Integrada`;
+      syncSubline.innerHTML = `✅ Sincronizado às <b>${hora}</b> · Base Pronta`;
     }
 
   } catch (err) {
     clearInterval(timer);
     if(loadingBar) loadingBar.style.display = "none";
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️ Conexão em modo offline.`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
     
     initRedecSelector();
     atualizarMunicipiosEscopo();
@@ -992,11 +1113,18 @@ async function carregarDadosDaPlanilha() {
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
+  } finally {
+    if (btnRefresh) btnRefresh.disabled = false;
   }
 }
 
-// Inicialização
-carregarDadosDaPlanilha();
+// Configura o botão de forçar atualização
+document.getElementById("btnForceRefresh").addEventListener("click", () => {
+  carregarDadosDaPlanilha(true);
+});
+
+// Inicialização rápida via cache
+carregarDadosDaPlanilha(false);
 </script>
 
 </body>
