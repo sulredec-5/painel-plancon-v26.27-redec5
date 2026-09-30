@@ -376,9 +376,9 @@
 
   <footer>
     <hr>
-    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha <i>Plancons modelo 26-27</i> gerenciada pela equipe da DGDEC.</p>
-    <p>Critério de "atualizado": o município tem pelo menos um documento na pasta compartilhada no drive, da respectiva REDEC para o ano atual <b>ou</b> ou ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas.</p>
-    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos 7 critérios essenciais de planejamento e prontidão operacional definidos pela DGDEC e pela Diretoria Geral das REDECs. Município sem análise registrada aparece como "Pendente de análise" na matriz.</p>
+    <p><b>Como isto é atualizado:</b> Os dados de entrega e análises dos PLANCONs são sincronizados automaticamente a partir da planilha gerenciada pela equipe da REDEC 5.</p>
+    <p>Critério de "atualizado": o município tem pelo menos um documento na pasta do REDEC 5 do ano atual <b>ou</b> do ano anterior — já que os planos têm validade de um ano, isso garante que sempre exista uma versão vigente. Só entra como "não entregue" quem não tem nenhum documento em nenhuma das duas pastas.</p>
+    <p><b>Sobre a qualidade do conteúdo:</b> avaliação técnica efetuada com base nos critérios essenciais de planejamento e prontidão operacional definidos pela REDEC para o respectivo ciclo. Município sem análise registrada aparece como "Pendente de análise" na matriz.</p>
   </footer>
 
   <!-- ===================== MODAL: QUALIDADE DOS PLANOS ===================== -->
@@ -387,7 +387,7 @@
       <div class="quality-modal-header">
         <div>
           <h2 id="qualityModalTitle">Qualidade dos Planos</h2>
-          <p class="section-desc">Avaliação técnica detalhada dos critérios operacionais e de prontidão.</p>
+          <p class="section-desc">Critérios técnicos e fatores de verificação para prontidão operacional.</p>
         </div>
         <button class="quality-modal-close" id="qualityModalClose" aria-label="Fechar">✕</button>
       </div>
@@ -467,6 +467,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxbhRXtgXvJ4tGn5XxkqrkzZ1v7N9yqyP6BkeBfjbnPuiAcCHJbJhR8xxuqFpVwLByc0A/exec";
 
 let ALL_DATA = [];
+let DICIONARIO_GLOBAL = [];
 
 const REDEC = [
   "Barra do Piraí","Barra Mansa","Comendador Levy Gasparian","Itatiaia",
@@ -474,7 +475,7 @@ const REDEC = [
   "Resende","Rio das Flores","Três Rios","Valença","Vassouras","Volta Redonda"
 ];
 
-const CRITERIOS_AVALIACAO = [
+const FALLBACK_CRITERIOS = [
   {id:1, short:"Áreas de risco e COBRADE", full:"As áreas de risco estão mapeadas e relacionadas à codificação COBRADE?"},
   {id:2, short:"Alerta e rotas de evacuação", full:"O plano prevê sistema de alerta e identifica as rotas de evacuação?"},
   {id:3, short:"Abrigos e recursos humanos", full:"Os abrigos estão identificados e descritos, incluindo os recursos humanos disponíveis?"},
@@ -491,8 +492,7 @@ const RISK_TYPES = {
     prefix: "C",
     dataKey: "analises",
     riscoKeywords: ["geral", "chuva"],
-    history: {},
-    criteria: CRITERIOS_AVALIACAO
+    history: {}
   },
   estiagem: {
     label: "Estiagem e fogo em vegetação",
@@ -500,24 +500,38 @@ const RISK_TYPES = {
     prefix: "FV",
     dataKey: "analisesEstiagem",
     riscoKeywords: ["geral", "estiagem", "seca", "escassez", "fogo", "incendio", "incêndio", "vegetacao", "vegetação", "el nino", "el niño", "calor", "umidade"],
-    history: {},
-    criteria: CRITERIOS_AVALIACAO
+    history: {}
   }
 };
+
 let riskTipoAtivoQuality = "chuvas";
 let riskTipoAtivoCompare = "chuvas";
-
 let ANOS = [2026];
 let anoAtivo = 2026;
 let DATA = [];
+
+/**
+ * Obtém dinamicamente os critérios para o tipo e ciclo ativo
+ */
+function getActiveCriteria(tipo, ciclo) {
+  var cAno = Number(ciclo || anoAtivo);
+  var encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && Number(d.ciclo) === cAno);
+  if (encontrados.length > 0) {
+    return encontrados.sort((a,b) => a.id - b.id);
+  }
+  // Se não houver cadastro do ano específico, busca o mais recente disponível
+  var doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
+  if (doTipo.length > 0) {
+    var maxCiclo = Math.max(...doTipo.map(d => d.ciclo));
+    return doTipo.filter(d => d.ciclo === maxCiclo).sort((a,b) => a.id - b.id);
+  }
+  return FALLBACK_CRITERIOS;
+}
 
 function normalizarTexto(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
 }
 
-/**
- * Traduz status por extenso vindo da planilha para a chave interna
- */
 function normalizarStatus(st){
   const s = normalizarTexto(st);
   if(s === "atualizado" || s === "ok") return "ok";
@@ -563,9 +577,6 @@ const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"
 const QSTATUS_ICON = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
 const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
 
-/**
- * Consolida a situação do município dando prioridade ao melhor status cadastrado (ok > warn > outdated > bad)
- */
 function getMunicipioSummary(){
   const map = {};
   REDEC.forEach(m => map[m] = {status:"bad", riscos:[]});
@@ -576,7 +587,6 @@ function getMunicipioSummary(){
     const atualRank = rank[map[d.municipio].status] ?? 0;
     const novoRank = rank[d.status] ?? 0;
 
-    // Se o plano cadastrado tiver status superior a "bad", ele eleva a situação municipal
     if(novoRank >= atualRank){
       map[d.municipio].status = d.status;
     }
@@ -934,7 +944,8 @@ function municipioQualitySummary(municipio, tipo, ano){
   const m = latestQualityData(municipio, tipo, ano);
   if(!m || !m.criterios) return null;
   const counts = {ok:0, warn:0, bad:0};
-  RISK_TYPES[tipo].criteria.forEach(c=>{
+  const crits = getActiveCriteria(tipo, ano);
+  crits.forEach(c=>{
     const st = m.criterios[c.id] ? m.criterios[c.id].status : null;
     if(st && counts[st] !== undefined) counts[st]++;
   });
@@ -979,7 +990,8 @@ function renderRiskTabs(containerId, tipoAtivo, onSelect){
 }
 
 function renderCritList(tipo){
-  document.getElementById("critList").innerHTML = RISK_TYPES[tipo].criteria.map(c=>
+  const crits = getActiveCriteria(tipo, anoAtivo);
+  document.getElementById("critList").innerHTML = crits.map(c=>
     `<li><b>${RISK_TYPES[tipo].prefix}${c.id}. ${c.short}:</b> ${c.full}</li>`
   ).join("");
 }
@@ -996,11 +1008,12 @@ function renderQualityMeta(){
 
 function renderQualityMatrix(tipo){
   const cfg = RISK_TYPES[tipo];
-  document.getElementById("qualityMatrix").style.setProperty("--crit-count", cfg.criteria.length);
+  const crits = getActiveCriteria(tipo, anoAtivo);
+  document.getElementById("qualityMatrix").style.setProperty("--crit-count", crits.length);
 
   const headRow = document.getElementById("qualityHeadRow");
   headRow.innerHTML = `<th class="mun-col">Município</th>` +
-    cfg.criteria.map(c=>`<th class="crit-col" title="${c.full}"><span class="crit-num">${cfg.prefix}${c.id}</span><span class="crit-label">${c.short}</span></th>`).join("");
+    crits.map(c=>`<th class="crit-col" title="${c.full}"><span class="crit-num">${cfg.prefix}${c.id}</span><span class="crit-label">${c.short}</span></th>`).join("");
 
   const body = document.getElementById("qualityBody");
   body.innerHTML = REDEC.map(municipio=>{
@@ -1008,7 +1021,7 @@ function renderQualityMatrix(tipo){
     const sub = summary
       ? `${summary.ok} total · ${summary.warn} parcial · ${summary.bad} não atende`
       : "Pendente de análise";
-    const cells = cfg.criteria.map(c=>{
+    const cells = crits.map(c=>{
       const st = qualityStatusFor(municipio, c.id, tipo);
       const cls = st==="pending" ? "pending" : st;
       return `<td><button class="cell-btn ${cls}" data-mun="${municipio}" data-crit="${c.id}" aria-label="${municipio} — ${cfg.prefix}${c.id}: ${QSTATUS_LABEL[st]}"><span class="cell-icon" aria-hidden="true">${QSTATUS_ICON[st] || "—"}</span></button></td>`;
@@ -1033,6 +1046,7 @@ function openDrilldown(municipio, focusCritId, tipo){
   const cfg = RISK_TYPES[tipo];
   const panel = document.getElementById("drilldown");
   const data = latestQualityData(municipio, tipo);
+  const crits = getActiveCriteria(tipo, anoAtivo);
 
   if(!data){
     panel.innerHTML = `
@@ -1071,7 +1085,7 @@ function openDrilldown(municipio, focusCritId, tipo){
         <span class="sumchip bad"><span class="dot"></span>${summary.bad} não atende</span>
       </div>
       <div class="dd-body">
-        ${cfg.criteria.map(c=>{
+        ${crits.map(c=>{
           const item = data.criterios[c.id];
           const st = item ? item.status : "pending";
           return `
@@ -1147,7 +1161,7 @@ function renderCompareCards(tipo){
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
     <div class="compare-card"><div class="num">${none}</div><div class="label">sem documento inicial</div></div>
   `;
-  document.getElementById("compareNote").innerHTML = `Comparação técnica dos 7 fatores de prontidão operacional.`;
+  document.getElementById("compareNote").innerHTML = `Comparação técnica dos fatores de prontidão operacional.`;
 }
 
 function renderCompareMunicipioStatus(tipo){
@@ -1229,13 +1243,16 @@ function renderPendingAnalysisAlert(){
    ============================================================================ */
 async function carregarDadosDaPlanilha() {
   const syncSubline = document.getElementById("syncSubline");
-  if(syncSubline) syncSubline.innerHTML = "⏳ Sincronizando com a planilha <i>Plancons modelo 26-27</i>...";
+  if(syncSubline) syncSubline.innerHTML = "⏳ Sincronizando com a planilha...";
 
   try {
     const response = await fetch(API_URL);
     if(!response.ok) throw new Error("Status HTTP: " + response.status);
     
     const dados = await response.json();
+
+    // 0. Dicionário Dinâmico de Critérios
+    DICIONARIO_GLOBAL = (dados && Array.isArray(dados.dicionario)) ? dados.dicionario : [];
 
     // 1. Entregas (com normalização de status e data)
     const rawEntregas = (dados && Array.isArray(dados.entregas)) ? dados.entregas : [];
