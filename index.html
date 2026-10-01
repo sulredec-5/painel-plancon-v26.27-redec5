@@ -1231,7 +1231,7 @@ function renderCompareCards(tipo){
   const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
   const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
   document.getElementById("compareCards").innerHTML = `
-    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com ≥ 2 versões</div></div>
+    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com 2 ou mais versões</div></div>
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
     <div class="compare-card"><div class="num">${none}</div><div class="label">sem análise registrada</div></div>
   `;
