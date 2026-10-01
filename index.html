@@ -227,6 +227,28 @@
   .dd-tag.bad{color:var(--red);background:var(--red-bg);}
   .dd-tag.pending{color:var(--muted);background:#F0F2F5;}
 
+  /* COMPARATIVO DE VERSÕES */
+  .compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;}
+  .compare-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;}
+  .compare-card .num{font-family:"Source Serif 4",serif;font-size:26px;font-weight:600;line-height:1;}
+  .compare-card .label{font-size:12px;color:var(--muted);margin-top:4px;}
+  .compare-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;align-items:end;}
+  .compare-field label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+  .compare-field select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);font-family:"IBM Plex Sans",sans-serif;font-size:13px;}
+  .compare-note{font-size:13px;color:var(--muted);line-height:1.55;background:#FAFBFC;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:5px;padding:10px 12px;margin-bottom:16px;}
+  .compare-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;}
+  table.compare-table{min-width:700px;border:none;border-radius:0;}
+  table.compare-table thead th{cursor:default;}
+  table.compare-table td{font-size:13px;}
+  .compare-status{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;white-space:nowrap;display:inline-block;}
+  .compare-status.ready{background:var(--green-bg);color:var(--green);}
+  .compare-status.wait{background:var(--amber-bg);color:var(--amber);}
+  .compare-status.none{background:#F0F2F5;color:var(--muted);}
+  .evo{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:700;white-space:nowrap;}
+  .evo.up{color:var(--green);}.evo.flat{color:var(--muted);}.evo.down{color:var(--red);}.evo.na{color:#9AA4B2;}
+  .compare-cell{white-space:nowrap;}
+  .compare-cell .before,.compare-cell .after{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;}
+
   footer{max-width:1120px;margin:0 auto;padding:0 18px 40px;color:var(--muted);font-size:12px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 16px;}
 
@@ -268,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=8" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=9" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -392,7 +414,7 @@
     </div>
   </div>
 
-  <!-- MODAL: COMPARATIVO -->
+  <!-- MODAL: COMPARATIVO ENTRE VERSÕES -->
   <div class="quality-modal-backdrop" id="compareModalBackdrop">
     <div class="quality-modal" role="dialog" aria-modal="true">
       <div class="quality-modal-header">
@@ -404,13 +426,30 @@
       </div>
       <div class="quality-modal-body">
         <div class="risk-tabs" id="compareRiskTabs" role="tablist"></div>
-        <div id="compareCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;"></div>
-        <div class="compare-controls" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px;">
-          <div><label style="font-size:11px;font-weight:600;">Município</label><select id="compareMunicipio" style="width:100%;padding:8px;"></select></div>
-          <div><label style="font-size:11px;font-weight:600;">Versão anterior</label><select id="compareBefore" style="width:100%;padding:8px;"></select></div>
-          <div><label style="font-size:11px;font-weight:600;">Versão posterior</label><select id="compareAfter" style="width:100%;padding:8px;"></select></div>
+        <div class="compare-grid" id="compareCards"></div>
+        <div class="compare-note" id="compareNote"></div>
+        <div class="compare-controls">
+          <div class="compare-field">
+            <label for="compareMunicipio">Município</label>
+            <select id="compareMunicipio"></select>
+          </div>
+          <div class="compare-field">
+            <label for="compareBefore">Versão anterior</label>
+            <select id="compareBefore"></select>
+          </div>
+          <div class="compare-field">
+            <label for="compareAfter">Versão posterior</label>
+            <select id="compareAfter"></select>
+          </div>
         </div>
         <div id="compareDetail"></div>
+        <h3 style="font-family:'Source Serif 4',serif;font-size:18px;margin:18px 0 10px;">Situação dos Municípios na Regional</h3>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead><tr><th>Município</th><th>Situação</th><th>Versões disponíveis</th><th>Última análise</th></tr></thead>
+            <tbody id="compareMunicipioStatus"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -469,7 +508,7 @@ const TODAS_AS_REDECS = [
 
 let redecAtiva = "REDEC 5 - Sul I";
 let MUNICIPIOS_ESCOPO = [];
-let currentScopeBounds = null; // Armazena a extensão da visão geral para o Zoom Out
+let currentScopeBounds = null;
 
 function normalizarTexto(s){
   return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
@@ -567,6 +606,9 @@ function recalcAnos() {
 const STATUS_LABEL = {ok:"Atualizado", outdated:"Desatualizado", warn:"Verificar", bad:"Não entregue"};
 const STATUS_FILL  = {ok:"#6EC49A", outdated:"#E8807C", warn:"#9AA4B4", bad:"#F5C07A"};
 const STATUS_COLOR = {ok:"#1F7A4D", outdated:"#B0241D", warn:"#3F4A5E", bad:"#B5650A"};
+const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
+const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"Não atende", pending:"Pendente de análise"};
+const QSTATUS_ICON  = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
 
 function getMunicipioSummary(){
   const map = {};
@@ -633,7 +675,6 @@ function criarConteudoPopup(canonico) {
   `;
 }
 
-// POPUP PARA MUNICÍPIO CLICADO FORA DA REDEC ATIVA
 function criarConteudoPopupFora(canonico, redecNome) {
   return `
     <div class="popup-nome">${canonico}</div>
@@ -657,7 +698,6 @@ function initMap(){
       maxZoom: 14
     }).addTo(mapInstance);
 
-    // CONTROLE DE ZOOM OUT SUAVE AO FECHAR O POPUP
     mapInstance.on("popupclose", function(){
       popupCloseTimer = setTimeout(function(){
         let hasOpen = false;
@@ -691,7 +731,6 @@ function initMap(){
     const isNoEscopo = ESCOPO_SET.has(normalizarTexto(canonico));
     const redecNome = getRedecDoMunicipio(canonico);
 
-    // TOOLTIP SEMPRE PRESENTE (MOSTRA REDEC TANTO DENTRO QUANTO FORA)
     layer.bindTooltip(`<b>${canonico}</b><br><span style="font-size:10px;opacity:.85;">${redecNome}</span>`, {
       sticky: true,
       direction: "top",
@@ -716,7 +755,6 @@ function initMap(){
         } else {
           e.target.bindPopup(criarConteudoPopupFora(canonico, redecNome)).openPopup();
         }
-        // ZOOM IN SUAVE NO MUNICÍPIO CLICADO
         mapInstance.fitBounds(e.target.getBounds(), {padding:[35,35], animate:true, duration:0.6});
       }
     });
@@ -732,7 +770,6 @@ function initMap(){
       window._geojsonLayer.getLayers().filter(l => ESCOPO_SET.has(normalizarTexto(getNomeCanonicoMunicipio(l.feature.properties.NM_MUN))))
     ).getBounds();
 
-    // SALVA A EXTENSÃO GERAL ATIVA PARA O ZOOM OUT
     if (bounds.isValid()) {
       currentScopeBounds = bounds;
       mapInstance.fitBounds(bounds, {padding:[14,14], animate:true});
@@ -1160,12 +1197,164 @@ document.getElementById("qualityModalClose").addEventListener("click", ()=>{
   closeDrilldown();
 });
 
-document.getElementById("compareOpenBtn").addEventListener("click", ()=>{
+/* ============================================================================
+   LÓGICA DO COMPARATIVO ENTRE VERSÕES
+   ============================================================================ */
+function compareDelta(beforeStatus, afterStatus){
+  if(!(beforeStatus in QSTATUS_SCORE) || !(afterStatus in QSTATUS_SCORE)) return null;
+  return QSTATUS_SCORE[afterStatus] - QSTATUS_SCORE[beforeStatus];
+}
+
+function evolutionLabel(delta){
+  if(delta === null) return {symbol:"—", cls:"na", text:"Sem base comparável"};
+  if(delta >= 2) return {symbol:"↑↑", cls:"up", text:"Evolução forte"};
+  if(delta === 1) return {symbol:"↑", cls:"up", text:"Evolução"};
+  if(delta === 0) return {symbol:"→", cls:"flat", text:"Sem alteração"};
+  if(delta === -1) return {symbol:"↓", cls:"down", text:"Regressão"};
+  return {symbol:"↓↓", cls:"down", text:"Regressão forte"};
+}
+
+function compareStatusForMunicipio(municipio, tipo){
+  const versions = municipioVersions(municipio, tipo);
+  if(versions.length >= 2) return {cls:"ready", label:"Comparável", detail:`${versions.length} versões`};
+  if(versions.length === 1) return {cls:"wait", label:"Aguardando nova versão", detail:"1 versão"};
+  return {cls:"none", label:"Sem documento", detail:"0 versões"};
+}
+
+function renderCompareCards(tipo){
+  const ready = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length >= 2).length;
+  const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
+  const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
+  document.getElementById("compareCards").innerHTML = `
+    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com $\\ge 2$ versões</div></div>
+    <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
+    <div class="compare-card"><div class="num">${none}</div><div class="label">sem análise registrada</div></div>
+  `;
+  document.getElementById("compareNote").innerHTML = `Comparativo entre versões avaliadas para o tipo de risco: <b>${RISK_TYPES[tipo].label}</b>.`;
+}
+
+function renderCompareMunicipioStatus(tipo){
+  const tbody = document.getElementById("compareMunicipioStatus");
+  tbody.innerHTML = MUNICIPIOS_ESCOPO.map(m=>{
+    const versions = municipioVersions(m, tipo);
+    const status = compareStatusForMunicipio(m, tipo);
+    const latest = versions.length ? versions[versions.length-1] : null;
+    return `<tr>
+      <td class="municipio-cell">${m}</td>
+      <td><span class="compare-status ${status.cls}">${status.label}</span></td>
+      <td>${status.detail}</td>
+      <td>${latest ? `${latest.rotulo} (${latest.dataAnalise})` : "—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+function populateCompareSelectors(selectedMunicipio, tipo){
+  const munSel = document.getElementById("compareMunicipio");
+  munSel.innerHTML = MUNICIPIOS_ESCOPO.map(m=>`<option value="${m}">${m}</option>`).join("");
+  if(selectedMunicipio && MUNICIPIOS_ESCOPO.includes(selectedMunicipio)) {
+    munSel.value = selectedMunicipio;
+  }
+  
+  const munAtual = munSel.value;
+  const versions = municipioVersions(munAtual, tipo);
+  const beforeSel = document.getElementById("compareBefore");
+  const afterSel = document.getElementById("compareAfter");
+
+  if(versions.length < 2) {
+    beforeSel.innerHTML = `<option value="">Versões insuficientes</option>`;
+    afterSel.innerHTML = `<option value="">Versões insuficientes</option>`;
+    beforeSel.disabled = true;
+    afterSel.disabled = true;
+    renderCompareDetail(tipo);
+    return;
+  }
+
+  const opts = versions.map((v, i) => `<option value="${i}">${v.rotulo || "Versão"} (${v.dataAnalise})</option>`).join("");
+  beforeSel.innerHTML = opts;
+  afterSel.innerHTML = opts;
+  beforeSel.disabled = false;
+  afterSel.disabled = false;
+
+  beforeSel.value = "0";
+  afterSel.value = String(versions.length - 1);
+  renderCompareDetail(tipo);
+}
+
+function renderCompareDetail(tipo){
+  const cfg = RISK_TYPES[tipo];
+  const municipio = document.getElementById("compareMunicipio").value;
+  const versions = municipioVersions(municipio, tipo);
+  const target = document.getElementById("compareDetail");
+
+  if(versions.length === 0){
+    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: sem análise registrada para ${cfg.label.toLowerCase()}.</div>`;
+    return;
+  }
+  if(versions.length === 1){
+    const v = versions[0];
+    target.innerHTML = `<div class="compare-note"><b>${municipio}</b>: possui apenas 1 versão registrada (<b>${v.rotulo}</b> em ${v.dataAnalise}). Aguardando versão subsequente para comparação técnica.</div>`;
+    return;
+  }
+
+  const beforeIdx = Number(document.getElementById("compareBefore").value);
+  const afterIdx = Number(document.getElementById("compareAfter").value);
+  const before = versions[beforeIdx];
+  const after = versions[afterIdx];
+
+  if(!before || !after || beforeIdx === afterIdx){
+    target.innerHTML = `<div class="compare-note">Selecione duas versões distintas nos campos acima para comparar a evolução.</div>`;
+    return;
+  }
+
+  const anoRef = extrairAnoNumero(after.ciclo || after.dataAnalise || anoAtivo);
+  const crits = getActiveCriteria(tipo, anoRef);
+
+  let improved=0, stable=0, regressed=0;
+  const rows = crits.map(c=>{
+    const b = before.criterios[c.id]?.status || "pending";
+    const a = after.criterios[c.id]?.status || "pending";
+    const delta = compareDelta(b, a);
+    const evo = evolutionLabel(delta);
+    if(delta > 0) improved++; else if(delta === 0) stable++; else if(delta < 0) regressed++;
+    return `<tr>
+      <td><b>${cfg.prefix}${c.id}</b> — ${c.short}</td>
+      <td class="compare-cell"><span class="before">${QSTATUS_ICON[b]} ${QSTATUS_LABEL[b]}</span> → <span class="after">${QSTATUS_ICON[a]} ${QSTATUS_LABEL[a]}</span></td>
+      <td><span class="evo ${evo.cls}" title="${evo.text}">${evo.symbol} ${evo.text}</span></td>
+    </tr>`;
+  }).join("");
+
+  target.innerHTML = `
+    <div class="compare-note"><b>${municipio}</b>: ${before.rotulo} vs ${after.rotulo}. Evoluções: <b>${improved}</b> · Estáveis: <b>${stable}</b> · Regressões: <b>${regressed}</b>.</div>
+    <div class="compare-table-wrap"><table class="compare-table">
+      <thead><tr><th>Critério</th><th>Antes → Depois</th><th>Evolução</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+  `;
+}
+
+function setCompareTipo(tipo){
+  riskTipoAtivoCompare = tipo;
+  renderRiskTabs("compareRiskTabs", riskTipoAtivoCompare, setCompareTipo);
+  renderCompareCards(tipo);
+  renderCompareMunicipioStatus(tipo);
+  populateCompareSelectors(document.getElementById("compareMunicipio").value || MUNICIPIOS_ESCOPO[0], tipo);
+}
+
+function openCompareModal(municipio){
   document.getElementById("compareModalBackdrop").classList.add("open");
-});
-document.getElementById("compareModalClose").addEventListener("click", ()=>{
+  setCompareTipo(riskTipoAtivoCompare);
+  if(municipio) populateCompareSelectors(municipio, riskTipoAtivoCompare);
+}
+
+function closeCompareModal(){
   document.getElementById("compareModalBackdrop").classList.remove("open");
-});
+}
+
+document.getElementById("compareOpenBtn").addEventListener("click", ()=>openCompareModal(null));
+document.getElementById("compareModalClose").addEventListener("click", closeCompareModal);
+document.getElementById("compareMunicipio").addEventListener("change", ()=>populateCompareSelectors(document.getElementById("compareMunicipio").value, riskTipoAtivoCompare));
+document.getElementById("compareBefore").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
+document.getElementById("compareAfter").addEventListener("change", ()=>renderCompareDetail(riskTipoAtivoCompare));
 
 /* ============================================================================
    SINCRONIZAÇÃO E BOTÃO DE FORÇAR ATUALIZAÇÃO
@@ -1253,12 +1442,10 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
   }
 }
 
-// Configura o botão de forçar atualização
 document.getElementById("btnForceRefresh").addEventListener("click", () => {
   carregarDadosDaPlanilha(true);
 });
 
-// Inicialização rápida
 carregarDadosDaPlanilha(false);
 </script>
 
