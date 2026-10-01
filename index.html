@@ -221,7 +221,7 @@
   .dd-body{padding:6px 18px 16px;}
   .dd-item{padding:12px 0;border-bottom:1px solid #EEF0F3;display:grid;grid-template-columns:30px 1fr;gap:12px;}
   .dd-item:last-child{border-bottom:none;}
-  .dd-tag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase;}
+  .dd-tag{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:3px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.02em;}
   .dd-tag.ok{color:var(--green);background:var(--green-bg);}
   .dd-tag.warn{color:var(--amber);background:var(--amber-bg);}
   .dd-tag.bad{color:var(--red);background:var(--red-bg);}
@@ -290,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=10" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=11" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -1165,11 +1165,13 @@ function openDrilldown(municipio, focusCritId, tipo){
         ${crits.map(c=>{
           const item = data.criterios[c.id];
           const st = item ? item.status : "pending";
+          // RÓTULO EM PORTUGUÊS DO BRASIL
+          const rotuloPT = QSTATUS_LABEL[st] || "Pendente de análise";
           return `
             <div class="dd-item">
               <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;">${RISK_TYPES[tipo].prefix}${c.id}</div>
               <div>
-                <p style="margin:0 0 4px;font-weight:600;">${c.short} <span class="dd-tag ${st}">${st}</span></p>
+                <p style="margin:0 0 4px;font-weight:600;">${c.short} <span class="dd-tag ${st}">${rotuloPT}</span></p>
                 <p style="margin:0;font-size:12.5px;color:#384660;">${item ? item.texto : "Critério não avaliado."}</p>
               </div>
             </div>`;
@@ -1414,13 +1416,13 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
       });
     });
 
-    // 1. Prepara escopo inicial e seletor
+    // Prepara escopo inicial e seletor
     redecAtiva = "ALL";
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
 
-    // 2. Renderiza Mapa, Donut, Tabela e Métricas
+    // Renderiza Mapa, Donut, Tabela e Métricas
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
@@ -1436,7 +1438,7 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
     clearInterval(timer);
     if(loadingBar) loadingBar.style.display = "none";
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️️ Operando em modo offline/espera.`;
     
     redecAtiva = "ALL";
     initRedecSelector();
