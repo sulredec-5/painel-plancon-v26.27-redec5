@@ -290,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=9" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=10" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -337,7 +337,7 @@
 
   <div class="viz-row">
     <div class="viz-card">
-      <div class="viz-card-header"><h2 id="mapTitle">Estado do Rio de Janeiro — Situação Operacional</h2></div>
+      <div class="viz-card-header"><h2 id="mapTitle">Estado do Rio de Janeiro — Visão Geral (92 municípios)</h2></div>
       <div id="map"></div>
     </div>
     <div class="viz-card">
@@ -506,7 +506,8 @@ const TODAS_AS_REDECS = [
   "REDEC 10 - Norte", "REDEC 11 - Noroeste"
 ];
 
-let redecAtiva = "All";
+// INICIA COM O ESTADO DO RIO DE JANEIRO COMPLETO POR PADRÃO
+let redecAtiva = "ALL";
 let MUNICIPIOS_ESCOPO = [];
 let currentScopeBounds = null;
 
@@ -531,10 +532,12 @@ function getRedecDoMunicipio(nomeMun) {
 function atualizarMunicipiosEscopo() {
   if (redecAtiva === "ALL") {
     MUNICIPIOS_ESCOPO = Object.keys(MAPA_REDECS_RJ).sort((a,b)=>a.localeCompare(b,"pt-BR"));
-    document.getElementById("mapTitle").textContent = "Estado do Rio de Janeiro — Visão Geral (92 municípios)";
+    const titleEl = document.getElementById("mapTitle");
+    if(titleEl) titleEl.textContent = "Estado do Rio de Janeiro — Visão Geral (92 municípios)";
   } else {
     MUNICIPIOS_ESCOPO = Object.keys(MAPA_REDECS_RJ).filter(m => MAPA_REDECS_RJ[m] === redecAtiva).sort((a,b)=>a.localeCompare(b,"pt-BR"));
-    document.getElementById("mapTitle").textContent = `Estado do Rio de Janeiro — ${redecAtiva}`;
+    const titleEl = document.getElementById("mapTitle");
+    if(titleEl) titleEl.textContent = `Estado do Rio de Janeiro — ${redecAtiva}`;
   }
 }
 
@@ -1039,7 +1042,7 @@ function buildYearBtns(){
 
 function initRedecSelector() {
   const sel = document.getElementById("redecFilterSelect");
-  let optionsHtml = `<option value="ALL">Estado do Rio de Janeiro (Todas)</option>`;
+  let optionsHtml = `<option value="ALL"${redecAtiva === "ALL" ? " selected" : ""}>Estado do Rio de Janeiro (Todas)</option>`;
   TODAS_AS_REDECS.forEach(r => {
     const isSelected = (r === redecAtiva) ? " selected" : "";
     optionsHtml += `<option value="${r}"${isSelected}>${r}</option>`;
@@ -1226,7 +1229,7 @@ function renderCompareCards(tipo){
   const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
   const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
   document.getElementById("compareCards").innerHTML = `
-    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com 2 ou mais versões</div></div>
+    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com ≥ 2 versões</div></div>
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
     <div class="compare-card"><div class="num">${none}</div><div class="label">sem análise registrada</div></div>
   `;
@@ -1411,9 +1414,13 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
       });
     });
 
+    // 1. Prepara escopo inicial e seletor
+    redecAtiva = "ALL";
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
+
+    // 2. Renderiza Mapa, Donut, Tabela e Métricas
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
@@ -1431,6 +1438,7 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
     console.error("Falha ao sincronizar:", err);
     if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
     
+    redecAtiva = "ALL";
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
