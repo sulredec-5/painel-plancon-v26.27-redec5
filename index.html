@@ -290,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=14" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=15" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -317,7 +317,7 @@
         <div class="scenario-btns" id="scenarioBtns">
           <button class="scenario-btn active" data-scenario="geral" title="Considera qualquer plano cadastrado">🌐 Geral</button>
           <button class="scenario-btn" data-scenario="chuvas" title="Planos para chuvas e inundações">🌧️ Chuvas</button>
-          <button class="scenario-btn" data-scenario="estiagem" title="Planos para estiagem e queimadas">🔥 Estiagem/Fogo</button>
+          <button class="scenario-btn" data-scenario="estiagem" title="Planos para estiagem e queimadas">🔥 Estiagem</button>
         </div>
       </div>
 
@@ -557,6 +557,7 @@ function atualizarMunicipiosEscopo() {
   }
 }
 
+// TAXONOMIA OPERACIONAL COMPLETA (SEDEC / CENAD / COBRADE)
 function atendeCenario(riscoStr, cenario) {
   if (cenario === "geral") return true;
   const s = normalizarTexto(riscoStr);
@@ -565,11 +566,27 @@ function atendeCenario(riscoStr, cenario) {
   const isPlanoGeral = s.includes("geral") || s.includes("contingencia") || s.includes("plancon");
 
   if (cenario === "chuvas") {
-    return isPlanoGeral || s.includes("chuva") || s.includes("desliz") || s.includes("alag") || s.includes("inund") || s.includes("enxurr");
+    return isPlanoGeral || 
+           s.includes("chuva") || 
+           s.includes("hidro") ||        // Hidrológico, hidrologia
+           s.includes("geol") ||         // Geológico, geologia
+           s.includes("massa") ||        // Movimento de massa
+           s.includes("desliz") ||       // Deslizamento
+           s.includes("alag") ||         // Alagamento
+           s.includes("inund") ||        // Inundação
+           s.includes("enxurr");         // Enxurrada
   }
 
   if (cenario === "estiagem") {
-    return isPlanoGeral || s.includes("estia") || s.includes("seca") || s.includes("fogo") || s.includes("incend") || s.includes("vegeta");
+    return isPlanoGeral || 
+           s.includes("estia") ||        // Estiagem
+           s.includes("seca") ||         // Seca
+           s.includes("fogo") ||         // Fogo em vegetação
+           s.includes("incend") ||       // Incêndio florestal
+           s.includes("queimad") ||      // Queimadas
+           s.includes("florest") ||      // Florestal
+           s.includes("deficit") ||      // Déficit hídrico
+           s.includes("vegeta");         // Vegetação
   }
 
   return true;
@@ -586,7 +603,6 @@ let ANOS = [2026];
 let anoAtivo = 2026;
 let DATA = [];
 
-// EXTRAÇÃO ULTRA-ROBUSTA DE ANO/CICLO
 function extrairAnoNumero(val) {
   if (!val) return 2026;
   const s = String(val).trim();
@@ -647,7 +663,6 @@ function recalcAnos() {
   DATA = ALL_DATA.filter(d => {
     const mesmoAno = matchesAno(d.ano, anoAtivo);
     const munCan = getNomeCanonicoMunicipio(d.municipio);
-    // VINCULAÇÃO DUPLA: checa pelo município canônico OU se o registro veio com a etiqueta da REDEC
     const pertenceEscopo = (redecAtiva === "ALL") || 
                            (getRedecDoMunicipio(munCan) === redecAtiva) ||
                            (d.redec === redecAtiva);
@@ -1109,7 +1124,7 @@ function setAno(ano){
   const allBtn = document.querySelector(".pills .pill[data-status='all']");
   if(allBtn) allBtn.setAttribute("aria-pressed", "true");
 
-  document.querySelectorAll(".year-btn").forEach(b => b.classList.toggle("active", +b.dataset.ano === anoAtivo));
+  document.querySelectorAll(".year-btn").forEach(b => b.classList.toggle("active", matchesAno(b.dataset.ano, anoAtivo)));
   
   if (mapInstance) mapInstance.closePopup();
 
@@ -1124,7 +1139,7 @@ function buildYearBtns(){
   const wrap = document.getElementById("yearBtns");
   wrap.innerHTML = ANOS.map(a=>{
     const label = formatCicloLabel(a);
-    return `<button class="year-btn${a===anoAtivo?" active":""}" data-ano="${a}" onclick="setAno(${a})">${label}</button>`;
+    return `<button class="year-btn${matchesAno(a, anoAtivo)?" active":""}" data-ano="${a}" onclick="setAno(${a})">${label}</button>`;
   }).join("");
 }
 
