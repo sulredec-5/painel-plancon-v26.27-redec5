@@ -290,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=13" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=14" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -523,7 +523,7 @@ const TODAS_AS_REDECS = [
 ];
 
 let redecAtiva = "ALL";
-let cenarioAtivo = "geral"; // "geral", "chuvas", "estiagem"
+let cenarioAtivo = "geral";
 let MUNICIPIOS_ESCOPO = [];
 let currentScopeBounds = null;
 
@@ -557,13 +557,11 @@ function atualizarMunicipiosEscopo() {
   }
 }
 
-// LÓGICA DE CLASSIFICAÇÃO DE CENÁRIOS POR PALAVRA-CHAVE
 function atendeCenario(riscoStr, cenario) {
   if (cenario === "geral") return true;
   const s = normalizarTexto(riscoStr);
   if (!s || s === "—") return false;
 
-  // Planos gerais ou contingência abrangente atendem a ambos os cenários
   const isPlanoGeral = s.includes("geral") || s.includes("contingencia") || s.includes("plancon");
 
   if (cenario === "chuvas") {
@@ -588,16 +586,27 @@ let ANOS = [2026];
 let anoAtivo = 2026;
 let DATA = [];
 
+// EXTRAÇÃO ULTRA-ROBUSTA DE ANO/CICLO
 function extrairAnoNumero(val) {
   if (!val) return 2026;
-  const match = String(val).match(/20\d{2}/);
-  return match ? parseInt(match[0], 10) : parseInt(val, 10) || 2026;
+  const s = String(val).trim();
+  const match = s.match(/20\d{2}/);
+  if (match) return parseInt(match[0], 10);
+  const n = parseInt(s, 10);
+  return !isNaN(n) ? n : 2026;
+}
+
+function matchesAno(itemAno, targetAno) {
+  const itemStr = String(itemAno || "").trim();
+  const targetStr = String(targetAno);
+  if (itemStr.includes(targetStr)) return true;
+  return extrairAnoNumero(itemAno) === targetAno;
 }
 
 function getActiveCriteria(tipo, ciclo) {
   const cAno = extrairAnoNumero(ciclo || anoAtivo);
   if (!DICIONARIO_GLOBAL || DICIONARIO_GLOBAL.length === 0) return [];
-  let encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && extrairAnoNumero(d.ciclo) === cAno);
+  let encontrados = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo && matchesAno(d.ciclo, cAno));
   if (encontrados.length > 0) return encontrados.sort((a,b) => a.id - b.id);
   const doTipo = DICIONARIO_GLOBAL.filter(d => d.tipo === tipo);
   if (doTipo.length > 0) {
@@ -636,8 +645,12 @@ function recalcAnos() {
   if (!ANOS.includes(anoAtivo)) anoAtivo = ANOS[0];
   
   DATA = ALL_DATA.filter(d => {
-    const mesmoAno = extrairAnoNumero(d.ano) === anoAtivo;
-    const pertenceEscopo = (redecAtiva === "ALL") || (getRedecDoMunicipio(d.municipio) === redecAtiva);
+    const mesmoAno = matchesAno(d.ano, anoAtivo);
+    const munCan = getNomeCanonicoMunicipio(d.municipio);
+    // VINCULAÇÃO DUPLA: checa pelo município canônico OU se o registro veio com a etiqueta da REDEC
+    const pertenceEscopo = (redecAtiva === "ALL") || 
+                           (getRedecDoMunicipio(munCan) === redecAtiva) ||
+                           (d.redec === redecAtiva);
     return mesmoAno && pertenceEscopo;
   });
 }
@@ -649,7 +662,6 @@ const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
 const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"Não atende", pending:"Pendente de análise"};
 const QSTATUS_ICON  = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
 
-// CALCULA O SUMÁRIO LEVANDO EM CONTA O CENÁRIO ATIVO
 function getMunicipioSummary(){
   const map = {};
   MUNICIPIOS_ESCOPO.forEach(m => map[m] = {status:"bad", riscos:[]});
@@ -659,7 +671,6 @@ function getMunicipioSummary(){
     const canonico = getNomeCanonicoMunicipio(d.municipio);
     if(!map[canonico]) map[canonico] = {status:"bad", riscos:[]};
 
-    // Filtra pelo cenário atual
     if (atendeCenario(d.risco, cenarioAtivo)) {
       const atualRank = rank[map[canonico].status] ?? 0;
       const novoRank = rank[d.status] ?? 0;
@@ -710,7 +721,7 @@ function criarConteudoPopup(canonico) {
 
   const riscosHtml = riscosFiltrados.length
     ? [...new Set(riscosFiltrados)].map(r => `<div>· ${r}</div>`).join("")
-    : `<div style='color:#999'>Sem planos para o cenário de <b>${cenarioAtivo}</b></div>`;
+    : `<div style='color:#999'>Sem planos cadastrados para o cenário de <b>${cenarioAtivo}</b></div>`;
 
   const obsSet = new Set(DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.obs).map(d => d.obs));
   const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o => `⚠ ${o}`).join("<br>")}</div>` : "";
@@ -944,7 +955,6 @@ function renderTable(){
   const groups = [];
 
   MUNICIPIOS_ESCOPO.forEach(mun => {
-    // Filtra itens do município que atendem ao cenário ativo
     let items = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === mun && atendeCenario(d.risco, cenarioAtivo));
     
     if (items.length === 0) {
@@ -1150,8 +1160,7 @@ function municipioVersions(municipio, tipo){
 function versoesDoCiclo(municipio, tipo, ano){
   const targetAno = extrairAnoNumero(ano || anoAtivo);
   return municipioVersions(municipio, tipo).filter(v => {
-    const c = extrairAnoNumero(v.ciclo || v.dataAnalise || v.rotulo);
-    return c === targetAno;
+    return matchesAno(v.ciclo || v.dataAnalise || v.rotulo, targetAno);
   });
 }
 
@@ -1493,7 +1502,6 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
       });
     });
 
-    // Inicia com o Estado completo e no cenário geral
     redecAtiva = "ALL";
     cenarioAtivo = "geral";
     initRedecSelector();
