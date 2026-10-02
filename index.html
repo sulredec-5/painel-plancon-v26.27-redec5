@@ -46,10 +46,10 @@
   .redec-select:focus{border-color:#fff;}
   .redec-select option{background:#fff;color:var(--ink);}
 
-  .year-btns{display:flex;gap:6px;flex-wrap:wrap;}
-  .year-btn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .year-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
-  .year-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
+  .year-btns, .scenario-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .year-btn, .scenario-btn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .year-btn:hover, .scenario-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
+  .year-btn.active, .scenario-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
   
   .quality-selector{display:flex;flex-direction:column;align-items:flex-start;gap:5px;}
   .quality-btn-group{display:flex;gap:6px;}
@@ -72,7 +72,7 @@
 
   .viz-row{display:grid;grid-template-columns:1fr 280px;gap:14px;margin-bottom:22px;}
   .viz-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
-  .viz-card-header{padding:12px 14px 10px;border-bottom:1px solid var(--line);}
+  .viz-card-header{padding:12px 14px 10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
   .viz-card-header h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600;}
   #map{height:420px;width:100%;}
 
@@ -290,7 +290,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=11" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=13" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:32px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -309,6 +309,16 @@
       <div class="selector-block">
         <span class="selector-label">Regional / REDEC</span>
         <select class="redec-select" id="redecFilterSelect"></select>
+      </div>
+
+      <!-- Seletor de Cenário / Tipologia -->
+      <div class="selector-block">
+        <span class="selector-label">Tipologia / Cenário</span>
+        <div class="scenario-btns" id="scenarioBtns">
+          <button class="scenario-btn active" data-scenario="geral" title="Considera qualquer plano cadastrado">🌐 Geral</button>
+          <button class="scenario-btn" data-scenario="chuvas" title="Planos para chuvas e inundações">🌧️ Chuvas</button>
+          <button class="scenario-btn" data-scenario="estiagem" title="Planos para estiagem e queimadas">🔥 Estiagem</button>
+        </div>
       </div>
 
       <!-- Seletor de Ciclos -->
@@ -337,11 +347,17 @@
 
   <div class="viz-row">
     <div class="viz-card">
-      <div class="viz-card-header"><h2 id="mapTitle">Estado do Rio de Janeiro — Visão Geral (92 municípios)</h2></div>
+      <div class="viz-card-header">
+        <h2 id="mapTitle">Estado do Rio de Janeiro — Visão Geral (92 municípios)</h2>
+        <span id="scenarioTag" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;background:#EBF1FA;color:var(--accent);padding:3px 7px;border-radius:3px;">Cenário: Geral</span>
+      </div>
       <div id="map"></div>
     </div>
     <div class="viz-card">
-      <div class="viz-card-header"><h2>Entrega de planos</h2></div>
+      <div class="viz-card-header">
+        <h2>Entrega de planos</h2>
+        <span id="chartScenarioLabel" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);">Geral</span>
+      </div>
       <div class="chart-wrap">
         <canvas id="donutCanvas" width="180" height="180" style="width:180px;height:180px"></canvas>
         <div class="legend" id="chartLegend"></div>
@@ -378,7 +394,7 @@
   <footer>
     <hr>
     <p><b>Atualização Operacional:</b> Dados consolidados a partir das planilhas das 11 Regionais de Defesa Civil (REDECs) integradas ao Sistema Estadual da SEDEC-RJ.</p>
-    <p>Critério de conformidade: pelo menos um PLANCON válido registrado no ciclo selecionado ou anterior.</p>
+    <p>Critério de conformidade: pelo menos um PLANCON válido registrado no ciclo selecionado ou anterior conforme o cenário de tipologia ativo.</p>
   </footer>
 
   <!-- MODAL: QUALIDADE DOS PLANOS -->
@@ -506,8 +522,8 @@ const TODAS_AS_REDECS = [
   "REDEC 10 - Norte", "REDEC 11 - Noroeste"
 ];
 
-// INICIA COM O ESTADO DO RIO DE JANEIRO COMPLETO POR PADRÃO
 let redecAtiva = "ALL";
+let cenarioAtivo = "geral"; // "geral", "chuvas", "estiagem"
 let MUNICIPIOS_ESCOPO = [];
 let currentScopeBounds = null;
 
@@ -539,6 +555,26 @@ function atualizarMunicipiosEscopo() {
     const titleEl = document.getElementById("mapTitle");
     if(titleEl) titleEl.textContent = `Estado do Rio de Janeiro — ${redecAtiva}`;
   }
+}
+
+// LÓGICA DE CLASSIFICAÇÃO DE CENÁRIOS POR PALAVRA-CHAVE
+function atendeCenario(riscoStr, cenario) {
+  if (cenario === "geral") return true;
+  const s = normalizarTexto(riscoStr);
+  if (!s || s === "—") return false;
+
+  // Planos gerais ou contingência abrangente atendem a ambos os cenários
+  const isPlanoGeral = s.includes("geral") || s.includes("contingencia") || s.includes("plancon");
+
+  if (cenario === "chuvas") {
+    return isPlanoGeral || s.includes("chuva") || s.includes("desliz") || s.includes("alag") || s.includes("inund") || s.includes("enxurr");
+  }
+
+  if (cenario === "estiagem") {
+    return isPlanoGeral || s.includes("estia") || s.includes("seca") || s.includes("fogo") || s.includes("incend") || s.includes("vegeta");
+  }
+
+  return true;
 }
 
 const RISK_TYPES = {
@@ -613,6 +649,7 @@ const QSTATUS_SCORE = {bad:0, warn:1, ok:2};
 const QSTATUS_LABEL = {ok:"Atende totalmente", warn:"Atende parcialmente", bad:"Não atende", pending:"Pendente de análise"};
 const QSTATUS_ICON  = {ok:"✓", warn:"!", bad:"✕", pending:"—"};
 
+// CALCULA O SUMÁRIO LEVANDO EM CONTA O CENÁRIO ATIVO
 function getMunicipioSummary(){
   const map = {};
   MUNICIPIOS_ESCOPO.forEach(m => map[m] = {status:"bad", riscos:[]});
@@ -621,13 +658,17 @@ function getMunicipioSummary(){
   DATA.forEach(d=>{
     const canonico = getNomeCanonicoMunicipio(d.municipio);
     if(!map[canonico]) map[canonico] = {status:"bad", riscos:[]};
-    const atualRank = rank[map[canonico].status] ?? 0;
-    const novoRank = rank[d.status] ?? 0;
 
-    if(novoRank >= atualRank){
-      map[canonico].status = d.status;
+    // Filtra pelo cenário atual
+    if (atendeCenario(d.risco, cenarioAtivo)) {
+      const atualRank = rank[map[canonico].status] ?? 0;
+      const novoRank = rank[d.status] ?? 0;
+
+      if(novoRank >= atualRank){
+        map[canonico].status = d.status;
+      }
+      if(d.risco && d.risco !== "—") map[canonico].riscos.push(d.risco);
     }
-    if(d.risco && d.risco !== "—") map[canonico].riscos.push(d.risco);
   });
   return map;
 }
@@ -661,17 +702,25 @@ function criarConteudoPopup(canonico) {
   const redecNome = getRedecDoMunicipio(canonico);
   const st = info ? info.status : "bad";
 
-  const riscosFiltrados = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.risco && d.risco !== "—").map(d => d.risco);
+  const riscosFiltrados = DATA.filter(d => 
+    getNomeCanonicoMunicipio(d.municipio) === canonico && 
+    d.risco && d.risco !== "—" && 
+    atendeCenario(d.risco, cenarioAtivo)
+  ).map(d => d.risco);
+
   const riscosHtml = riscosFiltrados.length
     ? [...new Set(riscosFiltrados)].map(r => `<div>· ${r}</div>`).join("")
-    : "<div style='color:#999'>Sem riscos cadastrados no ciclo</div>";
+    : `<div style='color:#999'>Sem planos para o cenário de <b>${cenarioAtivo}</b></div>`;
 
   const obsSet = new Set(DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === canonico && d.obs).map(d => d.obs));
   const obsHtml = obsSet.size ? `<div class="popup-obs">${[...obsSet].map(o => `⚠ ${o}`).join("<br>")}</div>` : "";
 
+  const cenarioTexto = cenarioAtivo === "chuvas" ? "🌧️ Chuvas Intensas" : (cenarioAtivo === "estiagem" ? "🔥 Estiagem/Fogo" : "🌐 Geral");
+
   return `
     <div class="popup-nome">${canonico}</div>
     <div class="popup-redec">${redecNome} · Ciclo ${formatCicloLabel(anoAtivo)}</div>
+    <div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px;">Cenário: ${cenarioTexto}</div>
     <div class="popup-status ${st}">${STATUS_LABEL[st]}</div>
     <div class="popup-riscos">${riscosHtml}</div>
     ${obsHtml}
@@ -895,7 +944,8 @@ function renderTable(){
   const groups = [];
 
   MUNICIPIOS_ESCOPO.forEach(mun => {
-    let items = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === mun);
+    // Filtra itens do município que atendem ao cenário ativo
+    let items = DATA.filter(d => getNomeCanonicoMunicipio(d.municipio) === mun && atendeCenario(d.risco, cenarioAtivo));
     
     if (items.length === 0) {
       items = [{
@@ -942,7 +992,7 @@ function renderTable(){
 
   const body = document.getElementById("tableBody");
   if (!groups.length) {
-    body.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum município localizado.</td></tr>`;
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum município localizado para este filtro e cenário.</td></tr>`;
     return;
   }
 
@@ -1009,6 +1059,34 @@ document.querySelectorAll("#dataTable thead th[data-key]").forEach(th => {
     if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = 1; }
     renderTable();
   });
+});
+
+function setCenario(cenario) {
+  cenarioAtivo = cenario;
+  document.querySelectorAll(".scenario-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.scenario === cenario);
+  });
+
+  const labels = {
+    geral: "Geral",
+    chuvas: "Chuvas",
+    estiagem: "Estiagem"
+  };
+  const scenarioTag = document.getElementById("scenarioTag");
+  if (scenarioTag) scenarioTag.textContent = `Cenário: ${labels[cenario]}`;
+  const chartLabel = document.getElementById("chartScenarioLabel");
+  if (chartLabel) chartLabel.textContent = labels[cenario];
+
+  if (mapInstance) mapInstance.closePopup();
+
+  renderStats();
+  updateMapColors();
+  initDonut();
+  renderTable();
+}
+
+document.querySelectorAll(".scenario-btn").forEach(btn => {
+  btn.addEventListener("click", () => setCenario(btn.dataset.scenario));
 });
 
 function setAno(ano){
@@ -1165,7 +1243,6 @@ function openDrilldown(municipio, focusCritId, tipo){
         ${crits.map(c=>{
           const item = data.criterios[c.id];
           const st = item ? item.status : "pending";
-          // RÓTULO EM PORTUGUÊS DO BRASIL
           const rotuloPT = QSTATUS_LABEL[st] || "Pendente de análise";
           return `
             <div class="dd-item">
@@ -1231,7 +1308,7 @@ function renderCompareCards(tipo){
   const wait = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 1).length;
   const none = MUNICIPIOS_ESCOPO.filter(m=>municipioVersions(m, tipo).length === 0).length;
   document.getElementById("compareCards").innerHTML = `
-    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com 2 ou mais versões</div></div>
+    <div class="compare-card"><div class="num">${ready}</div><div class="label">municípios com ≥ 2 versões</div></div>
     <div class="compare-card"><div class="num">${wait}</div><div class="label">aguardando nova versão</div></div>
     <div class="compare-card"><div class="num">${none}</div><div class="label">sem análise registrada</div></div>
   `;
@@ -1416,13 +1493,13 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
       });
     });
 
-    // Prepara escopo inicial e seletor
+    // Inicia com o Estado completo e no cenário geral
     redecAtiva = "ALL";
+    cenarioAtivo = "geral";
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
 
-    // Renderiza Mapa, Donut, Tabela e Métricas
     initMap(); 
     setAno(anoAtivo);
     buildYearBtns();
@@ -1438,9 +1515,10 @@ async function carregarDadosDaPlanilha(forcarRecache = false) {
     clearInterval(timer);
     if(loadingBar) loadingBar.style.display = "none";
     console.error("Falha ao sincronizar:", err);
-    if(syncSubline) syncSubline.innerHTML = `⚠️️ Operando em modo offline/espera.`;
+    if(syncSubline) syncSubline.innerHTML = `⚠️ Operando em modo offline/espera.`;
     
     redecAtiva = "ALL";
+    cenarioAtivo = "geral";
     initRedecSelector();
     atualizarMunicipiosEscopo();
     recalcAnos();
