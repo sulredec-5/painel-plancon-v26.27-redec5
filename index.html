@@ -31,60 +31,127 @@
   body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",sans-serif;-webkit-font-smoothing:antialiased;}
   a{color:var(--accent);}
   
-  /* HEADER DESKTOP OTIMIZADO */
-  header.top{background:var(--ink);color:#fff;padding:18px 20px 14px;width:100%;}
+  /* HEADER */
+  header.top{background:var(--ink);color:#fff;padding:16px 18px 14px;width:100%;}
   .top-inner{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
   
   .top-header-row{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:16px;
+    gap:14px;
     flex-wrap:wrap;
   }
-  .top-brand{display:flex;align-items:center;gap:14px;min-width:0;}
-  .top-logo-wrap{flex-shrink:0;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
-  .top-logo{width:54px;height:54px;object-fit:contain;}
+  .top-brand{display:flex;align-items:center;gap:12px;min-width:0;}
+  .top-logo-wrap{flex-shrink:0;width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
+  .top-logo{width:50px;height:50px;object-fit:contain;}
   .top-text{min-width:0;}
   
   .sync-status-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .btn-refresh{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.28);color:#fff;border-radius:4px;padding:4px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .btn-refresh{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.28);color:#fff;border-radius:4px;padding:3px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
   .btn-refresh:hover:not(:disabled){background:rgba(255,255,255,0.25);border-color:#fff;}
   .btn-refresh:disabled{opacity:0.6;cursor:wait;}
 
-  /* GRID DOS CONTROLES: FLUÍDA E EQUILIBRADA NO DESKTOP */
+  /* CONTROLES / FILTROS (GRID HORIZONTAL NO DESKTOP) */
   .filter-selectors{
     display:flex;
     align-items:flex-end;
-    gap:12px;
+    gap:14px;
     width:100%;
-    flex-wrap:wrap;
-    padding-top:4px;
-    border-top:1px solid rgba(255,255,255,0.1);
+    flex-wrap:nowrap;
+    padding-top:8px;
+    border-top:1px solid rgba(255,255,255,0.08);
   }
-  .selector-block{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;}
+  .selector-block{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:4px;
+    flex:0 0 auto;
+  }
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
   
-  .block-redec{flex:1 1 230px;min-width:200px;}
-  .block-scenario{flex:0 0 auto;}
-  .block-cycle{flex:0 0 auto;}
-  .block-quality{flex:0 0 auto;}
-
-  .redec-select{padding:7px 10px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;}
+  /* Largura elegante e fixa no desktop para a Regional */
+  .block-redec{
+    width:250px;
+    flex:0 0 250px;
+  }
+  .redec-select{
+    padding:6px 10px;
+    background:#243657;
+    color:#fff;
+    border:1.5px solid rgba(255,255,255,0.25);
+    border-radius:5px;
+    font-family:"IBM Plex Sans",sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    outline:none;
+    cursor:pointer;
+    width:100%;
+    height:33px;
+    text-overflow:ellipsis;
+  }
   .redec-select:focus{border-color:#fff;}
   .redec-select option{background:#fff;color:var(--ink);}
 
-  .year-btns, .scenario-btns{display:flex;gap:5px;flex-wrap:wrap;}
-  .year-btn, .scenario-btn{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:6px 11px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.75);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .year-btns, .scenario-btns{display:flex;gap:5px;flex-wrap:nowrap;}
+  .year-btn, .scenario-btn{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:0 11px;
+    height:33px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+    border:1.5px solid rgba(255,255,255,0.25);
+    background:transparent;
+    color:rgba(255,255,255,0.75);
+    cursor:pointer;
+    transition:all .15s;
+    white-space:nowrap;
+  }
   .year-btn:hover, .scenario-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
   .year-btn.active, .scenario-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
   
-  .quality-btn-group{display:flex;gap:6px;flex-wrap:wrap;}
-  .quality-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
-  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--muted);margin-left:3px;font-weight:500;}
-  .compare-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 12px;cursor:pointer;white-space:nowrap;}
+  .quality-btn-group{display:flex;gap:6px;flex-wrap:nowrap;}
+  .quality-open-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    font-weight:600;
+    background:#fff;
+    color:var(--ink);
+    border:1.5px solid #fff;
+    border-radius:4px;
+    padding:0 10px;
+    height:33px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--muted);font-weight:500;}
+  .compare-open-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    font-weight:600;
+    background:transparent;
+    color:rgba(255,255,255,0.85);
+    border:1.5px solid rgba(255,255,255,0.35);
+    border-radius:4px;
+    padding:0 11px;
+    height:33px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
 
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 3px;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 2px;}
   h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:22px;margin:0 0 2px;letter-spacing:-.01em;line-height:1.15;}
   .sub{color:#C2CEE2;font-size:12px;margin:0;}
   .sub b{color:#fff;font-weight:600;}
@@ -167,15 +234,6 @@
   .map-legend-item:last-child{margin-bottom:0;}
   .mun-tooltip{background:rgba(22,36,63,0.92);color:#fff;border:none;border-radius:4px;padding:4px 8px;font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
   .map-legend-swatch{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.12);flex-shrink:0;}
-
-  /* ACCORDION NA TABELA */
-  tr.mun-group-row{cursor:pointer;}
-  tr.mun-group-row.single{cursor:default;}
-  .mun-toggle{display:inline-block;width:14px;color:var(--muted);transition:transform .15s;margin-right:4px;}
-  tr.mun-group-row.expanded .mun-toggle{transform:rotate(90deg);}
-  tr.mun-detail-row{display:none;background:#FAFBFC;}
-  tr.mun-detail-row.visible{display:table-row;}
-  tr.mun-detail-row td{padding-left:26px;font-size:12px;}
 
   /* MODAIS */
   .quality-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(22,36,63,0.65);z-index:2000;padding:12px;align-items:flex-start;justify-content:center;overflow-y:auto;}
@@ -267,68 +325,59 @@
   footer{max-width:1120px;margin:0 auto;padding:0 14px 40px;color:var(--muted);font-size:11.5px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 14px;}
 
-  /* TRANSIÇÃO RESPONSIVA */
-  @media(max-width:920px){
+  /* REGRAS RESPONSIVAS LIMPAS (MOBILE / TELAS ESTREITAS) */
+  @media(max-width:860px){
     .viz-row{grid-template-columns:1fr;gap:14px;}
-    #map{height:350px;}
+    #map{height:340px;}
     .chart-wrap{padding:12px;}
     .crit-list{columns:1;}
-  }
-
-  @media(max-width:768px){
-    /* NO CELULAR: 3 LINHAS COMPACTAS E INTELIGENTES */
-    header.top{padding:14px 12px 12px;}
-    main{padding:10px 10px 36px;}
-    .top-header-row{flex-direction:column;align-items:flex-start;gap:8px;}
+    
+    header.top{padding:12px 14px;}
+    .top-header-row{flex-direction:column;align-items:flex-start;gap:6px;}
     .sync-status-row{width:100%;justify-content:space-between;}
-    .top-logo-wrap{width:46px;height:46px;}
-    .top-logo{width:44px;height:44px;}
-    h1{font-size:18px;}
-    .sub{font-size:11px;}
 
+    /* No celular: Layout limpo em colunas sem vácuo */
     .filter-selectors{
       display:flex;
       flex-direction:column;
       gap:8px;
-      padding-top:8px;
+      padding-top:6px;
+      border-top:1px solid rgba(255,255,255,0.08);
     }
     
-    /* Linha 1 no mobile: Regional e Tipologia lado a lado em 2 colunas */
-    .filter-row-mobile-1{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
+    .selector-block{
+      width:100% !important;
+      flex:0 0 auto !important;
+      gap:2px;
+    }
+    .block-redec{
+      width:100% !important;
+    }
+    .redec-select{
       width:100%;
-      align-items:flex-end;
     }
-    .block-redec, .block-scenario{width:100%;min-width:0;}
-    .redec-select{padding:6px 6px;font-size:11.5px;}
-    
+
     .scenario-btns{
       display:grid;
       grid-template-columns:1fr 1fr 1fr;
-      gap:3px;
       width:100%;
+      gap:4px;
     }
     .scenario-btn{
-      padding:5px 2px;
-      font-size:9.5px;
-      text-align:center;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      width:100%;
+      padding:0;
+      font-size:10px;
     }
 
-    /* Linha 2 no mobile: Ciclo de Referência */
-    .filter-row-mobile-2{
+    .year-btns{
+      display:flex;
       width:100%;
+      gap:6px;
     }
-    .year-btns{gap:5px;}
-    .year-btn{padding:5px 9px;font-size:11px;}
+    .year-btn{
+      flex:1;
+    }
 
-    /* Linha 3 no mobile: Qualidade Técnica (50% / 50%) */
-    .filter-row-mobile-3{
-      width:100%;
-    }
     .quality-btn-group{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -336,10 +385,9 @@
       gap:6px;
     }
     .quality-open-btn, .compare-open-btn{
-      padding:6px 4px;
-      font-size:10.5px;
-      justify-content:center;
       width:100%;
+      justify-content:center;
+      padding:0;
     }
 
     .stats{grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;}
@@ -362,7 +410,7 @@
     <div class="top-header-row">
       <div class="top-brand">
         <div class="top-logo-wrap">
-          <img class="top-logo" id="headerLogo" src="logo.png?v=19" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
+          <img class="top-logo" id="headerLogo" src="logo.png?v=20" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
         </div>
         <div class="top-text">
           <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -378,9 +426,9 @@
     <div id="syncLoadingBar" class="sync-loading-bar"></div>
     <div id="pendingAnalysisAlert" style="display:none;margin-top:2px;font-size:11px;color:#FBEEDF;">⏳ <span id="pendingAnalysisText"></span></div>
 
-    <!-- Controles (Grid no Desktop / 3 Linhas Inteligentes no Mobile) -->
+    <!-- Barra de Filtros: 1 Linha Horizontal no Desktop / Compacta sem Vão no Mobile -->
     <div class="filter-selectors">
-      <!-- Bloco 1: Regional / REDEC -->
+      <!-- Bloco 1: Regional / REDEC (Com largura fixa e elegante) -->
       <div class="selector-block block-redec">
         <span class="selector-label">Regional / REDEC</span>
         <select class="redec-select" id="redecFilterSelect"></select>
@@ -643,25 +691,25 @@ function atendeCenario(riscoStr, cenario) {
   if (cenario === "chuvas") {
     return isPlanoGeral || 
            s.includes("chuva") || 
-           s.includes("hidro") ||        // Hidrológico, hidrologia
-           s.includes("geol") ||         // Geológico, geologia
-           s.includes("massa") ||        // Movimento de massa
-           s.includes("desliz") ||       // Deslizamento
-           s.includes("alag") ||         // Alagamento
-           s.includes("inund") ||        // Inundação
-           s.includes("enxurr");         // Enxurrada
+           s.includes("hidro") ||
+           s.includes("geol") ||
+           s.includes("massa") ||
+           s.includes("desliz") ||
+           s.includes("alag") ||
+           s.includes("inund") ||
+           s.includes("enxurr");
   }
 
   if (cenario === "estiagem") {
     return isPlanoGeral || 
-           s.includes("estia") ||        // Estiagem
-           s.includes("seca") ||         // Seca
-           s.includes("fogo") ||         // Fogo em vegetação
-           s.includes("incend") ||       // Incêndio florestal
-           s.includes("queimad") ||      // Queimadas
-           s.includes("florest") ||      // Florestal
-           s.includes("deficit") ||      // Déficit hídrico
-           s.includes("vegeta");         // Vegetação
+           s.includes("estia") ||
+           s.includes("seca") ||
+           s.includes("fogo") ||
+           s.includes("incend") ||
+           s.includes("queimad") ||
+           s.includes("florest") ||
+           s.includes("deficit") ||
+           s.includes("vegeta");
   }
 
   return true;
