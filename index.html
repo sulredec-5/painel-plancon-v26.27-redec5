@@ -31,65 +31,61 @@
   body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",sans-serif;-webkit-font-smoothing:antialiased;}
   a{color:var(--accent);}
   
-  /* HEADER */
-  header.top{background:var(--ink);color:#fff;padding:20px 16px 16px;width:100%;}
-  .top-inner{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
-  .top-brand{display:flex;align-items:center;gap:14px;width:100%;}
-  .top-logo-wrap{flex-shrink:0;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
-  .top-logo{width:58px;height:58px;object-fit:contain;}
-  .top-text{flex:1;min-width:0;}
+  /* HEADER DESKTOP OTIMIZADO */
+  header.top{background:var(--ink);color:#fff;padding:18px 20px 14px;width:100%;}
+  .top-inner{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
   
-  .sync-status-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;}
-  .btn-refresh{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.28);color:#fff;border-radius:4px;padding:3px 8px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .top-header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .top-brand{display:flex;align-items:center;gap:14px;min-width:0;}
+  .top-logo-wrap{flex-shrink:0;width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;}
+  .top-logo{width:54px;height:54px;object-fit:contain;}
+  .top-text{min-width:0;}
+  
+  .sync-status-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .btn-refresh{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.28);color:#fff;border-radius:4px;padding:4px 9px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
   .btn-refresh:hover:not(:disabled){background:rgba(255,255,255,0.25);border-color:#fff;}
   .btn-refresh:disabled{opacity:0.6;cursor:wait;}
 
-  /* ESTRUTURA DOS FILTROS EM 3 LINHAS DEFINIDAS */
+  /* GRID DOS CONTROLES: FLUÍDA E EQUILIBRADA NO DESKTOP */
   .filter-selectors{
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-    width:100%;
-    margin-top:2px;
-  }
-  .filter-row{
-    display:flex;
-    align-items:flex-end;
-    gap:10px;
-    width:100%;
-  }
-  .filter-row-1{
     display:flex;
     align-items:flex-end;
     gap:12px;
     width:100%;
     flex-wrap:wrap;
+    padding-top:4px;
+    border-top:1px solid rgba(255,255,255,0.1);
   }
-  .block-redec{
-    flex:1 1 240px;
-    min-width:180px;
-  }
-  .block-scenario{
-    flex:1 1 auto;
-    min-width:220px;
-  }
-
   .selector-block{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;}
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
-  .redec-select{padding:7px 9px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;width:100%;max-width:100%;text-overflow:ellipsis;}
+  
+  .block-redec{flex:1 1 230px;min-width:200px;}
+  .block-scenario{flex:0 0 auto;}
+  .block-cycle{flex:0 0 auto;}
+  .block-quality{flex:0 0 auto;}
+
+  .redec-select{padding:7px 10px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;width:100%;text-overflow:ellipsis;}
   .redec-select:focus{border-color:#fff;}
   .redec-select option{background:#fff;color:var(--ink);}
 
-  .year-btns, .scenario-btns{display:flex;gap:6px;flex-wrap:wrap;max-width:100%;}
+  .year-btns, .scenario-btns{display:flex;gap:5px;flex-wrap:wrap;}
   .year-btn, .scenario-btn{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:6px 11px;border-radius:4px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.75);cursor:pointer;transition:all .15s;white-space:nowrap;}
   .year-btn:hover, .scenario-btn:hover{border-color:rgba(255,255,255,0.6);color:#fff;}
   .year-btn.active, .scenario-btn.active{background:#fff;color:var(--ink);border-color:#fff;}
   
-  .quality-selector{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;}
-  .quality-btn-group{display:flex;gap:8px;flex-wrap:wrap;width:100%;}
+  .quality-btn-group{display:flex;gap:6px;flex-wrap:wrap;}
+  .quality-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
+  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--muted);margin-left:3px;font-weight:500;}
+  .compare-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 12px;cursor:pointer;white-space:nowrap;}
 
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 4px;}
-  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:23px;margin:0 0 3px;letter-spacing:-.01em;line-height:1.15;word-break:break-word;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;margin:0 0 3px;}
+  h1{font-family:"Source Serif 4",serif;font-weight:600;font-size:22px;margin:0 0 2px;letter-spacing:-.01em;line-height:1.15;}
   .sub{color:#C2CEE2;font-size:12px;margin:0;}
   .sub b{color:#fff;font-weight:600;}
 
@@ -172,11 +168,6 @@
   .mun-tooltip{background:rgba(22,36,63,0.92);color:#fff;border:none;border-radius:4px;padding:4px 8px;font-family:"IBM Plex Sans",sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
   .map-legend-swatch{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.12);flex-shrink:0;}
 
-  /* BOTÕES AUXILIARES */
-  .quality-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:#fff;color:var(--ink);border:1.5px solid #fff;border-radius:4px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
-  .quality-open-meta{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--muted);margin-left:3px;font-weight:500;}
-  .compare-open-btn{display:flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;background:transparent;color:rgba(255,255,255,0.85);border:1.5px solid rgba(255,255,255,0.35);border-radius:4px;padding:6px 12px;cursor:pointer;white-space:nowrap;}
-  
   /* ACCORDION NA TABELA */
   tr.mun-group-row{cursor:pointer;}
   tr.mun-group-row.single{cursor:default;}
@@ -276,7 +267,7 @@
   footer{max-width:1120px;margin:0 auto;padding:0 14px 40px;color:var(--muted);font-size:11.5px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 14px;}
 
-  /* REGRAS ESPECÍFICAS PARA TELEMÓVEL / MOBILE */
+  /* TRANSIÇÃO RESPONSIVA */
   @media(max-width:920px){
     .viz-row{grid-template-columns:1fr;gap:14px;}
     #map{height:350px;}
@@ -284,30 +275,33 @@
     .crit-list{columns:1;}
   }
 
-  @media(max-width:600px){
+  @media(max-width:768px){
+    /* NO CELULAR: 3 LINHAS COMPACTAS E INTELIGENTES */
     header.top{padding:14px 12px 12px;}
-    main{padding:10px 10px 40px;}
-    .top-brand{gap:10px;}
+    main{padding:10px 10px 36px;}
+    .top-header-row{flex-direction:column;align-items:flex-start;gap:8px;}
+    .sync-status-row{width:100%;justify-content:space-between;}
     .top-logo-wrap{width:46px;height:46px;}
     .top-logo{width:44px;height:44px;}
     h1{font-size:18px;}
     .sub{font-size:11px;}
 
-    /* 3 LINHAS COMPACTAS NO TELEMÓVEL */
-    .filter-selectors{gap:7px;margin-top:4px;}
-    .filter-row{gap:6px;}
-    .filter-row-1{
+    .filter-selectors{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-top:8px;
+    }
+    
+    /* Linha 1 no mobile: Regional e Tipologia lado a lado em 2 colunas */
+    .filter-row-mobile-1{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:6px;
+      gap:8px;
+      width:100%;
       align-items:flex-end;
     }
-    .block-redec, .block-scenario{
-      width:100%;
-      min-width:0;
-    }
-    .selector-block{gap:2px;}
-    .selector-label{font-size:9.5px;}
+    .block-redec, .block-scenario{width:100%;min-width:0;}
     .redec-select{padding:6px 6px;font-size:11.5px;}
     
     .scenario-btns{
@@ -323,9 +317,18 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .year-btns{gap:4px;}
-    .year-btn{padding:5px 8px;font-size:10.5px;}
 
+    /* Linha 2 no mobile: Ciclo de Referência */
+    .filter-row-mobile-2{
+      width:100%;
+    }
+    .year-btns{gap:5px;}
+    .year-btn{padding:5px 9px;font-size:11px;}
+
+    /* Linha 3 no mobile: Qualidade Técnica (50% / 50%) */
+    .filter-row-mobile-3{
+      width:100%;
+    }
     .quality-btn-group{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -355,59 +358,59 @@
 
 <header class="top">
   <div class="top-inner">
-    <div class="top-brand">
-      <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=18" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
-      </div>
-      <div class="top-text">
-        <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
-        <h1>Painel de Planos de Contingência</h1>
-        <div class="sync-status-row">
-          <p class="sub" id="syncSubline" style="margin:0;">Iniciando...</p>
-          <button class="btn-refresh" id="btnForceRefresh" title="Varre as 11 REDECs e atualiza a base">🔄 Atualizar Base</button>
+    <!-- Linha Superior do Cabeçalho: Marca + Status -->
+    <div class="top-header-row">
+      <div class="top-brand">
+        <div class="top-logo-wrap">
+          <img class="top-logo" id="headerLogo" src="logo.png?v=19" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
         </div>
-        <div id="syncLoadingBar" class="sync-loading-bar"></div>
-        <div id="pendingAnalysisAlert" style="display:none;margin-top:4px;font-size:11px;color:#FBEEDF;">⏳ <span id="pendingAnalysisText"></span></div>
+        <div class="top-text">
+          <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
+          <h1>Painel de Planos de Contingência</h1>
+        </div>
+      </div>
+      <div class="sync-status-row">
+        <p class="sub" id="syncSubline" style="margin:0;">Iniciando...</p>
+        <button class="btn-refresh" id="btnForceRefresh" title="Varre as 11 REDECs e atualiza a base">🔄 Atualizar Base</button>
       </div>
     </div>
     
+    <div id="syncLoadingBar" class="sync-loading-bar"></div>
+    <div id="pendingAnalysisAlert" style="display:none;margin-top:2px;font-size:11px;color:#FBEEDF;">⏳ <span id="pendingAnalysisText"></span></div>
+
+    <!-- Controles (Grid no Desktop / 3 Linhas Inteligentes no Mobile) -->
     <div class="filter-selectors">
-      <!-- LINHA 1: Regional/REDEC e Tipologia/Cenário alinhados lado a lado -->
-      <div class="filter-row-1">
-        <div class="selector-block block-redec">
-          <span class="selector-label">Regional / REDEC</span>
-          <select class="redec-select" id="redecFilterSelect"></select>
-        </div>
+      <!-- Bloco 1: Regional / REDEC -->
+      <div class="selector-block block-redec">
+        <span class="selector-label">Regional / REDEC</span>
+        <select class="redec-select" id="redecFilterSelect"></select>
+      </div>
 
-        <div class="selector-block block-scenario">
-          <span class="selector-label">Tipologia / Cenário</span>
-          <div class="scenario-btns" id="scenarioBtns">
-            <button class="scenario-btn active" data-scenario="geral" title="Considera qualquer plano cadastrado">🌐 Geral</button>
-            <button class="scenario-btn" data-scenario="chuvas" title="Planos para chuvas e inundações">🌧️ Chuvas</button>
-            <button class="scenario-btn" data-scenario="estiagem" title="Planos para estiagem e queimadas">🔥 Estiagem</button>
-          </div>
+      <!-- Bloco 2: Tipologia / Cenário -->
+      <div class="selector-block block-scenario">
+        <span class="selector-label">Tipologia / Cenário</span>
+        <div class="scenario-btns" id="scenarioBtns">
+          <button class="scenario-btn active" data-scenario="geral" title="Considera qualquer plano cadastrado">🌐 Geral</button>
+          <button class="scenario-btn" data-scenario="chuvas" title="Planos para chuvas e inundações">🌧️ Chuvas</button>
+          <button class="scenario-btn" data-scenario="estiagem" title="Planos para estiagem e queimadas">🔥 Estiagem</button>
         </div>
       </div>
 
-      <!-- LINHA 2: Ciclo de referência -->
-      <div class="filter-row filter-row-2">
-        <div class="selector-block">
-          <span class="selector-label">Ciclo de referência</span>
-          <div class="year-btns" id="yearBtns"></div>
-        </div>
+      <!-- Bloco 3: Ciclo de Referência -->
+      <div class="selector-block block-cycle">
+        <span class="selector-label">Ciclo de referência</span>
+        <div class="year-btns" id="yearBtns"></div>
       </div>
 
-      <!-- LINHA 3: Qualidade técnica -->
-      <div class="filter-row filter-row-3">
-        <div class="quality-selector">
-          <span class="selector-label">Qualidade Técnica</span>
-          <div class="quality-btn-group">
-            <button class="quality-open-btn" id="qualityOpenBtn">
-              Ver análise
-              <span class="quality-open-meta" id="qualityOpenMeta"></span>
-            </button>
-            <button class="compare-open-btn" id="compareOpenBtn">Comparar</button>
-          </div>
+      <!-- Bloco 4: Qualidade Técnica -->
+      <div class="selector-block block-quality">
+        <span class="selector-label">Qualidade Técnica</span>
+        <div class="quality-btn-group">
+          <button class="quality-open-btn" id="qualityOpenBtn">
+            Ver análise
+            <span class="quality-open-meta" id="qualityOpenMeta"></span>
+          </button>
+          <button class="compare-open-btn" id="compareOpenBtn">Comparar</button>
         </div>
       </div>
     </div>
@@ -1634,7 +1637,7 @@ document.getElementById("btnForceRefresh").addEventListener("click", () => {
   carregarDadosDaPlanilha(true);
 });
 
-// REDIMENSIONAMENTO INTELIGENTE (RESPONSIVO AO GIRAR A TELA)
+// REDIMENSIONAMENTO INTELIGENTE
 let resizeDebounce = null;
 function handleScreenResize() {
   clearTimeout(resizeDebounce);
