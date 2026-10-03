@@ -52,7 +52,7 @@
   .btn-refresh:hover:not(:disabled){background:rgba(255,255,255,0.25);border-color:#fff;}
   .btn-refresh:disabled{opacity:0.6;cursor:wait;}
 
-  /* CONTROLES / FILTROS (GRID HORIZONTAL NO DESKTOP) */
+  /* CONTROLES / FILTROS */
   .filter-selectors{
     display:flex;
     align-items:flex-end;
@@ -71,7 +71,6 @@
   }
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
   
-  /* Largura elegante e fixa no desktop para a Regional */
   .block-redec{
     width:250px;
     flex:0 0 250px;
@@ -336,7 +335,7 @@
     .top-header-row{flex-direction:column;align-items:flex-start;gap:6px;}
     .sync-status-row{width:100%;justify-content:space-between;}
 
-    /* No celular: Layout limpo em colunas sem vácuo */
+    /* No celular: Layout em colunas sem vácuo */
     .filter-selectors{
       display:flex;
       flex-direction:column;
@@ -400,6 +399,36 @@
     .pills{justify-content:flex-start;overflow-x:auto;padding-bottom:2px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;}
     .pill{white-space:nowrap;flex-shrink:0;}
   }
+
+  /* ==========================================================================
+     NOVA REGRA: CELULAR EM MODO PAISAGEM / HORIZONTAL (TELA GIRADA)
+     ========================================================================== */
+  @media (orientation: landscape) and (max-height: 550px) {
+    /* Todos os 5 cards na mesma linha horizontal, mais compactos e estreitos */
+    .stats {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      gap: 6px !important;
+      margin: 0 0 12px !important;
+    }
+    .stat {
+      padding: 6px 8px !important;
+    }
+    .stat .num {
+      font-size: 19px !important;
+      line-height: 1 !important;
+    }
+    .stat .label {
+      font-size: 10px !important;
+      margin-top: 2px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    #map {
+      height: 300px !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -410,7 +439,7 @@
     <div class="top-header-row">
       <div class="top-brand">
         <div class="top-logo-wrap">
-          <img class="top-logo" id="headerLogo" src="logo.png?v=20" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
+          <img class="top-logo" id="headerLogo" src="logo.png?v=21" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:26px;\'>🛡️</span>';">
         </div>
         <div class="top-text">
           <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
