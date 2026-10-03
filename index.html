@@ -44,7 +44,7 @@
   .btn-refresh:hover:not(:disabled){background:rgba(255,255,255,0.25);border-color:#fff;}
   .btn-refresh:disabled{opacity:0.6;cursor:wait;}
 
-  .filter-selectors{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;width:100%;max-width:100%;}
+  .filter-selectors{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;width:100%;max-width:100%;margin-top:4px;}
   .selector-block{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;max-width:100%;}
   .selector-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9FB3D6;}
   .redec-select{padding:7px 9px;background:#243657;color:#fff;border:1.5px solid rgba(255,255,255,0.25);border-radius:5px;font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:600;outline:none;cursor:pointer;width:100%;max-width:100%;text-overflow:ellipsis;}
@@ -247,11 +247,12 @@
   footer{max-width:1120px;margin:0 auto;padding:0 14px 40px;color:var(--muted);font-size:11.5px;line-height:1.55;}
   footer hr{border:none;border-top:1px solid var(--line);margin:0 0 14px;}
 
+  /* REGRAS RESPONSIVAS AJUSTADAS */
   @media(max-width:920px){
     .viz-row{grid-template-columns:1fr;gap:14px;}
     #map{height:350px;}
     .chart-wrap{padding:12px;}
-    .filter-selectors{flex-direction:column;align-items:stretch;}
+    .filter-selectors{flex-direction:column;align-items:stretch;gap:8px;}
     .selector-block{width:100%;}
     .redec-select{width:100%;}
     .quality-selector{width:100%;}
@@ -261,18 +262,29 @@
   }
 
   @media(max-width:600px){
-    header.top{padding:16px 12px 14px;}
-    main{padding:12px 10px 40px;}
+    header.top{padding:14px 12px 12px;}
+    main{padding:10px 10px 36px;}
     .top-brand{flex-direction:row;align-items:center;gap:10px;}
-    .top-logo-wrap{width:52px;height:52px;}
-    .top-logo{width:50px;height:50px;}
-    h1{font-size:20px;}
-    .stats{grid-template-columns:1fr 1fr;gap:7px;}
-    .stat{padding:9px;}
-    .stat .num{font-size:22px;}
-    .stat .label{font-size:10.5px;}
-    #map{height:300px;}
-    .controls{flex-direction:column;align-items:stretch;}
+    .top-logo-wrap{width:48px;height:48px;}
+    .top-logo{width:46px;height:46px;}
+    h1{font-size:19px;}
+    .sub{font-size:11.5px;}
+
+    /* Elimina o vazio/espaçamento acumulado entre os filtros no celular */
+    .filter-selectors{gap:7px;margin-top:6px;}
+    .selector-block{gap:2px;}
+    .selector-label{font-size:9.5px;}
+    .redec-select{padding:6px 8px;font-size:12px;}
+    .year-btn, .scenario-btn{padding:5px 8px;font-size:11px;}
+    .quality-btn-group{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:6px;}
+    .quality-open-btn, .compare-open-btn{padding:5px 6px;font-size:10.5px;justify-content:center;}
+
+    .stats{grid-template-columns:1fr 1fr;gap:6px;margin:2px 0 16px;}
+    .stat{padding:8px 10px;}
+    .stat .num{font-size:20px;}
+    .stat .label{font-size:10px;}
+    #map{height:290px;}
+    .controls{flex-direction:column;align-items:stretch;gap:8px;}
     .search{flex:1 1 100%;width:100%;}
     .pills{justify-content:flex-start;overflow-x:auto;padding-bottom:3px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;}
     .pill{white-space:nowrap;flex-shrink:0;}
@@ -285,7 +297,7 @@
   <div class="top-inner">
     <div class="top-brand">
       <div class="top-logo-wrap">
-        <img class="top-logo" id="headerLogo" src="logo.png?v=16" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:28px;\'>🛡️</span>';">
+        <img class="top-logo" id="headerLogo" src="logo.png?v=17" alt="Logo SEDEC RJ" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\'font-size:28px;\'>🛡️</span>';">
       </div>
       <div class="top-text">
         <p class="eyebrow">Defesa Civil Estadual · SEDEC-RJ</p>
@@ -869,7 +881,6 @@ function initMap(){
     window._legendAdded = true;
   }
 
-  // Força cálculo imediato do tamanho do container
   setTimeout(() => {
     if (mapInstance) mapInstance.invalidateSize();
   }, 100);
@@ -1570,7 +1581,7 @@ function handleScreenResize() {
       }
     }
     initDonut();
-  }, 250);
+  }, 200);
 }
 
 window.addEventListener("resize", handleScreenResize);
